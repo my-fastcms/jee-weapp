@@ -1,0 +1,101 @@
+.weui-media-box__bd .goods-price{
+  overflow: hidden;
+  font-size: 36rpx;
+  color:#fa3c64;
+  font-weight:600;
+}
+.weui-media-box__bd .p-cost{
+  font-size: 22rpx;
+  color:#999;
+  text-decoration:line-through;
+  font-weight:400;
+}
+.weui-media-box{
+  padding: 15rpx;
+}
+.weui-media-box__bd .goods-title{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:1;
+  -webkit-box-orient:vertical; 
+  font-size: 26rpx;
+  color:#666;
+  margin-bottom:20rpx;
+  line-height: 1.5;
+}
+.weui-media-box__bd .multigroup{
+  display: block; 
+  width:150rpx; 
+  height:68rpx; 
+  line-height: 68rpx; 
+  text-align: center; 
+  background:#fa3c64; 
+  color:#fff;    
+  border-radius:44rpx;
+  margin-top:20rpx;
+  margin-right:15rpx;
+
+}
+.goods-box{
+  /* width: 343rpx;
+  height: 462rpx; */
+  width:34%;
+  flex:none;
+  overflow: hidden;
+  padding:40rpx 40rpx 40rpx 10rpx;
+  box-sizing: border-box;
+}
+.goods-box .img-box{
+  /* width: 343rpx;
+  height: 343rpx; */
+  overflow: hidden;
+  border-radius: 10rpx; 
+}
+.goods-box .img-box image{
+   width: 100%;
+   height:200rpx;
+}
+.img-box{
+  /* 加的 */
+  height: 200rpx;
+}
+.goods-box .img-box .image01{
+  /* 加的 */
+   display: block;   
+   width: 100%;
+   height: 200rpx;
+   position: relative;
+   top: -200rpx;
+}
+.loading{  
+  /* padding-top: 80rpx; */
+  text-align: center;
+  height: 80rpx;
+  line-height:80rpx;
+
+}  
+.loading:before{  
+  display: inline-block;  
+  margin-right: 5rpx;  
+  vertical-align: middle;  
+  content: '';  
+  width: 40rpx;  
+  height: 40rpx;
+  background-size: contain;  
+  animation: rotate 1s linear infinite;  
+}  
+.loading.complete:before{  
+  display: none;  
+}
+.item{
+  border-bottom:1rpx solid #e1e1e1;
+}
+.weui-media-box__bd .group{
+  padding:10rpx 0rpx;
+  margin-bottom:15rpx;
+
+}
+.c-group { padding:6rpx 10rpx; border:1px solid #fa3c64; color:#fa3c64; font-size:28rpx; border-radius: 20rpx 0 20rpx 20rpx;}
+
+

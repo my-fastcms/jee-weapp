@@ -1,0 +1,43 @@
+.task-li{
+  overflow: hidden;
+  font-size: 26rpx;
+  color:#666;
+  padding-top: 16rpx;
+  line-height: 1.8;
+  text-indent: 25rpx;
+}
+.task-partake{
+  float:left;
+  height:45rpx;
+}
+.task-title{
+  font-size: 30rpx;
+  color: #000;
+  line-height: 1.8;
+  padding-top: 16rpx;
+}
+.bottom-box{
+  border:1px solid #fa3c64;
+  border-radius:44rpx;
+  color:#fa3c64;
+  margin: 0rpx 30rpx;
+  text-align: center;
+  padding:20rpx 0rpx;
+  font-size: 30rpx
+}
+.task-content{
+  text-indent: 0rpx;
+  padding: 0rpx 10rpx;
+}
+.no-task-tip{
+  color: #666;
+  text-align: center;
+  padding-top: 250rpx;
+}
+.go-task-index{
+  color: #666;
+  text-align: center;
+  padding-top: 20rpx;
+}
+.thank-tip{text-align: center; padding: 40rpx 0rpx 30rpx}
+.weui-panel__bd { background: #fff; border:1px solid #eee; margin:20rpx; border-radius: 10rpx;}

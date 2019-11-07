@@ -1,0 +1,142 @@
+.nav-tabs li{width:200px;}
+.app-image-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    display: block;
+    float: left;
+    height: 40px;
+    margin: 0 10px 10px 0;
+    position: relative;
+    width: 40px;
+}
+ .app-image-list li a {
+    display: block;
+    height: 100%;
+}
+.app-image-list li img {
+    height: 100%;
+    width: 100%;
+}
+.app-image-list li .add-goods, .app-image-list li .add {
+    cursor: pointer;
+    display: inline-block;
+    height: 100%;
+    line-height: 40px;
+    text-align: center;
+    width: 100%;
+}
+.app-image-list li:hover .close-modal {
+    display: block;
+}
+.w30{
+background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+width: 50px;
+}
+.controls{
+ margin-left: 160px;
+}
+.page-fullcut .fullcut-table-wrap {
+    /* padding-left: 50px; */
+}
+.page-fullcut .no-result {
+    border: medium none;
+    padding: 100px 0;
+}
+.page-fullcut .fullcut-table {
+    width: 100%;
+}
+.page-fullcut .fullcut-table tr {
+    border: 1px solid #ddd;
+}
+.page-fullcut .fullcut-table tr th {
+    background: #f2f2f2 none repeat scroll 0 0;
+    line-height: 36px;
+}
+.page-fullcut .fullcut-table tr .pl100 {
+    padding-left: 100px;
+    text-align: left;
+}
+.page-fullcut .fullcut-table tr td {
+     vertical-align: middle;
+}
+.page-fullcut .fullcut-table tr td .w30 {
+    margin: 0 5px;
+    vertical-align: middle;
+    width: 30px;
+}
+.page-fullcut .fullcut-table tr td .w120 {
+    width: 120px;
+}
+.page-fullcut .fullcut-table tr td .fullcut-controls {
+    line-height: 40px;
+    padding-left: 20px;
+}
+.page-fullcut .fullcut-table tr td .fullcut-setting .error-message {
+    display: inline-block;
+    padding-left: 10px;
+}
+.page-fullcut .fullcut-table tr td .fullcut-setting .show {
+    display: block;
+}
+.page-fullcut .fullcut-table tr td .fullcut-setting .hide {
+    display: none;
+}
+.page-fullcut .fullcut-table tr td .first-fullcut {
+    margin-top: 5px;
+}
+.page-fullcut .fullcut-table tr td .last-fullcut {
+    margin-bottom: 5px;
+}
+.page-fullcut .fullcut-table .controls {
+    /* height: 52px; */
+    margin-left: 100px;
+}
+.page-fullcut .fullcut-table  .input-group{
+   width: 100px;
+}
+.page-fullcut .fullcut-table .controlss{
+  margin-left: 100px;
+}
+.page-fullcut .fullcut-table .controls span {
+   display: inline-block;
+    line-height: 32px;
+} 
+.page-fullcut .fullcut-table .controls .fullcut-label {
+    display: inline-block;
+    padding-top: 0;
+    vertical-align: middle;
+}
+.page-fullcut .fullcut-table .controls .checked-status {
+    margin-top: 10px;
+}
+.page-fullcut .fullcut-table .controls .replace-status {
+    margin-left: 0;
+    padding-left: 0;
+}
+.page-fullcut .fullcut-table .readonly-control-group .control-group {
+    margin-top: 10px;
+}
+.page-fullcut .fullcut-table .readonly-control-group .control-group .controls {
+    height: auto;
+}
+.page-fullcut .fullcut-table label {
+    -moz-user-select: none;
+}
+.page-fullcut .fullcut-table .add-fullcut-toolbar {
+    display: none;
+}
+.page-fullcut .fullcut-table .error-node {
+    display: none;
+}
+.page-fullcut .fullcut-table .fullcut-need-one {
+    display: none;
+}
+.page-fullcut .fullcut-table .fullcut-need-one.error {
+    display: block;
+}
+.control-group {
+    margin-bottom: 10px;
+}

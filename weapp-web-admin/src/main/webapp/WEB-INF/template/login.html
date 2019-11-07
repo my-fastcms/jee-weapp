@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head><title>点步营销插件平台--登录</title>#include ("/_includes/header.html")
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+</head>
+<body class="gray-bg">
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div><h1 class="logo-name">WEAPP</h1></div>
+        <h3>欢迎登录点步微营销插件服务平台</h3>
+		<div class="tabs-container">
+			#if(!moblie??)
+            <ul class="nav nav-tabs">
+                <li class="#if(env == 'product') active #end"><a data-toggle="tab" href="#tab-1" aria-expanded="true">微信扫码登录</a></li>
+                <li class="#if(env =='dev') active #end"><a data-toggle="tab" href="#tab-2" aria-expanded="false">手机号登录</a></li>
+            </ul>
+            #end
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane #if(env == 'product' && !moblie) active #end">
+                    <div class="panel-body">
+                        <img src="#(qrcode)" width="260" height="260"></img>
+                        <br/>
+                        <strong>微信扫码验证后即可登录</strong>
+                        <br/>
+                        <span style="font-size: 12px;color: red;">推荐使用谷歌浏览器，否则可能影响扫码登录</span>
+                        <br/>
+                        <span style="font-size: 12px;color: gray;">扫码即表示已阅读并接受</span>
+                        <a href="http://www.dbumama.com" target="_blank" style="font-size: 12px;">《用户协议》</a>
+                    </div>
+                </div>
+                <div id="tab-2" class="tab-pane #if(env =='dev' || moblie) active #end">
+                    <form class="panel-body" role="form" action="">
+                    	<input id="CSRF_TOKEN_HIDDEN" type="hidden" value="#(CSRF_TOKEN)"/>
+			            <div class="form-group">
+			                <input id="username" name="username" type="text" class="form-control" placeholder="手机号" value="" required=""/>
+			            </div>
+			            <div class="form-group">
+			                <input id="password" name="password" type="password" class="form-control" placeholder="密码" value="" required=""/>
+			            </div>
+			            <div class="form-group">
+							<div class="controls">
+								<label class="input-group col-sm-5">
+									<input class="form-control" type="text" id="captcha" name="captchaToken" placeholder="验证码"/>
+								</label>
+								<label class="input-group col-sm-5">
+									<img id="captchaImage" src="#(webctx)/captcha?width=100&height=35&fontsize=30" alt="换一张" />
+								</label>
+							</div>
+						</div>
+			            <button id="loginBtn" type="button" class="btn btn-primary block full-width m-b">登 录</button>
+			            <p class="text-muted text-center"> <a href="#(webctx)/forgetPwd"><small>忘记密码了？</small></a> | 
+			            <a href="#(webctx)/register">注册一个新账号</a>
+			            </p>
+			            <br>
+			        </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+	var UA = navigator.userAgent.toLowerCase();
+	var browerKernel = {
+		isWebkit: function() {
+			if (/webkit/i.test(UA)) return true;
+			else return false;
+		},
+		isFirefox: function() {
+			if (/firefox/i.test(UA)) return true;
+			else return false;
+		}
+	}
+
+	if(!browerKernel.isWebkit()){
+		alert("您当前浏览器无法兼容本系统！\n推荐使用Google Chrome 浏览器！\n\n其它兼容浏览器：\n360浏览器极速模式\n搜狗高速浏览器3\n世界之窗极速版\n猎豹浏览器\nQQ浏览器\n其它浏览器请自测");
+	}
+	
+	var $captcha = $("#captcha");
+	var $captchaImage = $("#captchaImage");
+	var change_captcha = function() {
+		var timestamp = (new Date()).valueOf();
+		var imageSrc = $captchaImage.attr("src");
+		if(imageSrc.indexOf("?") >= 0) {
+			imageSrc = imageSrc.substring(0, imageSrc.indexOf("?"));
+		}
+		imageSrc = imageSrc + "?timestamp=" + timestamp + "&width=100&height=35&fontsize=30";
+		$captchaImage.attr("src", imageSrc);
+	};
+
+	$captchaImage.click(change_captcha);
+	
+	function login(){
+		var username = $("#username").val();
+		var password = $("#password").val();
+		
+		if(username == "" || password == ""){
+			obz.warn("请填写账号密码！");
+			return;
+		}
+		
+		var env = "#(env??)";
+		if(env != "dev"){
+			var captcha = $("#captcha").val();
+			if(captcha == null || captcha ==""){
+				obz.warn("请输入验证码");
+				return;
+			}			
+		}
+		
+		var params = {};
+		params.username = username;
+		params.password = password;
+		params.captchaToken = captcha;
+		obz.ajaxJson("#(webctx)/auth", params, function(resp){
+			if(resp.code != 200){
+				change_captcha();
+				$("#captcha").val("");
+				return;
+			}
+			#if(moblie??)
+				location.href = "#(webctx)/invitecode/app?first=true"
+			#else
+				location.href = "#(webctx)/authuser"
+			#end;
+		});
+	}
+	
+	$("#loginBtn").click(function(){
+		login();
+	});
+	
+	$(document).keyup(function(event){
+		if(event.keyCode ==13){
+			login();
+		}
+	});
+	
+	setTimeout(function(){
+		console.log("======" + Math.random());
+		isLoginSucceed();
+	}, 1000 * 3);
+	
+	function isLoginSucceed(){
+        if(!$(".qr-code").is(":hidden")){
+            $.ajax({url: "#(webctx)/wxlogin",
+                type: "POST",
+                data: { "scenceId": #(scenceId), "csrf_token" : $("#CSRF_TOKEN_HIDDEN").val()},
+                cache: false
+            }).done(function (resp){
+            	if(resp ==null || resp.code !=200){
+            		var error = resp.msg ? "系统错误" : resp.msg;
+                    alert(error || "system error");
+                    return;
+            	}
+            	
+            	if(resp !=null && resp.code == 200){
+            		if(!resp.data){
+            			setTimeout(isLoginSucceed, 1500);
+            		}else{
+                        console.log("=============="+resp.data);
+                        location.href = resp.data;
+            		}
+            	}
+           }).fail(function () {
+               setTimeout(isLoginSucceed, 1500);
+           });
+        }else{
+            setTimeout(isLoginSucceed, 1000 * 3);
+        }
+    }
+});
+</script>
+</body>
+</html>

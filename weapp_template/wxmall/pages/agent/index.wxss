@@ -1,0 +1,104 @@
+.headimg{
+border-radius: 50%;
+object-fit: cover;
+display: block;
+float: left;
+overflow:hidden;
+}
+.orderTip{
+  position: absolute;
+  top:5px;right:10px;
+  font-size:10px;
+}  
+.weui-panel__hd {
+/* padding:14px 15px 10px; */
+position:unset;
+}
+.weui-cell::before {
+content:" ";
+position:absolute;
+top:0;
+right:0;
+height:1px;
+/* border-top:1rpx solid #D9D9D9; */
+color:#D9D9D9;
+left:0px;
+}
+.user-lable{
+  text-align:center;color:#fff;padding-top:3px;
+}
+.version {
+  width:100%;
+  height: 40rpx;
+	line-height: 40rpx;
+	font-size: 24rpx;
+	text-align: center;  
+  padding-top: 40rpx;
+}
+.www {
+  width:100%;
+	font-size: 24rpx;
+	text-align: center; 
+  padding: 10rpx;
+}
+.center-alloder, .weui-panel { background: none; border:none; }
+.weui-cell_primary { padding-left:10rpx;}
+.center-money { font-size:42rpx; font-weight: bold; color:#ff003c;}
+.weui-cells { padding:0 30rpx;}
+.weui-cell { padding:30rpx; margin:10rpx 0; background: #fff; border:1px solid #eee; border-radius: 10rpx;}
+.weui-cell:before { border:0;}
+.weui-panel__bd { background: #fff; border:1px solid #eee; padding:10rpx; margin:20rpx 0; border-radius: 10rpx;}
+.title-u { padding:20rpx 0; text-align: center; font-size:32rpx; color:#fa3c64;}
+.title-u image { margin-right:10rpx; vertical-align: middle;}
+.center-ordersModule .name { color:#666; font-size:26rpx;
+}
+.center-list-txt { font-size:30rpx; color:#666;}
+.indexBox{
+  width: 29%;
+  height: 180rpx;
+  margin: 2rpx 0;
+}
+.imgicon{
+  text-align: center;
+  padding-top: 10rpx;
+}
+.center-ordersModule{
+  padding:0;
+}
+.imgBox{
+  width:35px;
+  height:35px;
+  margin:0 auto;
+  align-items:center;
+  display:flex;
+  justify-content:center;
+
+}
+button::after {
+  border: none;
+}
+button {
+  background-color: #fff;
+  border-radius:0;
+  line-height:1.5;
+}
+.rank {
+  background:black;
+  text-align:center;
+  border-radius: 30rpx;
+  font-size:10px;
+  line-height:1.5;
+  color: white;
+  width: 92px;
+  height: 15px;
+  position: relative;
+  right: 13px;
+  top:3px;
+  overflow:hidden;
+}
+.rankBox{
+  position: relative;
+  bottom: 10px;
+  height:30px;
+  width: 90px;
+}

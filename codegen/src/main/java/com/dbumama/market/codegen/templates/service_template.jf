@@ -1,0 +1,26 @@
+package #(basePackage);
+
+import com.jfinal.plugin.activerecord.Page;
+import #(modelPacket).#(tableMeta.modelName);
+import io.jboot.db.model.Columns;
+
+import java.util.List;
+
+public interface #(tableMeta.modelName)Service  {
+
+	//code here
+
+	//gen code begin =============================================================================================
+    public #(tableMeta.modelName) findById(Object id);
+    public List<#(tableMeta.modelName)> findAll();
+    public boolean deleteById(Object id);
+    public boolean delete(#(tableMeta.modelName) model);
+    public Object save(#(tableMeta.modelName) model);
+    public Object saveOrUpdate(#(tableMeta.modelName) model);
+    public boolean update(#(tableMeta.modelName) model);
+	public List<#(tableMeta.modelName)> findByColumns(Columns columns);
+    public Page<#(tableMeta.modelName)> paginate(int page, int pageSize);
+    public Page<#(tableMeta.modelName)> paginateByColumns(int page, int pageSize, Columns columns);
+    public Page<#(tableMeta.modelName)> paginateByColumns(int page, int pageSize, Columns columns, String orderBy);
+    //gen code end ================================================================================================
+}

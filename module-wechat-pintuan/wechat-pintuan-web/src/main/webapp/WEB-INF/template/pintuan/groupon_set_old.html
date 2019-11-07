@@ -1,0 +1,745 @@
+#include ("/_includes/_layout.html")
+#define css()
+<style type="text/css">
+.nav-tabs li{width:200px;}
+.app-image-list{
+  float: left;
+}
+.app-image-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    display: block;
+    float: left;
+    height: 40px;
+    margin: 0 10px 10px 0;
+    position: relative;
+    width: 40px;
+}
+ .app-image-list li a {
+    display: block;
+    height: 100%;
+}
+.app-image-list li img {
+    height: 100%;
+    width: 100%;
+}
+.app-image-list li .add-goods, .app-image-list li .add {
+    cursor: pointer;
+    display: inline-block;
+    height: 100%;
+    line-height: 40px;
+    text-align: center;
+    width: 100%;
+}
+.app-image-list li:hover .close-modal {
+    display: block;
+}
+.w30{
+	background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+	width: 50px;
+}
+
+.control-group {
+    margin-bottom: 10px;
+}
+.form-horizontal.help-desc {
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 0;
+    margin-top: 6px;
+    opacity: 0.6;
+}
+.nav-tabs li{width:200px;}
+.nav-tabs li a{text-align: center;}
+</style>
+#end
+#@layout("多人拼团", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+		<!-- <div class="content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content">
+			       <a href="#(webctx)/groupon" class="J_menuTab active">多人拼团</a>
+		       </div>
+		   	</nav>
+		</div> -->
+		<!-- <div class="ibox-title">
+			<small><a href="#(webctx)/promotion">《返回列表</a></small>
+		</div> -->
+	    <div class="ibox-content">
+	      <div class="row">
+		     <div class="col-sm-12">
+				<div class="title_query padtop">
+					<form id="cashbackForm" class="form-horizontal">
+						<input type="hidden" name="id" id="id" value="#(groupResult.multiGroup.id??)"/>
+						<div class="form-group">
+				            <label class="col-md-2 control-label">活动名称<span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-8" id="error_name">
+				                <input id="name" name= "name" value="#(groupResult.multiGroup.name??)" maxlength="20" type="text" class="form-control" style="width: 400px" >
+				                <label class="control-label" for="name"></label>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label class="col-md-2 control-label">活动时间<span style="color: red;"><em>*</em></span></label>
+				            <div class="col-sm-10">
+			                   	<div class="row">
+			                   		<div class="col-lg-3 col-md-3" id="error_start_time">
+				                        <input type="text" id="start_date" name="start_date" readonly="readonly" style="width: 160px;"
+										onfocus="WdatePicker({errDealMode:2, skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd %H:%m:%s',minDate:'%y-%M-%d %H:%m:%s',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+										class="Wdate" value="#(groupResult.multiGroup.start_date??)" />
+										<label class="control-label" for="start_date"></label>
+				                    </div>
+				                    <div class="col-lg-3 col-md-3" id="error_end_time">
+				                        <input type="text" id="end_date" name="end_date" readonly="readonly" style="width: 160px;"
+										onfocus="WdatePicker({errDealMode:2, skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd %H:%m:%s',minDate:'#F{$dp.$D(\'start_date\',{d:7});}'})"
+										class="Wdate" value="#(groupResult.multiGroup.end_date??)" />	
+										<label class="control-label" for="end_date"></label>
+				                    </div>	
+				                    <div class="col-lg-3 col-md-3">
+				                    	<a class="label label-default" href="javascript:dateTimeTag(7);">一周</a>
+				                    	<a class="label label-default" href="javascript:dateTimeTag(15);">半个月</a>
+				                    	<a class="label label-default" href="javascript:dateTimeTag(30);">一个月</a>
+				                    </div> 
+				                </div>
+				            </div>
+				        </div>
+				        
+				        <div class="form-group">
+				        <label class="col-md-2 control-label">参团人数<span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-8" id="error_offer_num">
+				                <input id="offer_num" name="offer_num" value="#(groupResult.multiGroup.offer_num??)" maxlength="20" type="text" class="form-control" style="width: 80px" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+				                <p class="help-desc">建议参团人数不少于3人</p>
+				                <label class="control-label" for="offer_num"></label>
+				            </div>
+				        </div> 
+				        
+				        <div class="form-group">
+				        <label class="col-md-2 control-label">成团有效时间<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('开团后，在设置时间内凑足人数，即组团成功，否则组团失败。', this, {tips: [1, '#3595CC'],time: 0});"></i><span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-3" id="error_valid_time">
+				            <div class="input-group">
+				                <input type="text" value="#(groupResult.multiGroup.valid_time??)" id="valid_time" name="valid_time" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+				                <span class="input-group-addon">小时</span>
+				              </div>
+				                <label class="control-label" for="valid_time"></label>
+				            </div>
+				        </div>
+				        
+				        <div class="form-group">
+				        <label class="col-md-2 control-label">
+				                 开启模拟成团<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('开启模拟成团后，成团有效时间内人数未满的团，系统将会模拟“匿名买家”凑满人数，使该团成团，不再触发自动退款。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				        </label>
+				            <div class="col-md-3" id="error_enable_moni_suc">
+				             <label>
+								<div class="input-group">
+								<input id="enable_moni_suc" name="enable_moni_suc" type="checkbox" #if(groupResult.multiGroup.enable_moni_suc?? == true) checked="checked" #end class="i-checks" value="#(groupResult.multiGroup.enable_moni_suc??)"/>
+								</div>
+							</label>
+				             <label class="control-label" for="enable_moni_suc"></label>
+				            </div>
+				        </div>
+				        
+				        <div class="form-group">
+				        <label class="col-md-2 control-label">商品限购</label>
+				            <div class="col-md-3" id="error_quota">
+				            <label>
+								<div class="input-group">
+								<input type="text" value="#(groupResult.multiGroup.quota??)" id="quota" name="quota" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+								<span class="input-group-addon">件/人</span>
+								</div>
+							</label>
+							 <label class="control-label" for="quota"></label>
+				            </div>
+				        </div>
+				      
+				      <!-- <ol class="breadcrumb">
+					  	  <li><i class="fa fa-home"></i><a href="javascript:void(0);">选择活动商品</a></li>
+					  </ol> -->
+					 
+					 <div class="tabs-container">
+				        <ul id="select_item_tab" class="nav nav-tabs">
+				            <li #if(groupResult==null) class="active" #end><a id="select_item_a" href="javascript:void(0)">第一步:选择商品</a></li>
+				            <li #if(groupResult!=null) class="active" #end><a id="set_promotion_a" href="javascript:void(0)">第二步:设置团购价<font color="red" id="_sel_total_item" style="display: none;"></font></a></li>
+				        </ul>
+				     </div>
+					    <div class="panel-body">
+							<div id="myTabContent" class="tab-content">
+								<div class="tab-pane #if(groupResult==null) active #end" id="select_items_div">
+									<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0" style="width: 100%">
+										<thead>
+											<tr>
+												<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+												<th><span style="vertical-align: middle;">&nbsp;&nbsp;商品</span></th>
+												<th>价格</th>
+												<th>库存</th>
+											</tr>
+										</thead>
+										<tbody class="productLotGrid"></tbody>
+									</table>
+									<div id="productToolsbar" class="panel-body">
+										<div id="pager" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+									</div>
+								</div>
+								<div class="tab-pane #if(groupResult !=null) active #end" id="groupon_set_div">
+								    <div style="float: left; padding-right: 20px;padding-bottom: 10px;">
+										<a onclick="batchPrice()" class="btn btn-primary btn-xs" href="javascript:void(0)">批量设置拼团价</a>
+									</div>
+									<div id="batch-dazhe" style="display: none;">
+										<input id="bc-price" type="text" value="" placeholder="请输入价格" style="width: 80px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+										<a onclick="confirmPrice()" href="javascript:void(0)">确定</a>&nbsp;&nbsp;<a id="quxiao_dazhe_a" href="javascript:void(0)">取消</a>
+									</div>
+									<table class="table table-striped table-bordered bootstrap-datatable datatable" id="promotionSetTable" border="0" style="width: 100%;font-size: 12px;">
+											<tbody class="productSetLotGrid">
+											#if(groupResult.productDto?? !=null)
+											#for(product : groupResult.productDto)
+											   	<tr class="package trcls_#(product.id)" pp="#(product.price)" prodId="#(product.id)" ptype="">
+													<td>
+														<ul class="js-picture-lists app-image-list"><li><img src="#(product.img)" width="40px" height="40px"></li></ul>
+														<p class="goods-title"><font color="red">￥#(product.price)</font></p>
+														<p class="goods-title">#(product.name)</p>
+													</td>
+													<td>
+														<div id="createTable_#(product.id)" data-title="#(product.arrayTitle)" data-arrayInfor="#(product.arrayInfor)"></div>
+													</td>
+													<td><a id="#(product.id)" href="javascript:void(0)">取消</a></td>
+												</tr>
+											#end
+											#end
+											</tbody>
+									</table>
+								</div>
+					      </div>
+					   </div>   
+				  </form>
+				  <div class="panel-footer" align="center">
+				   	 	<button type="button" onclick="saveGroupon();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+				   	 	<a href="#(webctx)/groupon" class="btn btn-default btn-sm">取   消</a>
+					</div>
+				 </div>
+			</div>
+			<!-- <div class="col-sm-2">
+	            <div class="wrapper-content" style="padding-left: 10px;padding-top: 10px;">
+	                <h4>帮助说明</h4>
+	                <ol>
+	                    <li>指定多少人成团拼单</li>
+	                    <li>指定拼团时间内，达到拼团人数，视为拼团成功</li>
+	                    <li>如果在指定拼团时间内未达到人数，可以按指定调整人数视成功还是失败</li>
+	                    <li>系统会在拼团失败的3个工作日内原路返回各买家的拼团金额</li>
+	                </ol>
+	            </div>
+	        </div> -->
+	      </div>  
+	  </div>
+</div>
+<!-- 选择的商品列表模板 -->
+<script type="text/template" id="product_table_tr_tpl">
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{id}" product_info="{arrayInfor}" product_title="{arrayTitle}" product_infoId="{arrayInforId}" product_spec="{arraySpec}" product_id="{id}" product_name="{name}" product_price="{price}" product_stock="{stock}" product_img="{img}" style="margin-right: 4px; vertical-align: middle;"/></td>
+			<td>
+			<ul class="js-picture-lists app-image-list"><li><img src="{img}" width="40px" height="40px"></li></ul>
+            <p class="goods-title"><a class="new-window" href="javascript:void(0)" title="{name}">{name}</a></p>
+			</td>
+			<td><span class="label label-success">￥{price}</span></td>
+            <td>{stock}</td>
+		</tr>
+</script>
+<script type="text/template" id="promotion_set_tr_tpl">
+	<tr class="package trcls_{id}" pp="{price}" prodId="{id}" ptype="">
+		<td>
+			<ul class="js-picture-lists app-image-list"><li><img src="{img}" width="40px" height="40px"></li></ul>
+			<p class="goods-title"><font color="red">￥{price}</font></p>
+			<p class="goods-title">{name}</p>
+		</td>
+		<td><div id="createTable_{id}"></div></td>
+		<td><a id="{id}" href="javascript:void(0)">取消</a></td>
+	</tr>	
+</script>
+<script type="text/javascript">
+var step ="";
+var stepInfoNull="";
+var items = new Array();
+//取消批量打折
+$("#quxiao_dazhe_a").click(function(){
+	$("#bc-price").val("");
+	$("#batch-dazhe").hide();
+});
+//批量打折
+function confirmPrice(){
+	var zhekou = $("#bc-price").val();
+	$("input[name='collage_price']").val(zhekou);
+}
+function batchPrice(){
+	$("#batch-dazhe").show();
+	$("#batch-jianjia").hide();
+}
+//选中商品
+function selectItem(obj){
+	$("#_sel_total_item").html(parseInt(TBatch.getCheckedCount()) + parseInt($("#_sel_total_item").text()));
+	var productId = $(obj).attr("product_id");
+	//check
+	var hasItem = false;
+	$(".productSetLotGrid tr").each(function(){
+		if($(this).attr("prodId") == productId){
+			hasItem = true;
+			$(this).attr("opt", "");
+			$(this).show();
+			return false;
+		}
+	});
+	//如果设置列表中有了该商品就不再添加，
+	//由于取消设置是隐藏该行，
+	//并把该行数据的opt标志为“del”，
+	//所以此处如果找到设置列表存在的话，就移除删除标志，并显示该行
+	if(hasItem) {
+		return;
+	}
+	var productName = $(obj).attr("product_name");
+	var productImage = $(obj).attr("product_img");
+	var productPrice = $(obj).attr("product_price");
+	var productStock = $(obj).attr("product_stock");
+	var product = {id:productId, name:productName, price:productPrice, img:productImage};
+	var trHtml = obz.dataTemplate4obj($("#promotion_set_tr_tpl").html(), product);
+	$(".productSetLotGrid").append(trHtml);
+	var info = $(obj).attr("product_info");
+	var infoId = $(obj).attr("product_infoId");
+	var title = $(obj).attr("product_title");
+	var productId=$(obj).attr("product_id");
+	var productSpec= $(obj).attr("product_spec");
+	if(info != null && info != ""){
+		step.Creat_Table(info,infoId,title,productId,productSpec);	
+	}else{
+		stepInfoNull.Creat_Table(productPrice,productStock,productId);	
+	}
+	
+	bindSetTableAEvent();
+}
+
+//取消选中
+function unSelectItem(obj){
+	$("#_sel_total_item").html(parseInt(TBatch.getCheckedCount()) + parseInt($("#_sel_total_item").text()));
+	$(".productSetLotGrid").find("tr.trcls_"+$(obj).attr("product_id")).hide();
+//==========$(obj).parent().parent().removeAttr("style");
+}
+
+
+$("#select_item_tab li").find("a").click(function(){
+	$("#select_item_tab li").each(function(){
+		$(this).removeClass("active");
+	});
+	$("#select_items_div").removeClass("active");
+	$("#groupon_set_div").removeClass("active");
+	var me = $(this);
+	me.parent().addClass("active");
+	if(me.attr("id")=="select_item_a"){
+		//获取商品列表
+		$("#select_items_div").addClass("active");
+	}else {
+		//展示设置列表
+		$("#groupon_set_div").addClass("active");
+	}
+});
+
+function num(obj){
+	obj.value = obj.value.replace(/[^\d.]/g,""); //清除"数字"和"."以外的字符
+}
+
+/*===提交===*/
+function saveGroupon(){
+	var params = {}, error = {};
+	var  name = $("#name").val(),start_date = $("#start_date").val(),
+	end_date = $("#end_date").val(),id=$("#id").val(),offer_num=$("#offer_num").val(),
+	quota=$("#quota").val(),re_union_num=$("re_union_num").val(),
+	valid_time=$("#valid_time").val();
+	params.id=id;
+	if($.trim(name) =="") {error.error_name = "活动名称不能为空"; } else {error.error_name=""; params.name = $.trim(name);}
+	if($.trim(start_date) =="") {error.error_start_time = "开始时间不能为空"; } else {error.error_start_time =""; params.start_date = $.trim(start_date);}
+	if($.trim(end_date) =="") {error.error_end_time = "结束时间不能为空"; } else { error.error_end_time=""; params.end_date = $.trim(end_date);}
+	if($.trim(offer_num) =="") {error.error_offer_num= "参团人数不能为空"; } else { error.error_offer_num=""; params.offer_num = $.trim(offer_num);}
+	if($.trim(valid_time) =="") {error.error_valid_time= "团有效时间不能为空"; } else { error.error_valid_time=""; params.valid_time = $.trim(valid_time);}
+    params.quota= $.trim(quota);	
+    params.re_union_num= $.trim(re_union_num);
+    
+  	params.enable_moni_suc = $("input:checkbox[name='enable_moni_suc']").is(':checked');
+    
+	var hasErr = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasErr) hasErr = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasErr) return false;
+	var productIds="";
+	var specArray = new Array();
+	$(".productSetLotGrid .package").each(function(){
+		var productId = $(this).attr("prodid");
+		var specitem=$(this).find("table").attr("specitem");
+		var opt = $(this).attr("opt");
+		productIds=productIds+productId+",";	
+		if(specitem){
+			var spec=JSON.parse(specitem);
+			$(this).find("table tbody tr").each(function(index, item){
+				var entity = new Object();
+				entity.productId =productId;
+				entity.specificationValue=spec[index];
+				entity.msetId= $(this).find("input[name='groupSetId']").val(); 
+				entity.prime_cost = $(this).find("input[name='prime_cost']").val();       //原价
+				entity.collage_price = $(this).find("input[name='collage_price']").val(); //拼团价
+				entity.opt=opt;
+				specArray.push(entity);
+			});
+		}else{
+			var entity = new Object();
+			$(this).find("table tbody tr").each(function(index, item){
+				entity.productId =productId;
+				entity.specificationValue="";
+				entity.msetId= $(this).find("input[name='groupSetId']").val(); 
+				entity.prime_cost = $(this).find("input[name='prime_cost']").val();       //原价
+				entity.collage_price = $(this).find("input[name='collage_price']").val(); //拼团价
+				entity.opt=opt;
+				specArray.push(entity);
+			});
+		}
+	});
+	
+	var newIds=productIds.substring(0,productIds.length-1);
+	params.product_ids=newIds;
+	params.setItems=JSON.stringify(specArray);
+ 	$(".float-e-margins").mask("正在提交数据...");
+ 	$.post(obz.ctx+"/groupon/save", params, function(resp) {
+		$(".float-e-margins").unmask();
+		if(resp.code != 200){
+			obz.error(resp.msg);
+			return;
+		}
+		obz.msg("保存成功", function(){
+			location.href = obz.ctx + "/groupon";
+		});
+	});   
+}
+$(document).ready(function(){
+	bindSetTableAEvent();
+});
+function bindSetTableAEvent(){
+	//注册取消返现商品事件
+	$(".productSetLotGrid").find("tr a").each(function(){
+		$(this).unbind("click");
+		$(this).click(function(){
+			var me = $(this);
+			//取消设置不能直接删除该行，需要隐藏
+			me.parent().parent().attr("opt", "del");
+			me.parent().parent().hide();
+			$("#checkbox_"+me.attr("id")).attr("checked", false);
+//==========$("#checkbox_"+me.attr("id")).parent().parent().removeAttr("style");
+			return false;
+		});
+	});
+}
+
+var params = {};
+var table = new obz.TableView("pager", obz.ctx + "/groupon/listProducts", params, function(resp){
+	$(".productLotGrid").empty();
+	var dataList = resp.list;
+	if(dataList.length>0){
+		for(var i=0;i<dataList.length;i++){
+			var _row = dataList[i];
+			var trHtml = obz.dataTemplate4obj($("#product_table_tr_tpl").html(), _row);
+			$(".productLotGrid").append(trHtml);
+		}
+		TBatch.checkCheckbox(function (chkAll){
+			$("#_sel_total_item").html(parseInt(TBatch.getCheckedCount()) + parseInt($("#_sel_total_item").text()));
+			$("#mainTable input:checkbox.commchk").each(function(){
+				if($(this).is(":checked") == true){
+					selectItem($(this));
+				}else{
+					unSelectItem($(this));
+				}
+			});
+		});
+		TBatch.initCheckboxClick(function(resp){
+			selectItem($(resp));
+		}, function(resp){
+			unSelectItem($(resp));
+		});
+	}else{
+		$(".productLotGrid").append($("#table_noresult_tr_tpl").html());
+	}
+});
+table.init();
+
+stepInfoNull={//没有规格
+  Creat_Table: function (productPrice,productStock,productId,collage_price,groupSetId) {
+	  $("#createTable_"+productId).html("");
+      var table = $("<table id=\"process_"+productId+"\" class=\"table table-striped table-bordered\"></table>");
+      table.appendTo($("#createTable_"+productId));
+      var thead = $("<thead></thead>");
+      thead.appendTo(table);
+      var trHead = $("<tr></tr>");
+      trHead.appendTo(thead);
+      //创建表头
+      var itemColumHead = $("<th  style=\"width:70px;\">原价（￥）</th><th  style=\"width:70px;\">拼团价（￥）</th><th style=\"width:70px;\">库存</th> ");
+      itemColumHead.appendTo(trHead);
+      var tbody = $("<tbody></tbody>");
+      tbody.appendTo(table); 
+      var tr = $("<tr></tr>");
+      tr.appendTo(tbody);
+      var td1 = $("<td class=\"col-md-2\"><span  class=\"requiredField\"></span><input  name=\"prime_cost\" class=\"form-control\" type=\"text\" value=\""+productPrice+"\" readonly=\"readonly\"></td>");
+      td1.appendTo(tr);
+      if(collage_price!=null){
+          var td2 = $("<td class=\"col-md-2\"><input  name=\"groupSetId\" class=\"form-control\" type=\"hidden\" value=\""+groupSetId+"\"><input  name=\"collage_price\" class=\"form-control\" type=\"text\" value=\""+collage_price+"\"  onkeyup=\"num(this)\"><label class=\"stock_error_msg\" style=\"color:red;\"></td>");
+          td2.appendTo(tr);   
+      }else{
+       var td2 = $("<td class=\"col-md-2\"><span class=\"requiredField\"></span><input  name=\"collage_price\" class=\"form-control\" type=\"text\" value=\"\"  onkeyup=\"num(this)\"><label class=\"stock_error_msg\" style=\"color:red;\"></td>");
+       td2.appendTo(tr); 
+      }
+      var td3 = $("<td class=\"col-md-2\">"+productStock+"</td>");
+      td3.appendTo(tr); 
+  }
+		  
+}
+
+
+step = {
+        Creat_Table: function (info,infoId,title,productId,productSpec,groupSet) {
+            step.hebingFunction();
+            var arrayTile = new Array();//标题组数 : 颜色,尺码
+            var arrayInfor = new Array();//盛放每组选中的CheckBox值的对象 : 白色,37,38,39
+            var arrayInforId = new Array();//盛放每组选中的CheckBox id值的对象:  1,12,13,14
+            var arrayColumn = new Array();//指定列，用来合并哪些列
+            var bCheck = true;//是否有值
+            var columnIndex = 0;
+            var td_array_title = title.split(",");
+            $.each(td_array_title, function (i, values) {
+            	 arrayColumn.push(columnIndex);
+            	 columnIndex++;
+            	 arrayTile.push(values.replace("：", ""));
+                 
+            });
+            var td_array_info = info.split(",");//值对象
+            $.each(td_array_info, function (i, values) {
+            	//alert(values);
+            	var order = new Array();
+            	 var newstr=values.substring(0,values.length-1);
+            	 var td_array_info1 = newstr.split(";");
+            	 $.each(td_array_info1, function (j, value) {
+            		 order.push(value); 
+            	 });
+            	 arrayInfor.push(order);
+            });
+            var td_array_infoId = infoId.split(",");//值Id对象
+            $.each(td_array_infoId, function (i, values) {
+            	var orderId = new Array();
+            	var newstr=values.substring(0,values.length-1);
+            	 var td_array_infoId1 = newstr.split(";");
+            	 $.each(td_array_infoId1, function (j, value) {
+            		 orderId.push(value); 
+            	 });
+            	  arrayInforId.push(orderId);
+            });
+            if (arrayInfor.length <=0){
+                bCheck = false;
+            }
+            if (bCheck == true) {
+            	var RowsCount = 0;
+            //创建表
+            $("#createTable_"+productId).html("");
+            var table = $("<table id=\"spec_"+productId+"\" class=\"table table-striped table-bordered\"></table>");
+            table.appendTo($("#createTable_"+productId));
+            var thead = $("<thead></thead>");
+            thead.appendTo(table);
+            var trHead = $("<tr></tr>");
+            trHead.appendTo(thead);
+            //创建表头
+            $.each(arrayTile, function (index, item) {
+                var td = $("<th>" + item + "</th>");
+                td.appendTo(trHead);
+            });
+            var itemColumHead = $("<th  style=\"width:90px;\">原价（￥）</th><th  style=\"width:90px;\">拼团价（￥）</th><th style=\"width:70px;\">库存</th> ");
+            itemColumHead.appendTo(trHead);
+            var tbody = $("<tbody></tbody>");
+            tbody.appendTo(table);
+            
+            ////生成组合
+            var zuheId=step.doExchange(arrayInforId);
+            if (zuheId.length > 0) {
+            	items.length=0;
+            $.each(zuheId, function (index, item) {
+                items.push(item);
+            });
+            }
+            $("#spec_"+productId).attr("specItem",JSON.stringify(items));
+            //alert(JSON.stringify(items));
+            
+            var zuheDate = step.doExchange(arrayInfor);
+            var td_spec = productSpec.split(",");//规格
+            var groupSetValue;
+            if(groupSet!=null){
+            	groupSetValue=groupSet.split(",");//拼团价
+            }
+            if (zuheDate.length > 0) {
+            	 $.each(zuheDate, function (index, item) {
+            		 var td_array = item.split(",");
+                     var tr = $("<tr></tr>");
+                     tr.appendTo(tbody);
+                     $.each(td_array, function (i, values) {
+                         var td = $("<td>" + values + "</td>");
+                         td.appendTo(tr);
+                     });
+                     var td_spec_value=td_spec[index];
+                     var spec_value=td_spec_value.split(";");
+                     var td1 = $("<td class=\"col-md-2\"><span  class=\"requiredField\"></span><input  name=\"prime_cost\" class=\"form-control\" type=\"text\" value=\""+spec_value[0]+"\" readonly=\"readonly\"></td>");
+                     td1.appendTo(tr);
+                     if(groupSet!=null){
+                    	 //alert(groupSetValue[index])
+                    	 if(groupSetValue[index]){
+                    		 var td_groupSet_value=groupSetValue[index].split(";");
+    	                     var td2 = $("<td class=\"col-md-2\"><input  name=\"groupSetId\" class=\"form-control\" type=\"hidden\" value=\""+td_groupSet_value[0]+"\"><input  name=\"collage_price\" class=\"form-control\" type=\"text\" value=\""+td_groupSet_value[1]+"\"  onkeyup=\"num(this)\"><label class=\"collage_error_msg\" style=\"color:red;\"></td>");
+    	                     td2.appendTo(tr); 
+                    	 }else{
+                    		 var td2 = $("<td class=\"col-md-2\"><span class=\"requiredField\"></span><input  name=\"collage_price\" class=\"form-control\" type=\"text\" value=\"\"  onkeyup=\"num(this)\"><label class=\"collage_error_msg\" style=\"color:red;\"></td>");
+    	                     td2.appendTo(tr);
+                    	 }
+                     }else{
+	                     var td2 = $("<td class=\"col-md-2\"><span class=\"requiredField\"></span><input  name=\"collage_price\" class=\"form-control\" type=\"text\" value=\"\"  onkeyup=\"num(this)\"><label class=\"collage_error_msg\" style=\"color:red;\"></td>");
+	                     td2.appendTo(tr); 
+                     }
+                     var td3 = $("<td class=\"col-md-2\">"+spec_value[1]+"</td>");
+                     td3.appendTo(tr); 
+            	 });
+            }
+          //结束创建Table表
+            arrayColumn.pop();//删除数组中最后一项
+            //合并单元格
+            $(table).mergeCell({
+                // 目前只有cols这么一个配置项, 用数组表示列的索引,从0开始
+                cols: arrayColumn
+            });
+            
+            }else{
+                document.getElementById('createTable_'+productId).innerHTML="";
+            }
+            
+        },//合并行
+        hebingFunction: function () {
+            $.fn.mergeCell = function (options) {
+                return this.each(function () {
+                    var cols = options.cols;
+                    for (var i = cols.length - 1; cols[i] != undefined; i--) {
+                        // fixbug console调试
+                        // console.debug(cols[i]);
+                        mergeCell($(this), cols[i]);
+                    }
+                    dispose($(this));
+                });
+            };
+            function mergeCell($table, colIndex) {
+                $table.data('col-content', ''); // 存放单元格内容
+                $table.data('col-rowspan', 1); // 存放计算的rowspan值 默认为1
+                $table.data('col-td', $()); // 存放发现的第一个与前一行比较结果不同td(jQuery封装过的), 默认一个"空"的jquery对象
+                $table.data('trNum', $('tbody tr', $table).length); // 要处理表格的总行数, 用于最后一行做特殊处理时进行判断之用
+                // 进行"扫面"处理 关键是定位col-td, 和其对应的rowspan
+                $('tbody tr', $table).each(function (index) {
+                    // td:eq中的colIndex即列索引
+                    var $td = $('td:eq(' + colIndex + ')', this);
+                    // 取出单元格的当前内容
+                    var currentContent = $td.html();
+                    // 第一次时走此分支
+                    if ($table.data('col-content') == '') {
+                        $table.data('col-content', currentContent);
+                        $table.data('col-td', $td);
+                    } else {
+                        // 上一行与当前行内容相同
+                        if ($table.data('col-content') == currentContent) {
+                            // 上一行与当前行内容相同则col-rowspan累加, 保存新值
+                            var rowspan = $table.data('col-rowspan') + 1;
+                            $table.data('col-rowspan', rowspan);
+                            // 值得注意的是 如果用了$td.remove()就会对其他列的处理造成影响
+                            $td.hide();
+                            // 最后一行的情况比较特殊一点
+                            // 比如最后2行 td中的内容是一样的, 那么到最后一行就应该把此时的col-td里保存的td设置rowspan
+                            if (++index == $table.data('trNum'))
+                                $table.data('col-td').attr('rowspan', $table.data('col-rowspan'));
+                        } else { // 上一行与当前行内容不同
+                            // col-rowspan默认为1, 如果统计出的col-rowspan没有变化, 不处理
+                            if ($table.data('col-rowspan') != 1) {
+                                $table.data('col-td').attr('rowspan', $table.data('col-rowspan'));
+                            }
+                            // 保存第一次出现不同内容的td, 和其内容, 重置col-rowspan
+                            $table.data('col-td', $td);
+                            $table.data('col-content', $td.html());
+                            $table.data('col-rowspan', 1);
+                        }
+                    }
+                });
+            }
+            // 同样是个private函数 清理内存之用
+            function dispose($table) {
+                $table.removeData();
+            }
+        },
+        //组合数组
+        doExchange: function (doubleArrays) {
+            var len = doubleArrays.length;
+            if (len >= 2) {
+                var arr1 = doubleArrays[0];
+                var arr2 = doubleArrays[1];
+                var len1 = doubleArrays[0].length;
+                var len2 = doubleArrays[1].length;
+                var newlen = len1 * len2;
+                var temp = new Array(newlen);
+                var index = 0;
+                for (var i = 0; i < len1; i++) {
+                    for (var j = 0; j < len2; j++) {
+                        temp[index] = arr1[i] + "," + arr2[j];
+                        index++;
+                    }
+                }
+                var newArray = new Array(len - 1);
+                newArray[0] = temp;
+                if (len > 2) {
+                    var _count = 1;
+                    for (var i = 2; i < len; i++) {
+                        newArray[_count] = doubleArrays[i];
+                        _count++;
+                    }
+                }
+                return step.doExchange(newArray);
+            }
+            else {
+                return doubleArrays[0];
+            }
+        }
+    }
+
+#if(groupResult.productDto?? !=null)
+#for(product: groupResult.productDto)
+var productId="#(product.id)";
+var info = "#(product.arrayInfor)";
+if(info!=''){	
+	info=info.substring(1,info.length-1);
+	var infoId ="#(product.arrayInforId)";
+	infoId=infoId.substring(1,infoId.length-1);
+	var title ="#(product.arrayTitle)";
+	title=title.substring(1,title.length-1);
+	var productSpec="#(product.arraySpec)";
+	productSpec=productSpec.substring(1,productSpec.length-1);
+	var groupSet="#(product.arrayGroupSet)";
+	groupSet=groupSet.substring(1,groupSet.length-2);
+	step.Creat_Table(info,infoId,title,productId,productSpec,groupSet);
+}else{
+	var groupSet="#(product.arrayGroupSet)";
+	groupSet=groupSet.substring(1,groupSet.length-2);
+	var collage_price=groupSet.split(";");
+	stepInfoNull.Creat_Table("#(product.price)","#(product.stock)",productId,collage_price[1],collage_price[0]);
+}
+#end
+#end
+</script>	 
+#end

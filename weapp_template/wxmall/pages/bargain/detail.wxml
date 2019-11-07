@@ -1,0 +1,215 @@
+<view class="weui-content">
+  <view class="weui_tab">
+   
+    <view class="weui-tab__bd proinfo-tab-con">
+      <view hidden="{{activeIndex != 0}}" class="weui-tab__content">
+        <swiper class="swiper-view" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+          <block wx:for-items="{{detail.imageList}}" wx:key="id">
+            <swiper-item class="swiper-item" bindtap="previewImg">
+              <image src="{{item}}" mode='aspectFill' class="swiper-image" />
+            </swiper-item>
+          </block>
+        </swiper>
+        <view class="my-cell" style='background-color:{{navbar_bgcolor}}'>
+          <view class="weui-cell__bd" >
+            <view>
+              <text class="gray_text">底价:</text><text class="price_blod">¥ {{ detail.bargainPrice }}</text>
+              <text class="price_del" style='padding-left:10px;'> ¥ {{ detail.product.price }}</text>
+            </view>
+          </view>
+         
+          <!-- <view class="weui-cell__bd" wx:else>
+            <view class="price">¥ {{ detail.product.price }}</view>
+          </view> -->
+          <view class="weui-cell__ft gray_text" >剩余：{{detail.product.stock}}</view>
+        </view>
+        <view class="wy-media-box-nomg">
+
+          <view class="title" style='color: {{navbar_bgcolor}}'>{{ detail.product.name }}</view>
+          <!-- <view class="text" >销量：{{detail.product.sales}}</view> -->
+          <block wx:if="{{detail.groupInfo !=null}}">
+            <view class="goods-sale" style='border:1px solid {{navbar_bgcolor}}; color:{{navbar_bgcolor}}'>
+              <!--已团3.5万件·-->{{detail.groupInfo.groupNum}}</view>
+          </block>
+        </view>
+
+        
+        <view class="server">
+          <!-- <image src="/style/images/yes.png"></image><text>全场包邮</text> -->
+          <block wx:if="{{show_safeguard == 'yes'}}">
+            <image src="/style/images/yes.png"></image>
+            <text>7天退换</text>
+          </block>
+          
+          <block wx:if="{{show_delivery_time == 'yes'}}">
+            <image src="/style/images/yes.png"></image>
+            <text>全场48小时发货</text>
+          </block>
+          <block wx:if="{{show_compensate == 'yes'}}">
+            <image src="/style/images/yes.png"></image>
+            <text>假一赔十</text>
+          </block>
+          <!-- <view class="pull-right right"><image src="/style/images/left-b.png"></image></view> -->
+        </view>
+
+         <view class="server" style='height:60rpx;line-height: 60rpx;border-bottom:1px solid #e1e1e1;'>
+          <view style='display: flex;justify-content: center;color:{{navbar_bgcolor}};font-size:32rpx'>
+            <block wx:if="{{t <= 0}}">
+              <view>活动已结束</view>
+            </block>
+            <block wx:else>
+              <view>{{unTime}}</view>
+            </block>
+          </view>
+        </view>
+      
+        
+        <view wx:if="{{detail.promotionInfo}}" class="wy-media-box-nomg">
+          <view class="price" style='color:{{navbar_bgcolor}};font-size:52rpx;font-weight:bold;'>{{detail.promotionInfo.promotionTag}} {{detail.promotionInfo.promotionInfo}},{{detail.promotionInfo.promotionTime}}</view>
+        </view>
+        <view wx:if="{{detail.cashback}}" class="wy-media-box-nomg" >
+          <view class="price" style='color:{{navbar_bgcolor}};font-size:52rpx;font-weight:bold;' >{{detail.cashback.tag}}, {{detail.cashback.backTime}}</view>
+        </view>
+        <view wx:if="{{detail.fullCutInfo && detail.fullCutInfo.length>0}}" class="wy-media-box-nomg">
+          <view class="weui-media-box_appmsg">
+            <view class="weui-media-box__hd proinfo-txt-l">
+              <text class="promotion-label-tit">满减</text>
+            </view>
+            <view class="yhq" style='border: 1px solid {{navbar_bgcolor}}; color:{{navbar_bgcolor}}'>
+              <view wx:for-items="{{detail.fullCutInfo}}" wx:key="id" wx:for-index="index">
+                <view wx:if="{{index<=2}}">{{item.fullCutInfo}}</view>
+              </view>
+            </view>
+            <view wx:for-items="{{detail.fullCutInfo}}" wx:for-index="index" wx:key="id">
+              <view wx:if="{{index==0}}">
+                <view class="yhq-btn" style='padding-left:10px;background-color:{{navbar_bgcolor}}'>{{item.fullCutTime}}</view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <import src="../../wxParse/wxParse.wxml" />
+        <view class="wxParse" style="margin-top:5px;padding-bottom:180rpx">
+          <template is="wxParse" data="{{wxParseData:article.nodes}}" />
+        </view>
+      </view>
+
+      <view class="weui-tab__content" hidden="{{activeIndex != 1}}">
+        <scroll-view style="height:{{scollHeight}}px;" scroll-y="true" bindscrolltolower="lower">
+          <view wx:if="{{reviews}}" wx:for-items="{{reviews}}" wx:key="id" wx:for-item="rv" class="pl-box">
+            <view class="pl-media-box">
+              <view class="weui-cell" style='padding:5px 5px'>
+                <view class="weui-cell__hd" style="padding-right:8px;padding-top:2rpx;">
+                  <image class="user_img" src="{{rv.headimgurl}}" alt="" />
+                </view>
+                <view class="weui-cell__bd weui-cell_primary" style="padding-right:8px;">
+                  <view>{{rv.nickname}}</view>
+                  <view style="color:grey;font-size:12px;">{{rv.created}}</view>
+                  <view class="pl-media-desc">{{rv.content}}</view>
+                </view>
+                <view wx:if="{{rv.score==3}}" class="weui-cell__ft pl-star" style="background:orangered;">好评</view>
+                <view wx:if="{{rv.score==2}}" class="weui-cell__ft pl-star" style="background:orange;">中评</view>
+                <view wx:if="{{rv.score==1}}" class="weui-cell__ft pl-star" style="background:darkgrey;">差评</view>
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-tabbar">
+   <!-- bindtap="setModalStatus" data-status="1" data-flag="0" -->
+      <view class="yellow-color" style="width:50%;color:white;background-color:{{other_bgcolor}}" >
+      <form bindsubmit="formSubmit" report-submit="true" >
+        <button formType="submit" open-type="getUserInfo" bindgetuserinfo="setModalStatus" data-status="1" data-flag="0" style='background-color:{{other_bgcolor}}'>
+         <block wx:if="{{navbar_bgcolor == '#FF4D04'}}">
+          <text class="promotion-foot-menu-label" style='color:white' >去砍价</text>
+        </block>
+        <block wx:else>
+          <text class="promotion-foot-menu-label" style='color:{{navbar_bgcolor}}'>去砍价</text>
+        </block>
+          </button>
+      </form>
+      </view>
+      <!-- <view class="red-color" style="width:50%;color:white;background-color:{{navbar_bgcolor}}" bindtap="setModalStatus" data-status="1" data-flag="1">
+        <text class="promotion-foot-menu-label" style='color:white' >原价购买</text>
+      </view> -->
+       <view class="red-color" style="width:50%;color:white;background-color:{{navbar_bgcolor}}" bindtap="toBuyProduct" data-status="1" data-flag="1">
+        <text class="promotion-foot-menu-label" style='color:white' >原价购买</text>
+      </view>
+  </view>
+
+  <!-- sku选择弹出框begin -->
+  <view animation="{{animationData}}" class="drawer_attr_box" wx:if="{{showModalStatus}}">
+    <view class="close_icon" bindtap="setModalStatus" data-status="0" data-flag="-100">×</view>
+    <view class="order_comment_item">
+      <view class="weui-flex">
+        <view class="title_img">
+          <image src="{{res}}{{detail.product.image}}" class="order_comment_img"></image>
+        </view>
+        <view class="weui-flex__item order_comment_textarea_box">
+          <view class="cell_title">{{detail.product.name}}</view>
+          <!-- <view wx:if="{{detail.promotionInfo}}">
+            <view>
+              <text class="price_sku">¥ {{ detail.promotionInfo.promotionPrice }}</text>
+              <text class="price_del" style='padding-left:10px;'> ¥ {{ detail.product.price }}</text>
+            </view>
+          </view>
+          <view wx:elif="{{detail.groupInfo && flag==2}}">
+            <view>
+              <text class="price_sku">拼团价¥ {{ detail.groupInfo.collagePrice }}</text>
+              <text class="price_del" style='padding-left:10px;'> ¥ {{ detail.product.price }}</text>
+            </view>
+          </view>
+          <view wx:else> -->
+
+            <!-- <view>
+              <text class="price_sku">¥ {{ detail.promotionInfo.promotionPrice }}</text>
+              <text class="price_del" style='padding-left:10px;'> ¥ {{ detail.product.price }}</text>
+            </view> -->
+
+            <view class="price_sku">¥ {{ detail.product.price }}</view>
+          <!-- </view> -->
+        </view>
+      </view>
+    </view>
+
+    <view class="wy-media-box weui-media-box_text" wx:for="{{attrValueList}}" wx:for-item="attrValueObj" wx:for-index="attrIndex" wx:key="id">
+      <view class="weui-media-box__hd proinfo-txt-l" style="padding:30rpx 0">
+        <span class="promotion-label-tit">{{attrValueObj.attrKey}}</span>
+      </view>
+      <view class="weui-media-box_appmsg">
+        <view class="promotion-sku clear" style='padding-top:0'>
+          <ul class="app-image-list">
+            <li class="attr_value {{attrValueObj.attrValueStatus[valueIndex]?(value==attrValueObj.selectedValue?'active':''):''}}" bindtap="selectAttrValue" data-status="{{attrValueObj.attrValueStatus[valueIndex]}}" data-sfid="{{attrValueObj.attrKeyId}}" data-id="{{attrValueObj.attrValuesId[valueIndex]}}"
+              data-value="{{value}}" data-key="{{attrValueObj.attrKey}}" data-index="{{attrIndex}}" data-selectedvalue="{{attrValueObj.selectedValue}}" wx:for="{{attrValueObj.attrValues}}" wx:for-item="value" wx:for-index="valueIndex" wx:key="id">
+              <a href="javascript:;">{{value}}</a>
+            </li>
+          </ul>
+        </view>
+      </view>
+    </view>
+
+    <!-- <view class="weui-flex nuber_box">
+      <view class="promotion-label-tit" style="padding-top:7px;width:62%">购买数量</view>
+      <view class="stepper">
+        <text catchtap="bindMinus">-</text>
+        <input maxlength="5" type="number" style="color:red;" catchchange="bindManual" catchtap="bindManualTapped" value="{{num}}" />
+        <text catchtap="bindPlus">+</text>
+      </view>
+    </view> -->
+
+    <view class="cofrimbar">
+      <view class="totalPrice">
+        <text >￥{{totalPrice}}</text>
+      </view>
+      
+      <view class="okbox" bindtap="pay" style='background-color:{{navbar_bgcolor}}'>
+        <text>确定</text>
+      </view>
+       
+    </view>
+  </view>
+  <!-- sku选择弹出框end -->
+</view>

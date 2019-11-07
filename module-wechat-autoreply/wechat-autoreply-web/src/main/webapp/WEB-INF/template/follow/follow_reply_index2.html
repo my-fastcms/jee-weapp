@@ -1,0 +1,839 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<style>
+.radio-inline {
+    vertical-align: middle
+}
+.mobile_bd>:first-child{
+ 	margin-top:20px;
+}
+.msgType{
+ 	margin-top:8px;
+ 	overflow: hidden;
+}
+.mobile_menu_preview{
+	padding-bottom:10px;
+	height:auto;
+	min-height:500px;
+	background-color: #eee;
+}
+.chat-discussion{
+	height: auto;
+	margin-top: 12px;
+}
+.chat-user{
+	overflow: hidden;
+}
+.chat-user p{
+	margin: 0px;
+	line-height: 40px;	
+}
+.msg_weChat P{
+	line-height: 1.7em;	
+}
+.msgTitle_black{
+	text-align:center;
+	display:none;
+	border-top:1px solid #eee;
+	padding: 10px 0px;
+}
+.message-content{
+	white-space:pre;
+	word-wrap:break-word;
+	white-space:normal;
+}
+.modal-body{
+	overflow: hidden;
+}
+.btn-routine{
+	display: table;
+    margin-bottom: 10px;
+}
+.form-group {
+	overflow: hidden;
+}
+.routine-bottom{
+	border-top: 1px solid #e9d8d8;
+    position: relative;
+    top: 10px;
+    right: 20px;
+    width: 122%;
+    padding: 2px 0px
+}
+.routine-bottom span{
+	color: gray;
+	font-size: 15px;
+	font-family: "微软雅黑";
+	padding-left: 25px;
+	
+}
+.chat-user .chat-width{
+	float: left;
+	width: 80%;
+}
+.mobile_bd .ibox-content img{
+	width: 40px; 
+    height: 40px
+}
+.mobile_bd .ibox-content>:first-child{
+	height: 200px;
+	width: 100%;
+	position: relative;
+	border: none;
+	overflow: visible;
+}
+.mobile_bd .ibox-content>:nth-child(2){
+	border-top:1px solid #e7eaec; 
+}
+.mobile_bd .ibox-content>:first-child div{
+	position: absolute;
+	bottom:-40px;
+	display:inline;
+	text-align: center;
+	z-index: 1;
+	border-top:1px solid #e7eaec;
+	background-color:white;
+	width: 285px;
+	right:-20px;
+}
+.mobile_bd .ibox-content>:first-child img{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top:0px;
+	padding-bottom: 15px;
+}
+</style>
+#end
+#@layout("关注后回复", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content row ibox-content col-sm-10">
+  <div class="menu_setting_area js_editBox"> 
+   <div class="menu_preview_area" style="display: none;"> 
+    <div class="mobile_menu_preview"> 
+     <div class="mobile_hd tc">
+     	#if(session.weapp_in_session??) 
+     		#(session.weapp_in_session.nick_name) 
+     	#end
+     </div> 
+     <div class="mobile_bd">
+     </div> 
+    </div>
+   </div> 
+   
+    <!-- 菜单编辑区域 -->
+    <div class="menu_form_area"> 
+    <div id="js_rightBox" class="portable_editor to_left" style="display: block;"> 
+     <div class="editor_inner" style="display: black;">
+     
+     <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">回复规则设置</h4> 
+      </div> 
+      <div class="menu_form_bd" id="menu_form_bd"> 
+      	<div class="menu_content_container"> 
+        	<div class="menu_content" style="overflow:hidden;">
+       		<label class="radio-inline" for="rdo1">
+				<input id="rdo1" name="enable_config" value="1" type="radio" checked="checked" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+				<span class="label-text" style="vertical-align: middle">启用</span>
+			</label>
+             <label class="radio-inline" for="rdo0">
+				<input id="rdo0" name="enable_config" value="0" type="radio" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+				<span class="label-text">关闭</span>
+			</label>
+      		</div> 
+      	</div>
+      </div>
+      
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">回复内容设置</h4> 
+      </div> 
+      <div class="menu_form_bd" id="view"> 
+      	<div id="follow-config-list" class="menu_content_container"> 
+        	<div class="menu_content_container" style="padding-bottom: 10px;"> 
+		        <div class="menu_content url jsMain"> 
+		         <a href="javascript:void(0)" class="type_text" onclick="WxmMsg.textClick(this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_image_itme" onclick="WxmMsg.openImageClick(this)" style="text-decoration: underline;">图片</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_routine" onclick="WxmMsg.routineClick(this)" style="text-decoration: underline;">小程序</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_zan_item" onclick="WxmMsg.openProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;
+				 <a href="javascript:void(0)" class="type_wechat_media" onclick="WxmMsg.openWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+				 <a href="javascript:void(0)" class="type_custom_media" onclick="WxmMsg.openCustomMediaDialog(this)" style="text-decoration: underline;">自定义图文</a> &nbsp;/&nbsp;
+		         <a href="javascript:void(0)" onclick="WxmMsg.delRow(this)" style="text-decoration: underline;color: red;" class="del_config">删除行</a>
+		        </div>
+		        <div class="menu_content select_content" style="overflow:hidden;"></div>
+	       	</div>
+       	</div>
+       	<div class="msg_sender_msg mini_tips warn"> 
+	       	<a id="add_reply_config" href="javascript:void(0)" class="btn btn-primary btn-xs" title="每新增一行，增加一条回复消息">新增一条回复</a>
+	    </div>
+      </div> 
+     </div> 
+    </div>
+   </div> 
+  </div>
+  	<div class="panel-footer" align="center">
+   	 	<button id="saveMenu" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+	</div>
+	
+	<div class="help col-sm-2" style="float: right; padding:0px">
+         <h5>功能描述</h5>
+         <ul class="list-unstyled project-files">
+             <li><a href="javascript:void(0)">用户关注公众号后，可以自动回复多条消息</a></li>
+             <li><a href="javascript:void(0)">一条回复消息，可以包含最多8个商品或8个微信素材，可混搭</a></li>
+         </ul>
+         <br/>
+         <h5><font color="blue">温馨提示</font></h5>
+         <ul class="list-unstyled project-files">
+             <li><a href="javascript:void(0)">配置的自动回复会在店铺绑定的公众号消息上面叠加回复</a></li>
+             <li><a href="javascript:void(0)">菜单自动回复功能是基于有赞公众号插件开发，跟有赞消息独立分开，即不会影响有赞里面配置好的消息回复功能</a></li>
+         </ul>
+     </div>
+</div>
+<!-- html 模板文件开始 -->
+<!-- 文本预览图 -->
+<script type="text/template" id="msgType0_tpl">
+<div class="chat-message" style="padding: 0 0 !important;">
+  <img class="message-avatar" src="http://wx.qlogo.cn/mmopen/BqvlDRnYWYZEGQZgmic2tvNb6H1Ju14c3jYpIs9BWG8g1T6kjAIP6DBNCHDribJDnaFicZkVia9BwjQSCpxSJvgvYdSjKWZ8a6f0/0" alt="">
+   <div class="message">
+     <span class="message-content">{{content}}</span>
+   </div>
+</div>
+</script>
+<!-- 商品，微信素材，第一张预览图 -->
+<script type="text/template" id="msgType5_first_tpl">
+<div class="ibox-content no-padding border-left-right" data-id={{id}}>
+  <img alt="image" class="img-responsive" style="padding: 20px;height: 200px;width: 100%;" src="{{msgPic}}">
+  <span class="msgTitle_black">{{msgTitle}}</span>
+</div>
+</script>
+<!-- 商品预览图 -->
+<script type="text/template" id="msgType5_tpl">
+<div class="chat-user">
+  <div class="chat-width" >
+    <p>{{msgTitle}}</p>
+  </div>
+  <img style="right: 0;" src="{{msgPic}}" alt="">
+</div>
+</script>
+<!-- 图片素材 -->
+<script type="text/template" id="image_sel_tpl">
+<div class="imagemsg_item" media_id="{{mediaId}}" media_pic="{{mediaPic}}" style="float:left;padding-left:3px;"><img style="width:120px;height:120px;" src="{{mediaPic}}"/></a><br><a href="javascript:void(0)" onclick="delNewsRow(this)"><font color="red">移除</font></div>
+</script>
+<!-- 图片预览图 -->
+<script type="text/template" id="image_tpl">
+<div class="chat-message" style="padding: 0 0 !important; margin-top:10px" >
+  <img class="message-avatar" src="http://wx.qlogo.cn/mmopen/BqvlDRnYWYZEGQZgmic2tvNb6H1Ju14c3jYpIs9BWG8g1T6kjAIP6DBNCHDribJDnaFicZkVia9BwjQSCpxSJvgvYdSjKWZ8a6f0/0" alt="">
+   <div class="message " style="height:230px;width:230px; margin-bottom:10px;">
+    <img alt="image" class="img-responsive" style="height:100%;width: 100%;" src="{{mediaPic}}">
+   </div>
+</div>
+</script>
+<!-- 小程序预览图 -->
+<script type="text/template" id="routine_tpl">
+<div class="chat-message" style="padding: 0 0 !important;">
+  <img class="message-avatar" src="http://wx.qlogo.cn/mmopen/BqvlDRnYWYZEGQZgmic2tvNb6H1Ju14c3jYpIs9BWG8g1T6kjAIP6DBNCHDribJDnaFicZkVia9BwjQSCpxSJvgvYdSjKWZ8a6f0/0" alt="">
+   <div class="message" style="border-radius: 10px;">
+     <div style="width:190px;height:190px">
+  		<img alt="image" class="img-responsive" style="height:100%;width: 100%;" src="{{thumbMediaPic}}">
+	</div>
+	<div class="routine-bottom"><span>小程序</span></div>
+   </div>
+</div>
+</script>
+
+#include ("/_includes/msg_reply_tpl.html")
+
+<!-- html 模板文件结束 -->
+#define script()
+<script type="text/javascript">
+
+//删除已选择的素材
+/* function delNewsRow(obj){
+	
+	/*获取点击素材的索引位置，删除对应的预览素材*/
+	/* var msgType = $(obj).parent().parent().parent().index();
+	var chatIndex = $(obj).parent().index();
+	
+
+	/*清除文本索引的预览图内容 判断data-type 删除不同的素材 5.有赞商品/微信素材 ；1 图片；8 小程序*/
+	/* if($(obj).parent().parent().attr('data-type') == 5){
+		$(".mobile_bd").children().eq(msgType).find("div.ibox-content").children("div").eq(chatIndex).remove();
+		$(".mobile_bd").children().eq(msgType).find("div.chat-user").eq(0).children("div").css("display","none");
+		//素材为空时，删除预览图
+		if($(obj).parent().parent().children().length == 1){
+			$(".mobile_bd").children().eq(msgType).find("div").remove();
+		}
+		if($(obj).parent().parent().children().length == 2){
+			$(".mobile_bd").children().eq(msgType).find("div.chat-user").eq(0).children("div").css("display","block");
+		} 
+	}
+	if($(obj).parent().parent().attr('data-type') == 1 ){
+		$(".mobile_bd").children().eq(msgType).find("div.chat-message").remove();
+	}
+	if($(obj).parent().parent().attr('data-type') == 8){
+		$(".mobile_bd").children().eq(msgType).children("div").remove();
+	} */
+	//删除已选择的素材
+	/* $(obj).parent().remove();
+	
+}  */
+
+/*选择有赞商品对话框*/
+/* /* function parseToNewsEntity(obj, tpl, type){
+	
+	//获取锁点击的索引 清除索引的预览图内容
+	var index = $(obj).parent().parent().index();
+	//清除素材的内容
+	if($(obj).parent().next().attr('data-type') != 5){
+		$(".mobile_bd").children("div").eq(index).find("div").remove();
+		$(obj).parent().parent().find("div.select_content").children().remove();
+	}
+	var count = $(obj).parent().parent().find("div.select_content").find("div.newsmsg_item").length;
+	log("count:" + count); */
+	/** var newCount = TBatch.getCheckedCount();
+	if( newCount + count >8){
+		obz.info("微信规定一条图文消息不能超过8个素材");
+		return false;
+	}
+
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "5");
+	var idsArr = TBatch.getChecked().split("-");
+	
+	if($(".mobile_bd").children("div").eq(index).length == 0){
+		$(".mobile_bd").append('<div class="chat-discussion msgType"></div>');
+	}	 
+	
+	for(var i=0;i<idsArr.length;i++){
+		var id = idsArr[i];
+		if(id != null && id !=""){
+			var tr = $("#tr_id_"+id);
+			var entity = new Object();
+			entity.msgTitle = tr.attr("data-title");
+			entity.msgDesc = tr.attr("data-digest");
+			entity.msgUrl = tr.attr("data-url");
+			entity.id = tr.attr("data-id");
+			entity.msgPic = tr.attr("data-image");
+			entity.msgOrgType = type;//数据来源，是商品，还是微信素材，还是其他
+			$(obj).parent().parent().find("div.select_content").append(template(tpl, entity));
+			
+			//商品内容
+			setImageTextPreview(index,entity);
+
+		}
+		if( newCount + count >1){
+		$(".mobile_bd").children().eq(index).find("div.chat-user").eq(0).children("div").css("display","none");
+		}
+	}
+	return true;
+} */
+
+/*文本失去焦点*/
+function loseFocus(obj){
+	
+	//获取失去焦点的索引位置
+	var index = $(obj).parent().parent().index();
+	var entity = {};
+	//获取文本框内容
+	entity.content = $(obj).val();
+	if($(".mobile_bd").children("div").eq(index).length == 0){
+		$(".mobile_bd").append('<div class="chat-discussion msgType" ></div>');	
+	}else{
+		$(".mobile_bd").children("div").eq(index).find("div").remove();
+	} 
+	$(".mobile_bd").children("div").eq(index).append(template('msgType0_tpl', entity));
+}
+
+
+/*选择文本事件*/
+/* function textClick(obj){
+	//清除对应的索引位置的预览图的内容
+	var index = $(obj).parent().parent().index();
+	$(".mobile_bd").children("div").eq(index).find("div").remove();
+	$(obj).parent().parent().find("div.select_content").children().remove();
+	
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "0");
+	$(obj).parent().parent().find("div.select_content").empty().append($("#text_tpl").html());
+		
+} */
+/*选择图片事件*/
+/* function openImageClick(obj){
+	
+	var url = "#(webctx)/image";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择图片",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = $("#image-list .check-img").length;
+            		if(count <=0) {
+            			obz.warn("请选择图片")
+            			return;
+            		}
+            		if(parseToImageEntity(obj, "image_sel_tpl", 1));
+            		self.close();  
+            	}
+            }]
+    });
+	return false;
+} */
+
+/*选择图片事件*/
+/* function parseToImageEntity(obj, tpl, type){
+	
+	//清除索引的预览图内容
+	var index = $(obj).parent().parent().index();
+	if($(obj).parent().next().attr('data-type') != 1)
+	$(".mobile_bd").children("div").eq(index).find("div").remove();
+	//清除已有素材的内容
+	$(obj).parent().parent().find("div.select_content").children().remove();
+	$(".mobile_bd").children("div").eq(index).find("div").remove();
+
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "1");
+	
+	var entity = {};
+	entity.mediaPic =$("#image-list .check-img").attr("src");
+	entity.mediaId =$("#image-list .check-img").parent().attr("data-id");
+	$(obj).parent().parent().find("div.select_content").append(template(tpl, entity));
+		
+	if($(".mobile_bd").children("div").eq(index).length == 0){
+		$(".mobile_bd").append('<div class="chat-discussion msgType"></div>');
+	} 
+	$(".mobile_bd").children("div").eq(index).append(template('image_tpl', entity));
+
+		return true;
+} */
+
+/*选择小程序事件*/
+/* function routineClick(obj){
+	//清除对应的索引位置的预览图的内容
+	var index = $(obj).parent().parent().index();
+	$(".mobile_bd").children("div").eq(index).find("div").remove(); 
+	
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "8");
+	$(obj).parent().parent().find("div.select_content").empty().append($("#routine_sel_tpl").html());
+		
+} */
+/*选择小程序图片事件*/
+/* function routineImageClick(obj){
+	
+	var url = "#(webctx)/image";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择图片",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = $("#image-list .check-img").length;
+            		if(count <=0) {
+            			obz.warn("请选择图片")
+            			return;
+            		}
+            		if(parseToRoutineEntity(obj, "routine_image_sel_tpl", 1));
+            		self.close();  
+            	}
+            }]
+    });
+	return false;
+} */
+
+/*选择小程序图片事件*/
+/* function parseToRoutineEntity(obj, tpl, type){
+	
+	//清除索引的预览图内容
+	/* var index = $(obj).parent().parent().index();
+	if($(obj).parent().next().attr('data-type') != 8)
+	$(".mobile_bd").children("div").eq(index).find("div").remove();
+	//清除已有素材的内容
+	$(obj).parent().parent().find("div.select_content").children("div.imagemsg_item").remove();
+	$(".mobile_bd").children("div").eq(index).find("div").remove();
+	
+	var entity = {};
+	entity.thumbMediaPic =$("#image-list .check-img").attr("src"); */
+	/* entity.thumbMediaId =$("#image-list .check-img").parent().attr("data-id");
+	$(obj).parent().parent().find("div.select_content").append(template(tpl, entity));
+	
+	if($(".mobile_bd").children("div").eq(index).length == 0){
+		$(".mobile_bd").append('<div class="chat-discussion msgType"></div>');
+	} 
+	$(".mobile_bd").children("div").eq(index).append(template('routine_tpl', entity));
+	
+		return true;
+} */
+
+
+/*选择有赞商品事件*/
+/* function openProductDialog(obj){
+	
+	var url = "#(webctx)/product/youzan";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择商品",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = TBatch.getCheckedCount();
+            		if(count <=0) {
+            			obz.warn("请选择商品")
+            			return;
+            		}
+            		if(parseToNewsEntity(obj, "product_sel_tpl", 1))
+            			self.close();
+            	}
+            }]
+    });
+	return false;
+} */
+
+/* function openWechatMediaDialog(obj){
+	
+	var url = "#(webctx)/media/wechat";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择微信图文素材",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = TBatch.getCheckedCount();
+            		if(count <=0) {
+            			obz.warn("请选择微信图文素材")
+            			return;
+            		}
+            		if(parseToNewsEntity(obj, "wechat_media_sel_tpl", 2))
+            			self.close();
+            	}
+            }]
+    });
+	return false;
+} */
+
+/* function openCustomMediaDialog(obj){
+	var url = "#(webctx)/media/index";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择自定义图文素材",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = TBatch.getCheckedCount();
+            		if(count <=0) {
+            			obz.warn("请选择自定义图文素材")
+            			return;
+            		}
+            		if(parseToNewsEntity(obj, "wechat_media_sel_tpl", 2))
+            			self.close();
+            	}
+            }]
+    });
+	return false;
+} */
+/* 
+function delRow(obj){
+
+	//获取点击第几条回复内容的索引位置，对应删除预览位置的索引
+	var index = $(obj).parent().parent().index();
+	$(".mobile_bd").children().eq(index).remove();
+	
+	$(obj).parent().parent().remove();
+	
+} */ 
+
+
+/* ==start==  preview*/
+function setImageTextPreview(index,replyNew){
+	replyNew.msgTitle = replyNew.msgTitle.length > 12 ? replyNew.msgTitle.substring(0,12)+"..." : replyNew.msgTitle;
+	//填内容  判断是否存在第一张预览图
+	if($(".mobile_bd").find("div.msgType").eq(index).find("div.ibox-content").length < 1)
+		$(".mobile_bd").find("div.msgType").eq(index).append('<div class="ibox-content "></div>');	
+	$(".mobile_bd").find("div.msgType").eq(index).find("div.ibox-content").append(template('msgType5_tpl', replyNew));
+
+}
+/* ==end==  preview*/
+
+
+$(document).ready(function(){
+	
+	$("#add_reply_config").click(function(){
+		$(".mobile_bd").append('<div class="chat-discussion msgType" ></div>');	
+		$("#follow-config-list").append($("#reply_type_tpl").html());
+	});
+	
+
+	/* ==start== saveMenu.click*/
+	$("#saveMenu").click(function(){
+		var hasError = true;
+		//获取设置的回复内容数据
+		var followConfigArray = new Array();	//消息行配置
+		
+		if(console) console.log($("div.select_content").length);
+		$("div.select_content").each(function(){
+			log($(this).attr("data-type"));
+			var followConfigObj = new Object();
+			var msgType = $(this).attr("data-type");
+			if(!msgType) return true;
+			
+			if(msgType == "0"){//纯文本消息
+				var textValue = $(this).find("textarea").val();
+				log("textValue:" + textValue);
+				if(textValue == "" || textValue == null){
+					obz.warn("纯文本消息不能为空");
+					hasError = false;
+					return false;
+				}
+				followConfigObj.msg_type = msgType;
+				followConfigObj.msg_text_content = textValue;
+			}else if(msgType == "1"){//图片
+				if(!$(this).find("div.imagemsg_item").attr("media_id")){
+					obz.warn("图片不能为空");
+					hasError = false;
+					return false;
+				}
+				followConfigObj.msg_type = msgType;
+				followConfigObj.media_id = $(this).find("div.imagemsg_item").attr("media_id");
+				followConfigObj.media_pic = $(this).find("div.imagemsg_item").attr("media_pic");
+				
+			}else if(msgType == "5"){//图文消息
+				followConfigObj.msg_type = msgType;
+				var followReplyNewsArr = new Array();		//图文消息行配置，一天消息可以包含最多8条图文消息
+				//获取菜单设置的图文消息数据
+				$(this).find("div.newsmsg_item").each(function(){
+					log("===title:" + $(this).attr("data-title"));
+					log("===url:" + $(this).attr("data-url"));
+					log("===image:" + $(this).attr("data-image"));
+					var followReplyNewsObj = new Object();
+					followReplyNewsObj.msg_title = $(this).attr("data-title");
+					followReplyNewsObj.msg_desc = $(this).attr("data-desc");
+					followReplyNewsObj.msg_pic = $(this).attr("data-image");
+					followReplyNewsObj.msg_url = $(this).attr("data-url");
+					followReplyNewsObj.msg_org_type = $(this).attr("data-type");
+					followReplyNewsArr.push(followReplyNewsObj);
+				});
+		
+				if(followReplyNewsArr.length<=0){
+					obz.error("图文消息最少要有一条记录");
+					hasError = false;
+					return false;
+				}
+				followConfigObj.replyNews = followReplyNewsArr;
+			}else if(msgType == "8"){//小程序
+				var appId = $(this).find("input#app_id").val();
+				var appPath = $(this).find("input#app_path").val();
+				var title = $(this).find("input#title").val();
+				
+				if(appId == "" || appId == null){
+					obz.warn("小程序Appid不能为空");
+					hasError = false;
+					return false;
+				}
+				if(appPath == "" || appPath == null){
+					obz.warn("小程序路径不能为空");
+					hasError = false;
+					return false;
+				}
+				if(title == "" || title == null){
+					obz.warn("小程序标题不能为空");
+					hasError = false;
+					return false;
+				}
+				if(!$(this).find("div.imagemsg_item").attr("thumb_media_id") || !$(this).find("div.imagemsg_item").attr("thumb_media_pic")){
+					obz.warn("小程序封面图不能为空");
+					hasError = false;
+					return false;
+				} 
+				followConfigObj.msg_type = msgType;
+				followConfigObj.app_id = appId;
+				followConfigObj.app_path = appPath;
+				followConfigObj.title = title;
+				followConfigObj.thumb_media_id = $(this).find("div.imagemsg_item").attr("thumb_media_id");
+				followConfigObj.thumb_media_pic = $(this).find("div.imagemsg_item").attr("thumb_media_pic");
+				log("====appId:"+followConfigObj.app_id);
+				log("====appPath:"+appPath);
+				log("====title:"+title);
+				
+			}		
+			followConfigArray.push(followConfigObj);
+		});
+		
+		if(followConfigArray.length <=0) {
+			obz.warn("请设置关注后回复内容");
+			hasError = false;
+			return false;
+		}
+		
+		if(!hasError){
+			return;
+		}
+		
+		//获取通知规则
+		var enableConfig = $(':radio[name="enable_config"]:checked').val();
+		log("===========rule enableConfig:" + enableConfig);
+		
+		//提交到后台
+		var params = {};
+		params.followConfig = JSON.stringify(followConfigArray);
+		params.enableConfig = enableConfig;
+		
+		$(".menu_form_area").mask("正在保存配置...");
+		obz.ajaxJson("#(webctx)/follow/save", params, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				obz.msg("保存成功");
+			}
+		});
+	});
+	/* ==end== saveMenu.click*/
+	
+	//加载回复配置数据  
+	getFollowConfig();
+	
+	/* == start== 加载回复配置数据*/
+	function getFollowConfig(){
+		obz.ajaxJson(obz.ctx+"/follow/list", {}, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				var data = resp.data;
+				if(!data) return;
+				
+				//启用，停用状态赋值
+				setConfig(resp.followConfig.enableConfig);
+				log("==========enableConfig:" +resp.followConfig.enableConfig);
+				log("==========length:" + data.length);
+				
+				if(data.length>0){
+					$("#follow-config-list").find("div.menu_content_container").remove();
+				}
+				
+				for(var i=0;i<data.length;i++){
+					
+					log("=======================i:" + i);
+					var followRpCfgDto = data[i];
+						followRpCfgDto.replyConfig.index = i;
+					var followRpCfg = followRpCfgDto.replyConfig;
+					
+					$("#follow-config-list").append(template("reply_type_tpl", followRpCfg));
+					
+					if(followRpCfg.msgType==0){
+						//纯文本消息
+						$("#sel_div_"+followRpCfg.id).append($("#text_tpl").html());
+						$("#sel_div_"+followRpCfg.id).find("textarea").val(followRpCfg.msgTextContent);
+						
+						var entity = {};
+						//获取文本框内容
+						entity.content = followRpCfg.msgTextContent;
+						if($(".mobile_bd").children("div").eq(i).length == 0){
+							$(".mobile_bd").append('<div class="chat-discussion msgType" ></div>');	
+						}else{
+							$(".mobile_bd").children("div").eq(i).find("div").remove();
+						} 
+						$(".mobile_bd").children("div").eq(i).append(template('msgType0_tpl', entity));
+					}else if(followRpCfg.msgType==1){
+						//图片
+						$("#sel_div_"+followRpCfg.id).append($("#image_sel_tpl").html());
+						$("#sel_div_"+followRpCfg.id).find("div.imagemsg_item").attr("media_id",followRpCfg.mediaId);
+						$("#sel_div_"+followRpCfg.id).find("div.imagemsg_item").attr("media_pic",followRpCfg.mediaPic);
+						$("#sel_div_"+followRpCfg.id).find("img").attr("src",followRpCfg.mediaPic);
+						
+						var entity = {};
+						//获取图片内容
+						entity.mediaId = followRpCfg.mediaId;
+						entity.mediaPic = followRpCfg.mediaPic;
+						if($(".mobile_bd").children("div").eq(i).length == 0){
+							$(".mobile_bd").append('<div class="chat-discussion msgType"></div>');	
+						}else{
+							$(".mobile_bd").children("div").eq(i).find("div").remove();
+						} 
+						$(".mobile_bd").children("div").eq(i).append(template('image_tpl', entity));
+						
+					}else if(followRpCfg.msgType==5){
+						//图文消息
+						var replyNews = followRpCfgDto.replyNews;
+						for(var k=0;k<replyNews.length;k++){
+							var replyNew = replyNews[k];
+							if($(".mobile_bd").children("div").eq(i).length == 0){
+								$(".mobile_bd").append('<div class="chat-discussion msgType"></div>');
+							}
+							$("#sel_div_"+followRpCfg.id).append(template("wechat_media_sel_tpl", replyNew));
+							
+							//添加图文预览
+							setImageTextPreview(i,replyNew);
+							 if( replyNews.length >1){
+								$(".mobile_bd").children().eq(i).find("div.chat-user").eq(0).children("div").css("display","none");
+							} 
+						}	
+						
+					}else if(followRpCfg.msgType==8){
+						//图片
+						$("#sel_div_"+followRpCfg.id).append($("#routine_sel_tpl").html());
+						$("#sel_div_"+followRpCfg.id).find("input#app_id").val(followRpCfg.appId);
+						$("#sel_div_"+followRpCfg.id).find("input#app_path").val(followRpCfg.appPath);
+						$("#sel_div_"+followRpCfg.id).find("input#title").val(followRpCfg.title);
+						$("#sel_div_"+followRpCfg.id).append($("#routine_image_sel_tpl").html());
+						$("#sel_div_"+followRpCfg.id).find("div.imagemsg_item").attr("thumb_media_id",followRpCfg.thumbMediaId);
+						$("#sel_div_"+followRpCfg.id).find("div.imagemsg_item").attr("thumb_media_pic",followRpCfg.thumbMediaPic);
+						$("#sel_div_"+followRpCfg.id).find("img").attr("src",followRpCfg.thumbMediaPic);
+						
+						var entity = {};
+						//获取图片内容
+						/* entity.appId = followRpCfg.appId;						
+						entity.appPath = followRpCfg.appPath;						
+						entity.title = followRpCfg.title; */						
+						entity.thumbMediaId = followRpCfg.thumbMediaId;
+						entity.thumbMediaPic = followRpCfg.thumbMediaPic;
+						if($(".mobile_bd").children("div").eq(i).length == 0){
+							$(".mobile_bd").append('<div class="chat-discussion msgType"></div>');	
+						}else{
+							$(".mobile_bd").children("div").eq(i).find("div").remove();
+						} 
+						$(".mobile_bd").children("div").eq(i).append(template('routine_tpl', entity));
+					}
+				}
+				
+			}
+
+		});
+	}
+	/* ==end== 加载回复配置数据*/
+	
+	//开启，停用
+	function setConfig(enableConfig){
+		var enabelInt = enableConfig == false ? 0 : 1;
+		$(":radio[name='enable_config'][value='" + enabelInt + "']").prop("checked", "checked");
+	}
+	
+	
+});
+</script>
+#end
+#end

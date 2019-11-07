@@ -1,0 +1,171 @@
+#include ("/_includes/_layout.html")
+#@layout("红包领取","wxmall,点步科技","Wxmall社区","wxmall") 
+<style>
+.weui-content{
+	height:100%;
+}
+.repack-bg{
+	background: rgb(57,57,62);
+	height: 100%;
+	position: relative;
+}
+.repack-bg-box{
+    position: absolute;
+    left:0;
+    right:0;
+    top: 0px;
+    bottom: 0px;
+    margin: 10% 3%;
+}
+#redpack-open{
+	width: 95px; 
+	height: 95px; 
+	border-radius:50%; 
+	margin: auto;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	top: 30%
+}
+#redpack-money-box{
+    height: max-content;
+	margin: auto;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	top: -10%;
+	text-align: center;
+	color: rgb(216,183,132);
+}
+.money{
+	font-family: "微软雅黑";
+	font-size: 50px;
+	padding: 0px 10px;
+}
+.repack-msg{
+	height: max-content;
+	margin: auto;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	top: -50%;
+	text-align: center;
+	color: rgb(216,183,132); 
+}
+
+.img-box{
+	width: 45px;
+	height: 45px;
+    margin: auto;
+}
+.img-box img{
+	width: 100%;
+	height: 100%;
+    border-radius: 50%;
+}
+
+</style>
+#define content()
+<div class="repack-bg">
+	<div class="repack-box">
+		<div class="repack-bg-box">
+		<img style="width: 100%; height: 100%;border-radius: 10px;" src="#(webctx)/resources/images/redpack-bg.png"/>
+		</div>
+		<div class="repack-msg">
+			<div class="img-box"><img src="#(authUser.head_img??)"/></div>
+			<div style="margin-top: 3%"><span class="title">#(authUser.nick_name??)</span></div>
+			<div style="margin-top: 3%;"><span>#(memo??"恭喜发财")</span></div>
+		</div>
+		
+		<div id="redpack-money-box"><span class="money">#(money??)</span>元</div>
+		#if(redpack?? && redpack.status==0)
+		<div id="redpack-open"><img src="#(webctx)/resources/images/redpack-btn.png"/></div>
+		#end 
+	</div>
+	
+	<input id="_openid" value="#(redpack.openid??)" type="hidden"/>
+	<input id="_redpackid" value="#(redpack.id??)" type="hidden"/>
+	<input id="_redpackType" value="#(redpackType??)" type="hidden"/>
+</div>
+#define script()
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#redpack-open").click(function(){
+		var openid = $("#_openid").val();
+		var redpackid = $("#_redpackid").val();
+		$.showLoading("红包发送中...");
+		
+		var url = "#(webctx)/keywordsredpack/replace/award";
+		var type = $("#_redpackType").val();
+		if(type == "follows"){
+			url = "#(webctx)/follows/replace/award";
+		}else if(type == "keywords"){
+			url = "#(webctx)/keywordsredpack/replace/award";
+		}else if(type == "qrcoderdpack"){
+			url = "#(webctx)/qrcoderedpack/replace/award";
+		}else if(type == "taskredpack"){
+			url = "#(webctx)/taskredpack/replace/award";
+		}else if(type == "jifenredpack"){
+			url = "#(webctx)/jifenredpack/replace/award";
+		}else if(type == "tokenredpack"){
+			url = "#(webctx)/tokenredpack/replace/award";
+		}else {
+			$.alert("红包类型不存在");
+			return;
+		}
+		
+		$.ajax({
+			type: "post",
+			url: url,
+			data: {openid:openid, redpackid:redpackid},
+			async: true,
+			success: function(data){
+				if(data.code != 200){
+					$.hideLoading();
+					if(data.msg){
+						$.alert(data.msg);
+					}else{
+						location.href = "#(webctx)/keywordsredpack/replace/awardFail";						
+					}
+				}else{
+					$.hideLoading();
+					location.href = "#(webctx)/keywordsredpack/replace/awardSuccess";
+				}
+			},
+			error: function(){
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	});
+	
+	<!--禁用微信分享按钮-->
+	function onBridgeReady() {
+		// 通过下面这个API隐藏右上角按钮
+        WeixinJSBridge.call('hideOptionMenu');
+    	// 通过下面这个API隐藏底部导航栏
+        WeixinJSBridge.call('hideToolbar');
+    }
+
+    if (typeof WeixinJSBridge == "undefined") {
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+    } else {
+        onBridgeReady();
+    }
+    
+})
+$(window).bind('resize load', function() {
+        $("body").css("zoom", $(window).width() / 400);
+        $("body").css("display", "block");
+        $("body").css("zoom", $(window).width() / 400);
+    });
+</script>
+#end
+#end

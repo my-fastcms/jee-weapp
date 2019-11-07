@@ -1,0 +1,290 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/product.css"/>
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/js/map/AMap.PlaceSearchRender1120.css"/>
+<style type="text/css">
+.col-md-5 select{
+	width: 30%;
+	float: left;
+}
+</style>
+#end
+#define script()
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.6&key=d418a8a1e6d51110dd5f0390662943c0&plugin=AMap.PlaceSearch"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/map/PlaceSearchRender.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/jquery.lSelect.js"></script>
+<script type="text/javascript">
+function addPictureLogo(obj){
+	obz.selectImageOne(function(selImgs){
+		if(selImgs.length<=0){
+			obz.error("请选择一张图片");
+			return false;
+		}
+		var img = selImgs[0];
+        var h='<img class="image-preview" src="'+img.url+'" >';
+        h=h+'<a class="close-modal small hide" href="javascript:;" onclick="deleteLogoImg();">×</a>';
+	    $("#shopLogo-image-div").empty().append(h);     
+	    $('#shopLogo').val(img.title);
+		return true;
+	});
+}
+
+function deleteLogoImg(){
+	 var h='<a class="main-image-add" onclick="addPictureLogo(true);" href="javascript:;">+加图</a>';
+	 $("#shopLogo-image-div").empty().append(h);
+	 $('#shopLogo').val('');
+}
+
+function addPictureSign(obj){
+	obz.selectImageOne(function(selImgs){
+		if(selImgs.length<=0){
+			obz.error("请选择一张图片");
+			return false;
+		}
+		var img = selImgs[0];
+		
+		var h='<img class="image-preview" src="'+img.url+'" >';
+        h=h+'<a class="close-modal small hide" href="javascript:;" onclick="deleteSignImg();">×</a>';
+	    $("#shopSign-image-div").empty().append(h); 
+	    $('#shopSign').val(img.title);
+		return true;
+	});
+}
+
+function deleteSignImg(){
+	 var h='<a class="main-image-add" onclick="addPictureSign(true);" href="javascript:;">+加图</a>';
+	 $("#shopSign-image-div").empty().append(h);
+	 $('#shopSign').val('');  
+}
+</script>
+#end
+#@layout("店铺管理", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox-content">
+		<form id="shopForm" class="form-horizontal" >
+			<div>
+				<input type="hidden" id="id" name="id" value="#(shop.id??)"/>
+				<input type="hidden" id="lat" name="lat" value="#(shop.lat??)"/>
+				<input type="hidden" id="lng" name="lng" value="#(shop.lng??)"/>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">门店名称<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" id="error_shop_name">
+		                <input type="text" id="shop_name" name="shop_name" class="form-control"  value="#(shop.shop_name??)"/>
+		                <label class="control-label" for="shop_name"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">所属区域<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-5" id="error_areaId">
+		                <input type="hidden" id="areaId" value="#(shop.area_id??)"  name="areaId" treePath="#(areaPath??)"/>
+		                <label class="control-label" for="areaId"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">详细地址<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-5" id="error_addr">
+		            	<div class="input-group" >
+		                <input type="text" id="addr" name="shop_address" class="form-control" value="#(shop.shopAddress??)"/>
+		                <span class="input-group-btn"><a id="seachMap" href="javascript:void(0)" class="btn btn-primary">搜索地图</a></span>
+		                </div>
+		                <label class="control-label" for="addr"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">地图定位<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-10">
+		                <div class="col-md-9" id="container" style="width:546px; height: 500px;"></div>
+		                <div class="col-md-3" id="map_search_result" style="height: 500px;overflow-y:auto;overflow-x:hidden;"></div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">门店logo<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4">
+					     <input id="shopLogo" name="shop_logo" value="#(shop.shop_logo??)" type="hidden">
+					     <div id="shopLogo-image-div" class="main-image-div">
+                                  #if (shop.shop_logo??)
+                                    <img class="image-preview" src="#(img_domain)#(shop.shop_logo??)" />
+                                       <a class="close-modal small hide" href="javascript:;" onclick="deleteLogoImg();">×</a>
+                                  #else
+				                	<a class="main-image-add" onclick="addPictureLogo(true);" href="javascript:;">+加图</a>
+				             	  #end
+				           </div>
+					       <p class="size-remark">建议尺寸：480*480像素 </p>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">店招<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" >
+		                <input id="shopSign" name="shop_sign" value="#(shop.shop_sign??)" type="hidden">
+					     <div id="shopSign-image-div" class="main-image-div">
+                                  #if(shop.shop_sign??)
+                                    <img class="image-preview" src="#(img_domain)#(shop.shop_sign??)" >
+                                       <a class="close-modal small hide" href="javascript:;" onclick="deleteSignImg();">×</a>
+                                  #else 
+				                <a class="main-image-add" onclick="addPictureSign(true);" href="javascript:;" >+加图</a>
+				             	  #end
+				           </div>
+
+					       <p class="size-remark">建议尺寸：640*480像素 </p>
+		            </div>
+		        </div>
+		        <!-- <div class="form-group">
+		            <label class="col-md-2 control-label">门店照片<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" >
+		                <input id="shopPhotos" name="shop_photos" value="#(shop.shop_photos??)" type="hidden">
+					     <div id="shopSign-image-div" class="main-image-div">
+                                  #if(shop.shop_photos??)
+                                    <img class="image-preview" src="#(img_domain)#(shop.shop_photos??)" >
+                                       <a class="close-modal small hide" href="javascript:;" onclick="deleteSignImg();">×</a>
+                                  #else 
+				                <a class="main-image-add" onclick="addPictureSign(false);" href="javascript:;" >+加图</a>
+				             	  #end
+				           </div>
+					       <p class="size-remark">建议尺寸：640*480像素 </p>
+		            </div>
+		        </div> -->
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">店长<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" id="error_shop_contact">
+		                <input type="text" id="shop_contact" name="shop_contact" class="form-control"  value="#(shop.shop_contact??)"/>
+		                <label class="control-label" for="shop_contact"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">店长电话<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" id="error_shop_contact_phone">
+		                <input type="text" id="shop_contact_phone" name="shop_contact_phone" class="form-control"   value="#(shop.shop_contact_phone??)"/>
+		                <label class="control-label" for="shop_contact_phone"></label>
+		            </div>
+		        </div>
+		        #if(shop??)
+	            <div class="form-group">
+	               <span class="col-sm-2 control-label">状态</span>
+	               <div class="col-sm-4">
+	                   <select id="active_sel" name="active" class="form-control" style="width: 120px;">
+		                	<option value="0" #if(shop && shop.active ==false) selected="selected" #end>删除</option>
+		                	<option value="1" #if(shop== null || shop.active ==true) selected="selected" #end>启用</option>
+		                </select>
+	               </div>
+	           	</div>
+	            #end
+		        <div class="form-group">
+		            <div class="col-md-6" align="right">
+		                <button type="submit" class="btn btn-success btn-sm">保 存</button>
+		                <a href="#(webctx)/shop" class="btn btn-white btn-sm" type="reset">取消</a>
+		            </div>
+		        </div>
+			</div>
+			
+	  	</form>
+  	</div>
+</div>
+#end
+<script type="text/javascript">
+function getAddress(name, address, lat, lng){
+	$("#addr").val(name + "，" + address);
+	$("#lat").val(lat);
+	$("#lng").val(lng);
+}
+
+$(document).ready(function() {
+	var city = "";
+	
+	$(".col-md-5 select").each(function(i, obj){
+		var options=$(obj).find("option:selected");
+		if(i==1){
+			city=options.text();	
+		}
+	});
+	
+	var map = new AMap.Map("container", {
+        resizeEnable: true
+    });
+    var placeSearchOptions = { //构造地点查询类
+        pageSize: 6,
+        //pageIndex: 1,
+        //type:"公司企业|地名地址信息|生活服务|餐饮服务",
+        city: city //城市
+    };
+    var placeSearch = new AMap.PlaceSearch(placeSearchOptions);
+    //关键字查询，您如果想修改结果展现效果，请参考页面：	
+    placeSearch.search($("#addr").val(), callback);
+    var placeSearchRender=new Lib.AMap.PlaceSearchRender();
+    function callback(status, result) {
+        if (status === 'complete' && result.info === 'OK') {
+            placeSearchRender.autoRender({
+                placeSearchInstance: placeSearch,
+                methodName: "search",
+                methodArgumments: [$("#addr").val(), callback],
+                data: result,
+                map: map,
+                panel: "map_search_result"
+            });
+        }
+    }
+    
+    $("#seachMap").click(function(){
+    	$(".col-md-5 select").each(function(i, obj){
+    		var options=$(obj).find("option:selected");
+    		if(i==1){
+    			city=options.text();	
+    		}
+    	});
+    	var placeSearchOptions = { //构造地点查询类
+	        pageSize: 10,
+	        //pageIndex: 1,
+	        //type:"公司企业|地名地址信息|生活服务|餐饮服务",
+	        city: city //城市
+	    };
+    	var placeSearch = new AMap.PlaceSearch(placeSearchOptions);
+    	var keywords = $("#addr").val();
+    	placeSearch.search(keywords, callback);
+    });
+	
+	// 地区选择
+	$("#areaId").lSelect({
+		url:"#(webctx)/area/list"
+	});
+	
+	//----
+	$(".main-image-div").hover(function(){
+		$(this).find(".close-modal").removeClass("hide");
+	   $(this).find(".close-modal").addClass("hover");
+	},function(){
+		 $(this).find(".close-modal").addClass("hide");  
+		 $(this).find(".close-modal").removeClass("hover");
+	});
+	
+	// validate signup form on keyup and submit
+	var icon = "<i class='fa fa-times-circle'></i> ";
+    $("#shopForm").validate({
+    	ignore: "",
+    	errorElement: "em",
+        submitHandler:function() {
+        	$("#shopForm").mask("正在保存...");
+        	var params = $("#shopForm").serializeJSON();
+        	obz.ajaxJson(obz.ctx+"/shop/saveShop", params, function(json){
+        		$("#shopForm").unmask();
+    			if(json.code==200){
+    				obz.msg('保存成功', function(){
+    					location.href = "#(webctx)/shop";
+    				});
+    			}
+        	});
+        },
+        rules: {
+        	shop_name: "required", shop_logo: "required", shop_sign: "required", shop_contact: "required", shop_contact_phone: "required", areaId: "required", shop_address: "required"
+        },
+        messages: {
+        	shop_name: icon + "请输入店铺名称", 
+        	shop_logo: icon + "请上传店铺LOGO", 
+        	shop_sign: icon + "请上传店招", 
+        	shop_contact: icon + "请输入联系人", 
+        	shop_contact_phone: icon + "请输入联系人手机",
+        	areaId: icon + "请选择门店区域",
+        	shop_address: icon + "请填写门店详细地址"
+        }
+    });
+});
+</script>

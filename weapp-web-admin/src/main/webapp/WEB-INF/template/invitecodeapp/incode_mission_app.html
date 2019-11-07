@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <title>点步微助手--我的佣金</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+   <meta name="renderer" content="webkit"/>
+   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=375px, user-scalable=no"/>
+   <link rel="stylesheet" href="#(webctx)/resources/css/weui.min.css"/>
+   #include ("/_includes/header.html")
+   <style>
+   .weui-tab {
+    	position: relative;
+    	height: 100%;
+	}
+	.weui-navbar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    width: 100%;
+    background-color: #fafafa;
+	}
+	.weui-navbar:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+    color: #ccc;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+	}
+	.weui-navbar__item {
+	color: #888;
+    position: relative;
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    padding: 13px 0;
+    text-align: center;
+    font-size: 15px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+	}
+	.weui-navbar__item.proinfo-tab-tit {
+    padding: 10px 0;
+	}
+	.weui-navbar__item.weui-bar__item--on {
+    color: #e21323;
+    font-weight: bold;
+    background-color: inherit;
+	}
+	.weui-navbar__item.proinfo-tab-tit.weui-bar__item--on:before {
+    content: "";
+    width: 34px;
+    height: 3px;
+    background: #e21323;
+    position: absolute;
+    left: 50%;
+    margin-left: -17px;
+    bottom: -1px;
+    z-index: 10;
+	}
+	.weui-tab__bd {
+    	padding: 50px 10px 0px;
+	}
+	.input-group{
+		margin-top: 10px;
+	}
+   </style>
+</head>
+<body>
+<div class="weui-tab">
+	<div class="weui-navbar " style="position:fixed;  left:0; right:0; height:44px; background:#fff;">
+    	<a href="#(webctx)/invitecode/app" class="weui-navbar__item proinfo-tab-tit font-14">邀请码生成</a>
+        <a href="#(webctx)/invitecode/app/stat" class="weui-navbar__item proinfo-tab-tit font-14">我邀请的人</a>
+        <a href="#(webctx)/invitecode/app/mission" class="weui-navbar__item proinfo-tab-tit font-14 weui-bar__item--on">我的佣金</a>
+        <a href="#(webctx)/invitecode/app/cashrcd" class="weui-navbar__item proinfo-tab-tit font-14">提现明细</a>
+	</div>
+	<div class="weui-tab__bd">
+		<div class="alert alert-success">
+			<i class="fa fa-info-circle"></i><strong>提示:</strong>
+			<p>通过邀请码邀请用户注册并购买平台小程序模板后，可以获得一定的佣金</p>
+			<p>每天只能提现一次，提现审核3个工作日左右到账，如果没到账，请联系客服</p>
+		</div>
+		<div class="form-horizontal" align="center">
+	        <div class="form-group">
+	            <label class="control-label">我的累计佣金：</label>
+	            <div>
+	            	<div class="input-group m-b">
+                     	<span class="form-control">#if(totalMission !=null) #(totalMission) #else 0 #end</span>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">我的可提现佣金：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips(' 结算后方可提现佣金 。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div>
+	            	<div class="input-group m-b">
+                     	<span class="form-control">#(mission)</span>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+                 <a type="button" href="#(webctx)/invitecode/app/cash" class="btn btn-success">申请提现</a>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

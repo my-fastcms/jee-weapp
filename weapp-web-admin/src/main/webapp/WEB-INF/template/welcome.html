@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>#include ("/_includes/header.html")
+<title>绑定用户</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+</head>
+<body class="gray-bg">
+<div class="middle-box text-center loginscreen animated fadeInDown">
+<input id="CSRF_TOKEN_HIDDEN" type="hidden" value="#(CSRF_TOKEN)"/>
+		<div>
+			#if(error??)
+			<a href="#(webctx)/" style="cursor: pointer;">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content p-md">
+		            	<h3>绑定错误 </h3>
+						<span style="font-size: 14px;color: red;">#(error)</span>
+		        	</div>		
+				</div>
+			</a>	
+			#else
+			
+	        <div class="ibox-content p-md">
+	            <h3>请绑定手机号</h3>
+				<span style="font-size: 14px;color: gray;">绑定手机号后，同时支持微信扫码登录以及手机号登录。</span>
+				
+	            <form class="m-t" id="bindForm" role="form" action="">
+	            	<input type="hidden" id="scenceId" name="scenceId" value="#(scenceId)"/>
+	                <div class="form-group">
+	                    <input type="text" id="phone" name="phone" class="form-control" placeholder="手机号码" required=""/>
+	                </div>
+	                <div class="form-group">
+		            	<div class="input-group">
+						<input type="text" class="form-control" placeholder="短信验证码" id="phone_code"/>
+						<span class="input-group-btn"><a id="sendCodeBtn" href="javascript:void(0)" class="btn btn-primary">发送验证码</a></span>
+						</div>
+					</div>
+	                <div class="form-group">
+	                    <input type="password" id="password" name="password" class="form-control" placeholder="密码" required=""/>
+	                </div>
+	                <div class="form-group">
+	                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="确认密码" required=""/>
+	                </div>
+	                <button type="button" id="userBindBtn" class="btn btn-primary block full-width m-b">绑定</button>
+	            </form>
+	        </div>
+	        #end
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$("#sendCodeBtn").click(function(){
+		if($("#phone").val() == null || $("#phone").val() == ""){
+			alert("请输入手机号码");
+			return;
+		}
+		$("#bindForm").mask("正在发送验证码...");
+		obz.ajaxJson(obz.ctx+"/sendBindCode", {phone:$("#phone").val()}, function(resp){
+			$("#bindForm").unmask();
+			if(resp.code == 200){
+				obz.msg("短信验证码已发送");//alert(resp.msg);
+			}
+		});
+	});
+	
+	$("#userBindBtn").click(function(){
+		var scenceId = $("#scenceId").val();
+		if(scenceId == null || scenceId == ""){
+			obz.error("错误，请重新扫码登录");
+			return;
+		}
+		var phone = $("#phone").val();
+		var code = $("#phone_code").val();
+		var password = $("#password").val();
+		var confirmPassword = $("#confirm_password").val();
+		
+		if(phone == null || phone == ""){
+			obz.warn("请输入手机号码");
+			return;
+		}
+		
+		if(password == null || password == ""){
+			obz.warn("请输入密码");
+			return;
+		}
+		
+		if(code == null || code == ""){
+			obz.warn("请输入手机验证码");
+			return;
+		}
+		
+		if(confirmPassword == null || confirmPassword==""){
+			obz.warn("请输入确认密码");
+			return;
+		}
+		
+		if(password != confirmPassword){
+			obz.warn("两次密码不一致");
+			return;
+		}
+		
+		obz.ajaxJson("#(webctx)/bindUser",{scenceId:scenceId, phone:phone, password:password, confirmpwd:confirmPassword, code:code}, function(resp){
+			if(resp.code == 200){
+				location.href = "#(webctx)/index";
+			}
+		});
+		
+	});
+});
+</script>
+</body>
+</html>

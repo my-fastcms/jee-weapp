@@ -1,0 +1,406 @@
+#include ("/_includes/_layout.html")
+#@layout("任务商城","wxmall,点步科技","Wxmall社区","wxmall") #define content()
+
+<!--手机端script需要加载后方-->
+<div id="list" class="proListWrap">
+	#for(tDao:taskLevels??)
+	<div class="pro-items">
+		<a href="" onclick="return false;"
+			class="weui-media-box weui-media-box_appmsg">
+			<div class="weui-media-box__hd"   
+				 #if(tDao.needCount==0)
+				   onclick="showPrizeDetail(#(tDao.reward_id??),#(tDao.id??),#(tDao.reward_typeId??));"
+				 #end
+				   > 
+				<img class="weui-media-box__thumb" src="#(tDao.reward_img??)" alt=""
+					onerror="this.src='http://image.dbumama.com/upload/image/20180918/1537236113825.png'">
+			</div>
+			<div class="weui-media-box__bd" 
+				 #if(tDao.needCount==0)
+					onclick="showPrizeDetail(#(tDao.reward_id??),#(tDao.id??),#(tDao.reward_typeId??));"
+				 #end	
+			>
+    
+				<div class="wy-pro-pri">
+					<div class="wy-pro-pri">
+						<em class="num font-15"> 
+							#(tDao.reward_name??)
+						</em>
+					</div>
+				
+					<div class="wy-pro-pri">
+						<ul class="weui-media-box__info prolist-ul">
+							<li class="weui-media-box__info__meta">需要分享<em class="num">
+								#(tDao.user_count??)</em>人
+							</li>
+							<li class="weui-media-box__info__meta">
+								<em class="num">
+									还需分享#(tDao.needCount??)
+								</em>人
+							</li>
+						</ul>
+					</div>
+				
+
+					<div class="weui-media-box__info prolist-ul">
+						#if(tDao.needCount == 0)
+							已完成任务，点击 #if(tDao.reward_typeId == 2||tDao.reward_typeId ==
+							7||tDao.reward_typeId == 8) <span style="color: blue;">
+								查看奖品详情 </span> #else <span style="color: blue;"> 立即兑换 </span> #end
+						#end
+					</div>
+				<br>
+				</div>
+			</div> 
+			
+			<span class="open-popup" data-target="#full"
+				style="background-color: #1c84c6; color: #FFFFFF; padding: .2em .6em .3em;">
+					分享海报 
+			</span>
+
+		</a>
+	</div>
+	#end
+</div>
+#end
+
+
+
+<!-- 分享海报样式设置 -->
+<style>
+.demos-header {
+	padding-top: 3%;
+}
+
+#sharePost {
+	height: 77%;
+	width: 95%;
+}
+
+#sharePost img {
+	height: 100%;
+	width: 100%;
+	padding-left: 2.5%;
+}
+
+#post_close {
+	margin-top: 5%;
+}
+
+#shareTitle {
+	font-family: -webkit-body;
+	text-align: center;
+}
+
+#prizeDetail {
+	width: 100%;
+}
+
+#prizeDetail img {
+	height: 100%;
+	width: 100%;
+	padding-left: 0%;
+}
+
+#prizeDetailTitle {
+	width: 98%;
+	padding-left: 1%;
+}
+
+#prizeDetailTitle p {
+	font-family: sans-serif;
+	text-align: left;
+	font-size: x-large;
+	font-weight: bold;
+}
+
+#secondSpan {
+	float: right;
+}
+
+#prizeCount {
+	padding-top: 23px;
+	width: 98%;
+	padding-left: 1%;
+}
+</style>
+
+
+
+<!-- 弹出框--展示海报 -->
+<div id="full" class="weui-popup__container">
+	<div class="weui-popup__overlay"></div>
+	<div class="weui-popup__modal">
+
+		<header class="demos-header">
+			<h2 id="shareTitle">长按保存图片，发送给朋友/群聊</h2>
+		</header>
+
+
+		<section id="sharePost">
+			<img src="#(webctx)/#(taskPoster.poster_img??)"
+				onerror="this.src='http://image.dbumama.com/upload/image/20180918/1537236113825.png'">
+
+		</section>
+		<div id="post_close">
+			<a href="javascript:;" class="weui-btn weui-btn_primary close-popup">关闭</a>
+		</div>
+	</div>
+</div>
+
+
+<!-- 弹出框--查看奖品详情 -->
+<div id="prizeDetail" class="weui-popup__container">
+	<div class="weui-popup__overlay"></div>
+	<div class="weui-popup__modal">
+
+		<section id="prizeDetail">
+			<img src="#(webctx)/#(taskPoster.poster_img??)"
+				onerror="this.src='http://image.dbumama.com/upload/image/20180918/1537236113825.png'">
+		</section>
+
+
+		<section id="prizeDetailTitle">
+			<p>商品名称</p>
+			<div>
+				<span>奖品备注</span>
+			</div>
+		</section>
+
+		<section id="prizeCount">
+			<span>总份数：</span><span id="totalCount"></span>份 <span id="secondSpan">已领取：<span
+				id="hasSendCount"></span>份
+			</span>
+		</section>
+
+
+		<section style="margin-top: 22px;">
+			<hr />
+			<div class="weui-cells__title" style="text-align: center;">领奖信息</div>
+			<div class="weui-cells weui-cells_form">
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<label class="weui-label">姓名</label>
+					</div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="text" id="name"
+							placeholder="请输入你的姓名" />
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<label class="weui-label">联系电话</label>
+					</div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="tel" id="tel"
+							placeholder="请输入你的联系电话" />
+					</div>
+				</div>
+				<div class="weui-cell">
+					<div class="weui-cell__hd">
+						<label class="weui-label">联系地址</label>
+					</div>
+					<div class="weui-cell__bd">
+						<input class="weui-input" type="text" id="address"
+							placeholder="请输入你的联系地址" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<input type="hidden" id="hiddenPrizeId" /> <input type="hidden"
+			id="hiddentaskId" value="#(taskId)" /> <input type="hidden"
+			id="hiddenPrizeType" />
+
+		<div id="post_close">
+			<span id="get" style="display: none;"
+				class="weui-btn weui-btn_primary" onclick="getIt();">领取</span> <span
+				id="notGet" style="display: none;" class="weui-btn weui-btn_default">发奖中</span>
+			<span id="isGet" style="display: none;"
+				class="weui-btn weui-btn_default">已发奖</span> <span id="failGet"
+				style="display: none;" class="weui-btn weui-btn_default">发奖失败</span>
+
+
+
+			<span class="weui-btn weui-btn_default close-popup" id="saveOk">关闭</span>
+		</div>
+	</div>
+</div>
+<input type="hidden" id="taskId" value="#(taskId)" />
+
+
+<script type="text/javascript"> 
+function getIt(){  
+	
+	var name=$("#name").val();
+	var tel=$("#tel").val();
+	var address=$("#address").val(); 
+	
+
+	if(name==null || name==""){
+		alert("请填写你的姓名!"); 
+		return false;
+	}
+	
+	if(tel==null || tel==""){
+		alert("请填写你的联系电话!");
+		return false;
+	}
+	if(address==null || address==""){
+		alert("请填写你的联系地址!");
+		return false;
+	}
+	
+	
+	
+	$.post("#(webctx)/task/level/getIt", 
+			{
+			prizeID: $("#hiddenPrizeId").val(),
+			taskId:$("#hiddentaskId").val(),
+			prizeName:$("#prizeDetailTitle p").html(),
+			prizeType:$("#hiddenPrizeType").val(),
+			
+			name:$("#name").val(),
+			tel:$("#tel").val(),
+			address:$("#address").val() 
+			
+			}, function(json) {
+		
+		if(!json){  
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+			
+			$.toast("领奖失败！");
+		}else{
+			$.toast("领奖成功！");
+			$("#saveOk").click();
+			
+			$("#get").css("display","block");
+			$("#notGet").css("display","none");
+			$("#isGet").css("display","none"); 
+			
+			$("#name").attr("readonly","readonly"); 
+			$("#tel").attr("readonly","readonly");
+			$("#address").attr("readonly","readonly");
+			
+			
+		}
+	},"json");
+	
+	
+	
+	return false;
+}
+
+/**
+ * 兑换非实物
+ */
+function exchangeNonphysical(prizeId){
+	
+	$.post("#(webctx)/task/level/exchangeNonphysical", {
+			prizeId: prizeId,
+			taskId:$("#hiddentaskId").val(),
+		}, function(json) {
+			alert(json.data);
+		 
+	},"json");
+	
+}
+
+
+</script>
+
+
+
+<script type="text/javascript"
+	src="#(webctx)/resources/js/jquery-weui.js"></script>
+
+<script type="text/javascript">
+	function showPrizeDetail(prizeId,taskLevelId,prizeTypeId) {
+		
+		
+		if(prizeTypeId==2||prizeTypeId==7||prizeTypeId==8){
+		
+		$.post("#(webctx)/task/level/judgeCanGet", 
+				{ 
+					"taskId": $("#taskId").val(),
+					"prizeId":prizeId,
+				
+				}, function(json) {
+					
+					
+					
+					if(json.data=="查询数据发生错误"){
+						alert(json.data);
+					}else{
+						
+						setDetail(prizeId,taskLevelId);
+						
+						 console.log(json.data);   
+						if(json.data==-1){  
+							$("#get").css("display","block");
+						}
+						  if(json.data.status==0){
+							commonMethod(json);
+							$("#notGet").css("display","block"); 
+						}
+						
+						if(json.data.status==1){
+							commonMethod(json);
+							$("#isGet").css("display","block");
+						}
+						
+						if(json.data.status==2){
+							commonMethod(json);
+							$("#failGet").css("display","block");
+							
+						}
+					}
+					
+				},"json");
+		}else{
+			exchangeNonphysical(prizeId);
+		}
+		
+	}
+	
+	function commonMethod(json){
+	
+		$("#name").val(json.data.name);
+		$("#tel").val(json.data.tel); 
+		$("#address").val(json.data.address);
+		
+		$("#name").attr("readonly","readonly"); 
+		$("#tel").attr("readonly","readonly");
+		$("#address").attr("readonly","readonly");
+		
+		$("#get").css("display","none");
+		$("#notGet").css("display","none");
+		$("#isGet").css("display","none");
+		$("#failGet").css("display","none");
+	}
+	
+	function setDetail(prizeId,taskLevelId){
+		$.post("#(webctx)/task/level/prizeDetail", {"prizeId":prizeId,"taskLevelId":taskLevelId}, function(json) {
+			
+			if(json.code!=200){
+				BootstrapDialog.alert({title:'提示', message:json.msg});
+			}else{
+				$("#prizeDetail img").attr("src",json.data.reward_img);
+				$("#prizeDetailTitle p").html(json.data.reward_name); 
+				$("#prizeDetailTitle div span").html(json.data.prize_memo);
+				$("#totalCount").html(json.data.reward_count);
+				
+				$("#hasSendCount").html(json.data.hasSendCount);
+				
+				$("#hiddenPrizeId").val(json.data.reward_id);
+				$("#hiddentaskId").val(json.data.task_id);
+				$("#hiddenPrizeType").val(json.data.reward_typeId);
+				
+				
+				$("#prizeDetail").popup();					
+			}
+		},"json");
+	}
+</script>
+

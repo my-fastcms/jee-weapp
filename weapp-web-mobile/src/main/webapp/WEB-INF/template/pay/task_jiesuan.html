@@ -1,0 +1,139 @@
+#include ("/_includes/_layout.html")
+#@layout("订单结算", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link href="#(webctx)/resources/css/jiesuan.css" rel="stylesheet"/>
+#end
+#define content()
+<div class="content">
+<input id="awardSendId" type="hidden" value="#(awardSendId??)" />
+<!-- 收货地址 begin -->
+<div id="topFixedDiv" style="height: 7rem;"> 
+	<input type="hidden" value="#(receiver.id??)" id="select_receiverId">
+	<div id="addressDefault" class="weui-cells address_defalut address_border" style="height: 5rem;font-size: 12px;border: none;">
+	    #if( receiver??)
+	    	<div id="select_addr" class="weui-cell weui-cell_access" style="padding: 0px 15px !important;">
+		    	<div class="weui-cell__bd">
+	              	<div>收件人:</div>
+	              	<strong><span id="sel_name">#(receiver.receiverName??)</span></strong> 
+	              	<span id="sel_phone">#(receiver.phone??)</span> 
+	            </div>
+	    		<div class="weui-cell__ft" style="text-align: left;"><span id="sel_address">#(fullName??)#(receiver.address??)</span></div>
+	    	</div>
+		#else
+			<div id="select_addr" class="weui-cell weui-cell_access" style="border: none;padding: 0px 15px !important;">
+	            <div class="weui-cell__ft">
+	            	请填写收货地址
+	            </div>
+	        </div>
+		#end
+     </div>
+</div>
+<!-- 收货地址 end-->
+<!-- 商品列表begin -->
+<div class="order_info">
+<ul>
+#for(item : order.orderItems )
+<li class="hproduct">
+<img class="photo" src="#(img_domain)#(item.productImg)">
+<div class="fn"> #(item.productName)<br/>
+	#if(productType??)
+		#if(productType == 2)
+			<p style="color: red;">任务宝商品</p>
+		#else if(productType == 4)
+			<p style="color: red;">助力免单商品</p>
+		#else if(productType == 5)
+			<p style="color: red;">签到商品</p>
+		#end	
+	#end		
+</div>
+<!-- <p class="sku_coll">编号：#(item.sn) </p> -->
+#if(item.specificationValues??)
+<p class="sku_coll">规格： #for (spv : item.specificationValues )#(spv.name??)/#end</p>
+#end
+<p class="sku_price">¥#(item.price??)</p>
+<p class="sku_count">#(item.quantity??)</p>
+</li>
+#end
+</ul>
+</div>
+<!-- 商品列表end -->
+<div class="weui-cells" style="font-size: 14px;padding-bottom: 30px;">
+  	<div class="weui-cell">
+	  	<div class="weui-cell__bd"><p>商品金额</p></div>
+	    <div class="weui-cell__ft"><span style="color: red;">￥#(order.totalPrice??)</span> #if(order.oldPrice??) <s><span style="font-size: 10px;">#(order.oldPrice??)</span></s>#end</div>
+    </div>
+    <div class="weui-cell">
+	  	<div class="weui-cell__bd"><p>邮费</p></div>
+	    <div class="weui-cell__ft">+ ￥<span id="order_postFee">#(order.postFee??)</span>#if(order.oldPostFee??) <s><span style="font-size: 10px;">#(order.oldPostFee??)</span></s>#end</div>
+    </div>
+    <div class="weui-cells__title">买家留言</div>
+  	<div class="weui-cell">
+	    <div class="weui-cell__bd weui-cell-primary">
+	      <textarea id="order_memo" class="weui-textarea" placeholder="请输入留言" rows="2"></textarea>
+	    </div>
+  	</div>
+</div>
+<div class="weui-tabbar toolbar-bottom">
+	<div class="mini-btn-2-1">
+		<div id="o_div" style="padding-left: 1rem;padding-top: 1.3rem;"><span>合计:</span><span class="price" id="total_price">#(order.payFee??)</span><span style="font-size: 6px;padding-left: 2px;"><s id="o_price"></s></span></div>
+		<div id="c_div" style="padding-left: 4rem;font-size: 6px;display: none;"><span>会员</span><span id="card_disc_price"></span></div>
+	</div>
+	<div class="big-btn-2-1"><a id="create_order_btn" href="javascript:void(0);" class="big-btn red-btn" style="height: 5rem;color: white;">立即领取</a></div>
+</div>
+</div>
+<div id="half" class="weui-popup__container popup-bottom" style="z-index: 1000;">
+	<div class="weui-popup__overlay"></div>
+	<div class="weui-popup__modal">
+	  	<div class="toolbar"><div class="toolbar-inner"><a href="javascript:void(0);" class="picker-button close-popup">关闭</a></div></div>
+	  	<div id="address_div" class="modal-content" style="height: 420px;"></div>
+	</div>
+</div>
+<div id="add_half_dialog" class="weui-popup__container popup-bottom" style="z-index: 1000;">
+	<div class="weui-popup__overlay"></div>
+	<div class="weui-popup__modal">
+	  	<div class="toolbar"><div class="toolbar-inner"><a href="javascript:void(0);" class="picker-button close-popup">关闭</a></div></div>
+	  	<div id="address_add_div" class="modal-content"></div>
+	</div>
+</div>
+#end
+<script type="text/javascript">
+var items = #(items);
+$(document).ready(function(){
+	var payFee = #(order.payFee??);
+	payFee = payFee.toFixed(2);
+	
+	$("#select_addr").click(function(){
+		$.showLoading("正在加载...");
+		$("#address_div").load("#(webctx)/receiver", function(){
+			$.hideLoading();
+			$("#half").popup();
+		});
+	});
+	
+	$("#create_order_btn").click(function(){
+		if(items == null || items == ""){
+			showMsg("没有订单可以提交");
+			return;
+		}
+		if($("#select_receiverId").val()==null || ""==$("#select_receiverId").val()){
+			$.toast("请选择收货地址", "text");
+			return;
+		}
+		
+		$.showLoading("提交中...");
+		$.post("#(webctx)/order/taskCreate", {receiverId:$("#select_receiverId").val(), 
+			memo : $("#order_memo").val(),awardSendId:$("#awardSendId").val(),
+			items : JSON.stringify(items)}, function(data){
+			$.hideLoading();
+			var resp = data;
+			if(resp.code != 200){
+				$.alert(resp.msg==null ? "系统错误" : resp.msg);
+				return;
+			}else{
+				location.href = "#(webctx)/user";
+			}
+		}); 
+	});
+
+});
+</script>

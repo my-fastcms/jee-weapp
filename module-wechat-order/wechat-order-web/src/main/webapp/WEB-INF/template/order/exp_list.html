@@ -1,0 +1,32 @@
+<style type="text/css">
+.imgseled{
+    border: solid 3px #e6fab6;
+    width: 300px;
+    height: 200px;
+}
+.imgnoseled{
+	width: 150px;
+    height: 100px;
+}
+</style>
+<div align="left">
+	<div id="myexpinfocontent" style="margin-left: 100px;">
+		请选择快递公司:
+		<select id="expressCompy"  name="expressType" class="chzn-select" style="width:180px;height:20px;margin-left:30px"  onchange="Trade.displayTplImagesByCompkey()">
+			<option value="">请选择快递公司</option>
+			#for(company:expresscomps)
+				<option value="#(company.expKey)" expcode = "#(company.expCode)" expName="#(company.expName)">
+					#(company.expName)
+				</option>
+			#end
+		</select>
+	</div>
+	<div style="margin-left: 80px; padding-top: 10px;" id="_div_nametype"></div>
+		
+	<div id="expressCompyInfodiv" style="padding-top: 5px;margin-left: 100px;padding-bottom: 10px;"></div>
+	
+	<div class="panel-footer" align="center" style="padding-top: 10px;">
+	    <button onclick="Trade.getUserExpTemplate()" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>确认</button>
+	</div>
+</div>
+<input type="hidden" id="_myselexpbgimg" value=""/>

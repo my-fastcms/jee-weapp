@@ -1,0 +1,55 @@
+.order_info{
+    background:#fff;
+    margin:30rpx;
+    border-radius: 10rpx;
+    border:1px solid #eee;
+}
+
+.order_comment_item {
+   padding:20rpx;
+   border-bottom:1px solid #eee;
+}
+
+.order_comment_box{
+   padding-left:20rpx; 
+}
+
+.cell_title {
+    font-size:28rpx;
+}
+
+.cell_price {
+    margin-bottom:.3em;
+    padding-right:10rpx;
+    color:red;
+    font-size:13px;
+}
+
+.spec_cell{
+  display: inline-block;
+  padding:4rpx 6rpx; 
+  text-align: center;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 24rpx;
+  color:#999;
+  border: 1px solid #eee;
+}
+
+.order_comment_img {
+  width: 134rpx;
+  height: 134rpx;
+  border: 1rpx solid #e5e5e5;
+}
+.weui-cells { margin:30rpx;}
+.weui-cells:before { border:0;}
+.weui-cells:after { border:0;}
+.weui-tabbar { border-top:1px solid #eee; background: #fff;}
+.weui-tabbar__item { padding-left:30rpx;}
+.promotion-foot-menu-label { font-size:32rpx;}
+.weui-cell:before { border:0;}
+.weui-cell:after { border:0;}
+.weui-cells__title { font-size:28rpx; color:#333; margin:0;}
+.weui-textarea { box-sizing: border-box; height:150rpx; border:1px solid #eee; border-radius: 10rpx; padding:20rpx;}
+.name-shou { padding:10rpx 0; color:#fa3c64; font-size:32rpx;}
+.addre-shou { font-size:28rpx; color:#666;}

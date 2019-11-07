@@ -1,0 +1,17 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/product.css"/>
+#end
+#@layout("系統异常", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="middle-box text-center animated fadeInDown">
+        <h3 class="font-bold">发布商品出错,错误信息如下</h3>
+        <div class="error-desc">
+            <font color="red">#(error) #(message)</font>	
+            <br/>您可以返回商品列表
+            <br/><a href="#(webctx)/product" class="btn btn-primary m-t">返回</a>
+        </div>
+	</div>
+</div>
+#end

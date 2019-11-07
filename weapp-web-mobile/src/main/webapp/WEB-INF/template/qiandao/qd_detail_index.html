@@ -1,0 +1,134 @@
+#include ("/_includes/_layout.html")
+#@layout("签到明细","wxmall,点步科技","Wxmall社区","wxmall") 
+<style>
+.award-bg{
+	height: 100%;
+	position: relative;
+	background: #fdfdfd;
+}
+.award-box{
+	display:block;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left:0;
+	right:0;
+	margin: 20% 2%;
+}
+.award{
+	width: 100%; 
+	height: 100%;
+}
+.weui-content{
+	min-height: 100%
+}
+.award-box .item-name{
+	color: #999;
+}
+.award-box span{
+	color: #000;
+}
+.award-item{
+	border: 1px solid #e7eaec;
+    background: white;
+	padding: 0px 2%;
+}
+.award-box li{
+	line-height: 30px;
+	border-bottom: 1px dashed #e7eaec;
+	margin-top: 10px;
+}
+.award-box li li{
+	border-bottom: none;
+	line-height:25px;
+	margin-top: 10px;
+}
+.award-status{
+    border: 1px solid;
+    padding: 0px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: relative;
+    float:right;
+    bottom: 14px;
+}
+.award-box li li .award-status-rcd{
+    border: 1px solid;
+    padding: 0px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: relative;
+    float:right;
+    bottom: 14px;
+    color: #eb0000;
+}
+.footer-list-box{
+	background-color:#fdfdfd;	
+	text-align: left;
+	padding:10px 0px 10px 20px;
+	margin: 10px 0px;
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
+}
+.footer-box{
+	text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 50% 0px;
+    color: #999;
+}
+.weui-loadmore{
+	position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+#detail_list{
+	position: relative;
+}
+</style>
+#define content()
+<div class="weui-tab">
+	<div class="weui-navbar " style="position:fixed;  left:0; right:0; height:44px; background:#fff;">
+	    <a #if(!qiandaoDetail && award)href="#(webctx)/qiandao/detail?qiandaoId=#(qiandaoId??)&openId=#(openId??)"#end class="weui-navbar__item proinfo-tab-tit font-14 #if(qiandaoDetail && !award)weui-bar__item--on#end">签到记录</a>
+   	    <a #if(qiandaoDetail && !award)href="#(webctx)/qiandao/detail/award?qiandaoId=#(qiandaoId??)&openId=#(openId??)"#end class="weui-navbar__item proinfo-tab-tit font-14 #if(!qiandaoDetail && award)weui-bar__item--on#end">任务明细</a>
+    </div>
+	#if(qiandaoDetail && !award)
+	<div class="award-bg">
+		<div class="award-box">
+		<ul class="award-item">
+			<li><span class="item-name">连续签到天数：</span><span> #(qiandaoData.c_qiandao_count??)</span></li>
+			<li><span class="item-name">累计签到天数：</span><span> #(qiandaoData.qiandao_count??)</span></li>
+			<li><span class="item-name">最近签到日期：</span><span> #(qiandaoData.sign_date??)</span></li>
+		</ul>
+		</div>
+	</div>
+	#else if(!qiandaoDetail && award)
+	<div class="award-bg">
+		<div class="award-box">
+		<ul class="award-item">
+			<li><span class="item-name">任务名称：</span><span> #(qiandao.qiandaoName??)</span></li>
+			<li><span class="item-name">有效时间：</span><span> #(qiandao.startDate??) ~ #(qiandao.endDate??)</span></li>
+			<li style="margin-top: 0px;"><span class="item-name">任务奖励：</span>
+				<ul style="display: inline-table; width: 75%">
+				#for(qiandaoAward : qiandao.qiandaoAwards)
+					<li>#(qiandaoAward.name??),<br/>剩余奖品#(qiandaoAward.rewardCount??)份</li>
+				#end
+				</ul>
+			</li>
+			<li style="border: none;margin-bottom: 10px;"><span class="item-name">领取详情：</span>
+			<ul style="display: inline-table; width: 75%">
+				#for(award : awards)
+					<li><span>#(award.awardName??)</span><span #if(award.status=="已领取")class="award-status-rcd" #else class="award-status"#end>#(award.status??)</span></li>
+				#else
+					<li>尚未达到领取条件</li>
+				#end
+				</ul>
+			</li>
+		</ul>
+		</div>
+	</div>
+	#end
+</div>
+#end

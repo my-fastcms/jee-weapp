@@ -1,0 +1,75 @@
+ #include ("/_includes/_layout.html")
+<style>
+.explain {
+    color: #595961;
+    font-size: 1rem;
+    word-break: break-all;
+    padding: 10px;
+}
+.imgBox {
+	display: inline;
+    width: 100%;
+    color: #595961;
+    font-size: 1rem;
+    word-break: break-all;
+    padding: 10px 5px;
+}
+.imgDiv{
+	display: inline;
+    width: 20px;
+    width: 1.2rem;
+    height: 20px;
+    height: 1.2rem;
+    position: relative;
+    top: 4px;
+}
+span{
+	display: inline;
+	font-size: 0.5rem;
+    color: #9797a1;
+}
+.text{
+	font-size:0.9rem;
+    color: #9797a1;
+     padding: 10px;
+}
+
+</style>
+<div class="weui-panel_access" style="margin-top:0px">
+	<div style="font-size: 20px;padding: 10px;">说明内容</div>
+	<div class="explain">
+		<div>#(explain??)</div>
+	</div>
+	<div style="font-size: 20px;padding: 10px;">拼团规则</div>
+		<div class="imgBox">
+			<img class="imgDiv" src="#(webctx)/resources/images/kaituan.svg">
+			<span>开团/参团</span>
+		</div>
+		<div class="imgBox">
+			<img class="imgDiv" src="#(webctx)/resources/images/yaoyou.svg">
+			<span>邀友参团</span>
+		</div>
+		<div class="imgBox">
+			<img class="imgDiv" src="#(webctx)/resources/images/renman.svg">
+			<span>人满成团</span>
+		</div>	
+		<div class="imgBox">
+			<img class="imgDiv" src="#(webctx)/resources/images/choujiang.svg">
+			<span>抽奖</span>
+		</div>
+	</div>
+	#if(needFollows?? && needFollows)
+		<div class="explain" style="padding-bottom:0px">所有用户都可开团,只有未消费过的用户才能参团</div>
+	#end
+	#if(multiType?? && multiType == 0)
+		<div class="explain" >支付开团或参团，邀请好友参团，在有效时间内达到成团人数则拼团成功，进行发货；若超时未达到拼团人数则拼团失败，系统将自动退款。</div>
+	#end
+	#if(multiType?? && multiType == 1)
+		<div class="explain" >支付开团或参团，邀请好友参团，在有效时间内达到成团人数则拼团成功，成功后系统会在团队中抽取一名团员进行发货；若超时未达到拼团人数拼团失败，或者未抽中的团员，系统将自动退款。</div>
+	#end
+	#if(multiType?? && multiType == 2)
+		<div class="explain" >支付开团或参团，邀请好友参团，在有效时间内达到成团人数则拼团成功，拼团成功后等待活动结束，然后系统会在该商品所有拼团成功的全部成员中抽取一位进行发货；若超时未达到拼团人数拼团失败，或者未抽中的成员，系统将自动退款。</div>
+	#end
+	
+	
+	

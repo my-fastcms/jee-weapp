@@ -1,0 +1,212 @@
+ #include ("/_includes/_layout.html")
+#@layout("拼团订单","wxmall,点步科技","Wxmall社区","wxmall") 
+#define css()
+<style>
+.weui-content{
+	height: 100%
+}
+.product-item{
+	overflow: hidden;
+	background-color: #fff;	
+	padding:10px 20px;
+	margin: 10px 0px;
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
+}
+.assisfree-order-none{
+	text-align: center;
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    margin: 50% 0px;
+    color: #999;
+}
+.menu{
+	background: #fdfdfd;
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: table;
+    position: fixed;
+    z-index: 500;
+    height:8%;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #efefef;
+    box-shadow: 0px 0px 1px #efefef;
+} 
+.menu div{
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	color: #999;
+}
+a{
+	color: #999;
+}
+</style>
+#end
+#define content()
+<div class="weui-panel_access" style="margin-top:0px">
+	<div id="list"></div>
+	<div class="weui-loadmore">
+	    <i class="weui-loading"></i>
+	    <span class="weui-loadmore_tips">正在加载</span>
+	</div>
+</div>
+#end
+<div class="menu">
+	<div style="padding: 10px 0px"><a id="mg" href="javascript:void(0);" onclick="reIndex()">拼团商品</a></div>
+	<div style="border-bottom: 2px solid red;"><a href="#(webctx)/multigroup/orders?multigroupId=#(multigroupId??)" >我的拼团</a></div>
+</div>
+#define script()
+<script type="text/template" id="order_item_tpl">
+{{each data as item i}}
+<div class="product-item">
+ <div style="width:120px; height:120px; margin-right: 10px; float: left;">
+  		<img style="width:100%; height:100%" src="{{item.image}}"/>
+ </div>
+ <div style="color: #000;font-size: 14px;"> {{item.name}}</div>
+ <div class="" style="color: #999;font-size: 12px;overflow:hidden;margin-right: 35px">
+  <div style="margin-top: 2px;"><span>{{item.specification_value}}</span></div>
+ </div>
+ <div style="color: #999;font-size: 12px; margin-top: 5px"> 需 {{item.offer_num}} 人拼团</div>
+{{if item.group_status == 0}}
+ <div style="color: #999;font-size: 12px;color: red;"> 拼团倒计时：{{item.expiresIn}}</div>
+ <div style="color: red;font-size: 12px;overflow:hidden;line-height: 38px;">
+  <div style="float: left;"><span style="font-size: 14px;">{{if item.count > 0}} 还差 {{item.count}} 人{{else}}已完成  {{/if}}</span>
+</div>
+{{else}}
+ <div style="color: #999;font-size: 12px;color: red;"> 拼团倒计时：{{item.expiresIn}}</div>
+ <div class="" style="color: #999;font-size: 12px;overflow:hidden;margin-right: 35px">
+  <div style="float: right; margin-top: 2px;"><span>&nbsp;</span></div>
+ </div>
+{{/if}}
+  <div style="float: right; margin-top: 5px;">
+ 	  {{if item.group_status == 2 || item.group_status == 3}}
+	    <a href="#(webctx)/product/detail?id={{item.id}}" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini">重新拼团</a>
+      {{/if}}
+ 	  {{if item.group_status == 1}}
+	    <a href="#(webctx)/product/detail?id={{item.id}}" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini">拼团成功</a>
+      {{/if}}
+ 	  {{if item.group_status == 0}}
+	    <a href="#(webctx)/product/detail?id={{item.id}}&groupId={{item.gu_gid}}" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini">拼团中</a>
+      {{/if}}
+  </div>
+  </div>
+</div>
+{{/each}} 
+</script>
+<script type="text/html" id="ass_order_tpl">
+<div class="assisfree-order-none">
+	<div>暂无拼团订单</div>
+</div>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+params.multigroupId = "#(multigroupId??)";
+$(function(){
+	submit(params);
+	var loading = false;  //状态标记
+	//滚动加载
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		loading = true;
+		page ++;
+		params.page = page;
+		submit(params);
+	});
+	function submit(arr){
+		$.ajax({
+			type: "post",
+			url: "#(webctx)/multigroup/orderList",
+			data: arr,
+			async: true,
+			success: function(data){
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				if(data.data.length<=0){
+					$("#list").append($("#ass_order_tpl").html());
+					$(document.body).destroyInfinite();
+	                $('.weui-loadmore').remove();
+				}else{
+					for( var i = 0 ; i < data.data.length ; i ++ ){
+						var orderData = data.data[i];
+						if(orderData.expiresIn == "已超时") continue;
+						orderData.expiresIn = formatSeconds(orderData.expiresIn);
+					}
+					$("#list").append(template('order_item_tpl', data));
+					loading = false;
+					if(data.data.length<10){
+						$(document.body).destroyInfinite();
+		                $('.weui-loadmore').remove();
+					}
+				}
+			},
+			error: function(){
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+	
+	
+	<!--禁用微信分享按钮-->
+	function onBridgeReady() {
+		// 通过下面这个API隐藏右上角按钮
+	    WeixinJSBridge.call('hideOptionMenu');
+	}
+
+	if (typeof WeixinJSBridge == "undefined") {
+	    if (document.addEventListener) {
+	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+	    } else if (document.attachEvent) {
+	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+	    }
+	} else {
+	    onBridgeReady();
+	};
+	
+	$("#mg").on('tap', 'a', function (event) {
+		this.click();
+	});
+	
+});
+
+function formatSeconds(value) {
+    var secondTime = parseInt(value);// 秒
+    var minuteTime = 0;// 分
+    var hourTime = 0;// 小时
+    if(secondTime > 60) {//如果秒数大于60，将秒数转换成整数
+        //获取分钟，除以60取整数，得到整数分钟
+        minuteTime = parseInt(secondTime / 60);
+        //获取秒数，秒数取佘，得到整数秒数
+        secondTime = parseInt(secondTime % 60);
+        //如果分钟大于60，将分钟转换成小时
+        if(minuteTime > 60) {
+            //获取小时，获取分钟除以60，得到整数小时
+            hourTime = parseInt(minuteTime / 60);
+            //获取小时后取佘的分，获取分钟除以60取佘的分
+            minuteTime = parseInt(minuteTime % 60);
+        }
+    }
+    var result = "" + parseInt(secondTime) + "秒";
+
+    if(minuteTime > 0) {
+        result = "" + parseInt(minuteTime) + "分" + result;
+    }
+    if(hourTime > 0) {
+        result = "" + parseInt(hourTime) + "小时" + result;
+    }
+    return result;
+}
+
+function reIndex(){
+	location.href="#(webctx)/multigroup?id=#(multigroupId??)";
+}
+</script>
+#end

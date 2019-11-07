@@ -1,0 +1,759 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link href="#(webctx)/resources/css/product.css" rel="stylesheet"/>
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/card.css"/>
+<style type="text/css">
+.frm_input{width: 60px;}
+.js_card_input_item{padding-top: 5px;}
+</style>
+#end
+#@layout("会员卡编辑", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+		<div class="content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content" style="margin-left: 0px;">
+			       <a href="#(webctx)/customer/members" class="J_menuTab">会员</a>
+			       <a href="#(webctx)/memberRank" class="J_menuTab">会员等级</a>
+			       <a href="#(webctx)/card" class="J_menuTab active">会员卡</a>
+		       </div>
+		   	</nav>
+		</div>
+	<div class="container-fluid">	
+	  <div class="row">
+		<div class="content  ibox-content col-sm-10">
+			<div class="menu_setting_area js_editBox"> 
+			   <div class="menu_preview_area"> 
+				    <div class="mobile_menu_preview"> 
+					     <div class="mobile_hd tc">会员卡</div> 
+					     <div class="mobile_bd app-design"> 
+					     <div class="card-region"  style="background-color: #55bd47;">
+					         <div class="card-header">
+								<h4 class="shop-name">
+								<span class="shop-logo" style="background-image:url(#(webctx)/resources/images/dianbuLogo.png)"></span>
+								<span id="card_name"></span>
+								</h4>
+								<div class="qr-code"></div>
+							</div>
+							<h3 class="member-type"></h3>
+							<div class="card-content"><p class="expiry-date">有效期：<span>无限期</span></p></div>
+						 </div>
+					    </div>    
+				    </div> 
+			    </div> 
+			    <!--内容填充编辑 -->
+			    <div class="menu_form_area">
+			       <div class="app-sidebar" style="display: block; margin-top: 0px;">
+						<div class="app-sidebar-inner js-sidebar-region">
+						 <div class="form-horizontal">
+						    <!-- <div class="title"><h4>基本信息</h4></div> -->
+							<div class="js-toggle-content" style="margin-bottom: 30px">
+							<div class="form-group">
+								<label class="col-md-3">公众号名称：</label>
+								<div class="col-md-8"><label>#if(authUser)<span id="brand_name">#(authUser.nick_name)</span> #else 没有公众号 #end </label></div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">公众号Logo：</label>
+								<div class="col-md-8">
+								<span class="avatar">
+								#if(authUser) <img class="avatar-img" src="#(authUser.head_img)"/> #else 没有公众号 #end 
+								</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">卡片封面：</label>
+								<div class="col-md-8">
+								<label  class="checkbox-pretty inline checkbox-inline">
+									<input name="valuation_type" checked="checked" value="0" type="radio" onclick="checkStatus(this);"/><span>背景色 </span>
+								</label>
+								<div class="dropdown hover card-color btn-group">
+								<button class="btn dropdown-toggle" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
+									<div class="card-color-show" style="background-color: #55bd47" data-color="#55bd47" data-code="Color010"></div><span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu">
+			                        <li cc="#55bd47" code="Color010"><div class="js-select-card-color card-color-box" style="background-color: #55bd47" data-color="#55bd47" data-code="Color010"></div></li>
+			                        <li cc="#10ad61" code="Color020"><div class="js-select-card-color card-color-box" style="background-color: #10ad61" data-color="#10ad61" data-code="Color020"></div></li>
+			                        <li cc="#35a4de" code="Color030"><div class="js-select-card-color card-color-box" style="background-color: #35a4de" data-color="#35a4de" data-code="Color030"></div></li>
+			                        <li cc="#3d78da" code="Color040"><div class="js-select-card-color card-color-box" style="background-color: #3d78da" data-color="#3d78da" data-code="Color040"></div></li>
+			                        <li cc="#9058cb" code="Color050"><div class="js-select-card-color card-color-box" style="background-color: #9058cb" data-color="#9058cb" data-code="Color050"></div></li>
+			                        <li cc="#de9c33" code="Color060"><div class="js-select-card-color card-color-box" style="background-color: #de9c33" data-color="#de9c33" data-code="Color060"></div></li>
+			                        <li cc="#ebac16" code="Color070"><div class="js-select-card-color card-color-box" style="background-color: #ebac16" data-color="#ebac16" data-code="Color070"></div></li>
+			                        <li cc="#f9861f" code="Color080"><div class="js-select-card-color card-color-box" style="background-color: #f9861f" data-color="#f9861f" data-code="Color080"></div></li>
+			                        <li cc="#f08500" code="Color081"><div class="js-select-card-color card-color-box" style="background-color: #f08500" data-color="#f08500" data-code="Color081"></div></li>
+			                        <li cc="#e75735" code="Color90"><div class="js-select-card-color card-color-box" style="background-color: #e75735" data-color="#e75735" data-code="Color090"></div></li>
+			                        <li cc="#d54036" code="Color100"><div class="js-select-card-color card-color-box" style="background-color: #d54036" data-color="#d54036" data-code="Color100"></div></li>
+			                        <li cc="#cf3e36" code="Color101"><div class="js-select-card-color card-color-box" style="background-color: #cf3e36" data-color="#cf3e36" data-code="Color101"></div></li>
+			                      </ul>
+								</div>
+								<br/>
+			
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">会员卡名称：<span style="color: red;"><em>*</em></span></label>
+								<div class="col-md-8" id="error_title">
+								<input class="form-control" id="title" name="title" value="" maxlength="18" placeholder="最多可输入9个字符" type="text"/>
+								<p class="help-desc"><font color="red">最多9个汉字，</font>会员卡名称保存成功后不支持修改</p>
+								<label class="control-label" for="title"></label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">
+								会员卡优惠：<span style="color: red;"><em>*</em></span>
+								</label>
+								<div class="col-md-8">
+									<label><input name="supply_discount" value="1" checked="checked" type="checkbox"/><span>&nbsp;折扣优惠</span></label>
+									<label style="padding-left: 10px;"><input name="supply_discount" value="0"  type="checkbox"/><span>&nbsp;积分优惠</span></label>						
+									<div id="error_supply"><label class="control-label"></label></div>
+									<div id="error_discount">
+									<div class="input-group col-md-4" id="discount_div">
+									<input type="text" value="" id="discount" name="discount" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+									<span class="input-group-addon">折</span>
+									</div>
+									<label class="control-label" for="discount"></label>
+									<div id="js_bonus_rule_detail" style="border: 1px solid #ccc;padding:5px 5px 5px 5px;display: none;"> 
+									   <div class="js_card_input_item"> 
+									    <label for="">消费送积分</label> 
+									    <div class="input_submsg multi_input"> 
+									    <span class="">每消费</span> <span class="frm_input_box frm_input_box_short"> 
+									    	<input value="" id="cost_money_unit" name="cost_money_unit" type="text" class="frm_input valid" placeholder="" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/> </span> 
+									    	<span class="">元，赠送</span> 
+									    	<span class="frm_input_box frm_input_box_short"> 
+									    	<input value="" id="increase_bonus" name="increase_bonus" type="text" class="frm_input valid" placeholder="" /> </span> <span class="frm_input_append">积分</span> 
+									    </div> 
+									   </div>
+									   <div class="js_card_input_item"> 
+									    <div class="input_submsg multi_input"> 
+									     <span class="">每使用</span> <span class="frm_input_box frm_input_box_short"> 
+									     <input id="cost_bonus_unit" value="" name="cost_bonus_unit" type="text" class="frm_input valid" placeholder="" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+									     </span> 
+									     <span class="">积分，抵扣</span> <span class="frm_input_box frm_input_box_short"> 
+									     <input value="" id="reduce_money" name="reduce_money" type="text" class="frm_input valid" placeholder="" /> </span> <span class="frm_input_append">元</span> 
+									    </div> 
+									   </div>  
+									   <div class="js_card_input_item"> 
+									    <div class="input_submsg"> 
+									     <span class="frm_input_box"><span class="">单次上限</span><span class="tips">(选填)</span> 
+									     <input value="" id="max_increase_bonus" name="max_increase_bonus" type="text" class="frm_input valid" placeholder="" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/> </span> 
+									     <span class="input_sub_msg">积分</span>
+									     <i class="fa fa-question-circle" style="cursor: pointer;" onmouseout="layer.closeAll();" onmouseover="layer.tips('请设置单次增加积分的上限，不填写表示无限制。', this, {tips: [1, '#3595CC'],time: 0});"></i> 
+									    </div> 
+									   </div> 
+									   <div class="js_card_input_item" id="js_active_give_bonus" style="display: block;"> 
+									    <div class="input_submsg"> 
+									     <span class="frm_input_box"> <span class="">激活送积分</span><span class="tips">(选填)</span> 
+									     <input value="" id="init_bonus" name="init_bonus" type="text" class="frm_input valid" placeholder="" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/> </span> 
+									     <span class="input_sub_msg">积分</span>
+									     <i class="fa fa-question-circle" style="cursor: pointer;" onmouseout="layer.closeAll();" onmouseover="layer.tips('请设置激活会员卡赠送的积分，不填写表示不赠送。', this, {tips: [1, '#3595CC'],time: 0});"></i> 
+									    </div>
+									   </div> 
+									  
+									  </div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">激活设置：<span style="color: red;"><em>*</em></span></label>
+								<div class="col-md-8"> 
+									<label style="cursor: pointer;"><input name="active_set" value="1" checked="checked"  type="radio"/><span> 无需激活</span></label>
+									<label style="cursor: pointer; padding-left: 10px;"><input name="active_set" value="2"  type="radio"/> 需要激活</label>
+									<div id="active_div" style="border: 1px solid #ccc;padding:5px 5px 5px 5px;display: none;">
+										<input type="checkbox" disabled="disabled" name="validateMobile" value="1" checked="checked" /> 验证手机号（必选）<br/>  
+									   	<input type="checkbox" name="requireProfile" value="1" /> 填写完整会员资料 
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">储值卡设置：<i class="fa fa-question-circle" style="cursor: pointer;" onmouseout="layer.closeAll();" onmouseover="layer.tips('会员是否可以往会员卡里面充值。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+								<div class="col-md-8"> 
+									<label style="cursor: pointer;"><input name="supply_balance" type="checkbox"/><span>&nbsp;支持储值</span></label>
+									<label style="padding-left: 10px;cursor: pointer;"><input name="supply_buy" type="checkbox"/><span>&nbsp;开启购买</span></label>
+								   <label id="balance_tips" style="display: none;"><font color="red">一旦设置为储值卡后，不可再更改成非储值卡</font></label>
+								   <table id="balance_table" class="table table-striped table-bordered" style="display: none;"> 
+								    <thead><tr><th>充值金额</th><th>充值奖励</th></tr></thead> 
+								    <tbody>
+								     <tr>
+								      <td> 
+								       <div class="control-group"> 
+								        <div class="controls" style="margin-left: 0;"> 
+								         <input class="frm_input" type="text" name="price" value="" class="span1" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/> 
+								         <i class="fa fa-question-circle" style="cursor: pointer;" onmouseout="layer.closeAll();" onmouseover="layer.tips('会员充值金额会存储到会员卡，会员可以使用会员卡里面的余额进行消费。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+								        </div> 
+								       </div></td> 
+								      <td> 
+								       <div class="control-group"> 
+								        <div class="controls" style="margin-left: 0;"> 
+								         <input class="frm_input" type="text" name="stockNum" value="" class="span1" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/> 
+								        </div> 
+								       </div></td> 
+								     </tr>
+								    </tbody> 
+								   </table>
+								   #if(ranks)
+								   <table id="buyer_table" class="table table-striped table-bordered" style="display: none;">
+								   <thead><tr><th>会员等级</th><th>优惠策略</th><th>价格</th></tr></thead> 
+								    <tbody>
+								    #for(rank: ranks)
+									 <tr>
+									 <td> 
+								       <div class="control-group"> 
+								        <div class="controls" style="margin-left: 0;">
+								        #(rank.rank_name) 
+								        </div> 
+								       </div></td>
+								       <td> 
+								       <div class="control-group"> 
+								        <div class="controls" style="margin-left: 0;">
+								        #(rank.rank_discount)折优惠，满#(rank.rank_cash_full)减#(rank.rank_cash_rward)
+								        </div> 
+								       </div></td>
+								       <td> 
+								       <div class="control-group"> 
+								        <div class="controls" style="margin-left: 0;">
+								        #(rank.first_charge)元
+								        </div> 
+								       </div></td> 
+								     </tr>
+								     #end
+								    </tbody>
+								   </table> 
+								   #end
+								 </div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">会员期限：<span style="color: red;"><em>*</em></span> <i class="fa fa-question-circle" style="cursor: pointer;" onmouseout="layer.closeAll();" onmouseover="layer.tips('选择永久有效后不可更改为固定日期。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+								<div class="col-md-8">
+									<label style="cursor: pointer;"><input name="termDaysRadio" value="1" checked="checked"  type="radio"/><span> 永久有效</span></label>
+									<label style="cursor: pointer;padding-left: 10px;"><input name="termDaysRadio" value="2"  type="radio"/> 固定日期</label>
+									<div id="date_div" class="row" style="display: none;">
+									   	<div id="error_start_date" class="col-md-4">
+					                        <input type="text" id="start_date" name="start_date" readonly="readonly" style="width: 120px; cursor: pointer;"
+											onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+											class="Wdate" value="" />
+											<label class="control-label" style="color: red" for="error_start_date"></label>
+					                    </div>
+					                    <div id="error_end_date" class="col-md-4">
+					                        <input type="text" id="end_date" name="end_date" readonly="readonly" style="width: 120px;cursor: pointer;margin-left: 30px;"
+											onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\',{d:7});}'})"
+											class="Wdate" value="" />	
+											<label class="control-label" style="color: red" for="error_end_date"></label>
+					                    </div>
+									</div>
+									#if(mcard)<label id="date_tips"><font color="red">修改时间，只能延长</font></label> #else <label id="date_tips"><font color="red">选择永久有效后，不可更改为固定日期</font></label> #end
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">会员卡特权：<span style="color: red;"><em>*</em></span></label>
+								<div class="col-md-8" id="error_prerogative">
+								<textarea class="form-control" id="prerogative" name="prerogative">#(mcard.prerogative??)</textarea>
+								<label class="control-label" for="prerogative"></label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">使用说明：(选填)</label>
+								<div class="col-md-8" id="error_description">
+								<textarea class="form-control" id="description" name="description"></textarea>
+								<label class="control-label" for="description"></label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-md-3">客服电话：</label>
+								<div class="col-md-8">					
+								<input class="form-control" id="servicePhone" name="servicePhone" value="" type="text"/>
+								</div>
+							</div>
+							</div>
+			             </div>
+			         </div>  
+			       </div>
+			     </div>
+			    <div class="app-actions">
+				    <div class="form-actions text-center">
+				        <button class="btn btn-sm btn-primary js-btn-save">保存</button>
+				        <a href="#(webctx)/card" class="btn btn-default btn-sm">取消</a>
+				    </div>
+			  </div>
+			    
+		  </div> 
+	   </div>
+	   
+        <div class="col-sm-2">
+	         <div class="wrapper-content">
+	             <h4>帮助说明</h4>
+	             <ol>
+		            <li><label>关于会员卡</label><br/>为商家提供两种类型的会员卡，商家可根据自己的实际需要选择使用其中一种。一个店铺最多可以创建1张会员卡。</li>
+		            <li style="padding-top: 10px"><label>无门槛会员卡</label><br/>无门槛会员卡，领卡即享受会员卡优惠，打折，送积分等。</li>
+		            <li style="padding-top: 10px"><label>需购买的会员卡</label> <br/>付费卡自购买之日起生效，商家可设置会员有效期及到期后调整方案</li>
+		        </ol>
+	         </div>
+       </div>	
+     </div> 
+	</div>	
+   <input type="hidden" value="#(mcard.card_id??)" id="card_id"/>  
+</div>
+#end
+<script type="text/javascript">
+function timeStamp2String (time){
+    var datetime = new Date();
+     datetime.setTime(time);
+     var year = datetime.getFullYear();
+     var month = datetime.getMonth() + 1;
+     var date = datetime.getDate();
+     return year + "-" + month + "-" + date;
+};
+
+#if (mcard)
+var baseInfo = '#(mcard.base_info)';
+var baseInfoJson = JSON.parse(baseInfo);//卡券基础数据
+//设置卡券基础数据
+$("#title").val(baseInfoJson.title);
+$("#title").attr("disabled",true); 
+$("#card_name").text(baseInfoJson.title);
+$("#description").val(baseInfoJson.description);
+
+	//没有设置背景图的话，选中颜色
+	var color = baseInfoJson.color;
+	$("input:radio[name='valuation_type']").eq(0).attr("checked",'checked');
+	$(".card-region").css("background-color",color);
+	$(".card-color-show").css("background-color",color);
+	$(".card-color-show").attr("data-color", color);
+	$(".dropdown-menu").find("li").each(function(){
+		if($(this).attr("cc") == color){
+			$(".card-color-show").attr("data-code", $(this).attr("code"));
+			return;
+		}
+	});
+
+//设置会员卡有效日期
+var dateInfoJson = baseInfoJson.date_info;
+if(dateInfoJson.type == "DATE_TYPE_FIX_TIME_RANGE"){
+	//固定时间区间
+	$("input:radio[name='termDaysRadio']").eq(1).attr("checked",'checked');
+	$("#date_div").show();
+	$("#start_date").val(timeStamp2String(dateInfoJson.begin_timestamp * 1000));
+	$("#end_date").val(timeStamp2String(dateInfoJson.end_timestamp * 1000));
+	$("#date_tips").show();
+}else{
+	//永久有效
+	$("input:radio[name='termDaysRadio']").eq(0).attr("checked",'checked');
+	$("#date_tips").hide();
+	$("input[name='termDaysRadio']").attr("disabled",true);
+}
+//设置服务电话
+if(baseInfoJson.service_phone && baseInfoJson.service_phone!=""){
+	$("#servicePhone").val(baseInfoJson.service_phone);
+}
+//设置会员卡折扣优惠
+var discount = '#(mcard.discount)';
+if(discount && discount != ""){
+	//让折扣优惠选中，否则不选中
+	$("input:checkbox[name='supply_discount']").eq(0).attr("checked", true);
+	$("#discount").val(parseInt(100 - discount)/10);
+}else{
+	$("input:checkbox[name='supply_discount']").eq(0).attr("checked", false);
+	$("#discount").val(discount);
+}
+//设置会员卡积分优惠
+var supply_bonus = '#(mcard.supply_bonus)';//是否支持积分优惠
+if(supply_bonus && supply_bonus=='true'){
+	var bonus_rules = '#(mcard.bonus_rules)';//积分规则
+	var bonusRulesJson = JSON.parse(bonus_rules);
+	$("#cost_money_unit").val(parseInt(bonusRulesJson.cost_money_unit)/100);
+	$("#increase_bonus").val(bonusRulesJson.increase_bonus);
+	$("#cost_bonus_unit").val(bonusRulesJson.cost_bonus_unit);
+	$("#reduce_money").val(parseInt(bonusRulesJson.reduce_money)/100);
+	if(bonusRulesJson.max_increase_bonus && bonusRulesJson.max_increase_bonus != ""){
+		$("#max_increase_bonus").val(bonusRulesJson.max_increase_bonus);
+	}
+	if(bonusRulesJson.init_bonus && bonusRulesJson.init_bonus != ""){
+		$("#init_bonus").val(bonusRulesJson.init_bonus);
+	}
+	$("input:checkbox[name='supply_discount']").eq(1).attr("checked", true);
+	$("#js_bonus_rule_detail").show();
+}else{
+	$("input:checkbox[name='supply_discount']").eq(1).attr("checked", false);
+	$("#js_bonus_rule_detail").hide();
+}
+//是否支持储值
+var supply_balance = '#(mcard.supply_balance)';
+if(supply_balance && supply_balance=="true"){
+	$("input:checkbox[name='supply_balance']").eq(0).attr("checked", true);
+	//$("#balance_table").show();
+	$("#balance_tips").show();
+}else{
+	$("input:checkbox[name='supply_balance']").eq(0).attr("checked", false);
+	$("#balance_table").hide();$("#balance_tips").hide();
+}
+//是否开启会员卡购买功能
+var supply_buy = '#(mcard.supply_buy)';
+if(supply_buy && supply_buy=="true"){
+	$("input:checkbox[name='supply_buy']").eq(0).attr("checked", true);
+	$("#buyer_table").show();
+}else{
+	$("input:checkbox[name='supply_buy']").eq(0).attr("checked", false);
+	$("#buyer_table").hide();
+}
+//激活设置
+var auto_activate = '#(mcard.auto_activate)';
+var wx_activate = '#(mcard.wx_activate)';
+if(auto_activate!=null && auto_activate=="true"){
+	$("input:radio[name='active_set']").eq(0).attr("checked",'checked');
+}else{
+	$("input:radio[name='active_set']").eq(1).attr("checked",'checked');
+	$("#active_div").show();
+}
+#end
+
+var params = {};
+function checkStatus(obj){
+	var check=$(obj).val();
+	if(check=='1'){
+		$("#add_img").show();
+		if($("#shop_sign").attr('src')){
+		 	$(".card-region").css("background-color","");
+		}
+		$(".card-region").css("background-image","url("+$("#shop_sign").attr('src')+")");
+	}else{
+		$("#add_img").hide();
+		var color=$(".card-color-show").attr("data-color");	
+		$(".card-region").css("background-image","");
+		$(".card-region").css("background-color",color);
+	}
+}
+
+function bindSetTableAEvent(){
+	$(".dropdown-menu").find("li div").each(function(){
+		$(this).unbind("click");
+		$(this).click(function(){
+			var me = $(this).attr("data-color");
+			$(".card-region").css("background-color",me);
+			$(".card-color-show").css("background-color",me);
+			$(".card-color-show").attr("data-color", me);
+			$(".card-color-show").attr("data-code", $(this).attr("data-code"));
+		});
+	});
+}
+//创建会员卡
+function save(){
+	var  error = {};
+	var title = $("#title").val(),start_date = $("#start_date").val(), end_date = $("#end_date").val(),
+	prerogative=$("#prerogative").val(),discount=$("#discount").val();
+	var termDaysRadio=$("input[name='termDaysRadio']:checked").val();
+	if($.trim(title) =="") {error.error_title = "会员卡名称不能为空"; } else {error.error_title="";}
+	if(termDaysRadio=="2"){
+		if($.trim(start_date) =="") {error.error_start_date = "开始时间不能为空"; } else {error.error_start_date ="";}
+		if($.trim(end_date) =="") {error.error_end_date = "结束时间不能为空"; } else { error.error_end_date="";}
+	}
+	if($("input[name='supply_discount']:checked").length<=0){
+		error.error_supply = "请选择会员优惠";
+	}else{
+		error.error_supply = "";
+		if($("input[name='supply_discount']:checked").val()=="1"){
+        	if($.trim(discount) =="") {error.error_discount = "折扣不能为空"; } else {error.error_discount ="";}
+		}	
+	}
+    if($.trim(prerogative) =="") {error.error_prerogative = "特权说明不能为空"; } else {error.error_prerogative="";}
+
+	var hasErr = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasErr) hasErr = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	var valuation_type=$("input[name='valuation_type']:checked").val();
+    if(valuation_type=='1'){
+    	if($(".js-picture-sign li").length<=1){
+    		if(!hasErr) hasErr=true;
+    		$("#only_error_msg").html("封面图片 不能为空。");
+    	}
+    }
+	if(hasErr) return false;
+	var card = new Object();
+	card.card_type ="MEMBER_CARD";
+	var member_card = new Object();
+	
+	if(valuation_type=='1'){
+		var background_pic_url=$("#shop_sign").attr('src');
+		member_card.background_pic_url=background_pic_url;
+	}
+	var base_info=new Object();
+	base_info.logo_url=$(".avatar-img").attr('src');
+	base_info.brand_name=$("#brand_name").text();
+	base_info.code_type="CODE_TYPE_QRCODE";
+	base_info.title=$("#title").val();
+	base_info.color=$(".card-color-show").attr("data-code");
+	base_info.notice="请出示二维码核销卡券"; 
+	base_info.service_phone=$("#servicePhone").val();
+	base_info.description=$("#description").val() == null ? "" : $("#description").val();
+	
+	var sku=new Object(); 
+	sku.quantity=100000;
+	base_info.sku=sku;
+	
+	var date_info=new Object();
+	if(termDaysRadio=="1"){
+		date_info.type="DATE_TYPE_PERMANENT";//永久有效类型(DATE_TYPE_PERMANENT) 
+	}else{
+		date_info.type="DATE_TYPE_FIX_TIME_RANGE";
+		date_info.begin_timestamp=new Date($("#start_date").val()).getTime()/1000;  //type为DATE_TYPE_FIX_TIME_RANGE时专用
+		date_info.end_timestamp=new Date($("#end_date").val()).getTime()/1000;
+	}
+	base_info.date_info=date_info;
+	//自定义商城入口
+	base_info.date_info=date_info;
+	base_info.custom_url_name="购物商城";
+	base_info.custom_url="http://#(authUser.app_id).dbumama.com/";
+	base_info.custom_url_sub_title="会员卡打折";
+	base_info.get_limit=1;//每人限制领取1张
+	
+	member_card.base_info=base_info;
+	//特权说明
+	member_card.prerogative=$("#prerogative").val();
+	//是否支持会员积分优惠
+	var bonus = $("input:checkbox[name='supply_discount']").eq(1).is(":checked");
+	if(bonus == true){
+		var bonusRules = new Object();
+		bonusRules.cost_money_unit=parseInt($("#cost_money_unit").val()) * 100;//单位为分
+		bonusRules.increase_bonus=$("#increase_bonus").val();
+		bonusRules.cost_bonus_unit=$("#cost_bonus_unit").val();
+		bonusRules.reduce_money=parseInt($("#reduce_money").val()) * 100;
+		if($("#cost_money_unit").val() == "" || $("#increase_bonus").val()=="" || $("#cost_bonus_unit").val()=="" || $("#reduce_money").val()==""){
+			obz.error("请完善会员卡积分优惠规则");
+			return;
+		}
+		if($("#max_increase_bonus").val() != ""){
+			bonusRules.max_increase_bonus = $("#max_increase_bonus").val(); 
+		}
+		if($("#init_bonus").val() != ""){//激活送积分
+			bonusRules.init_increase_bonus = $("#init_bonus").val();
+		}
+		member_card.bonus_rule = bonusRules;
+		member_card.supply_bonus=true;
+	}else{
+		member_card.supply_bonus=false;
+	}
+	//是否支持存储卡
+	var balance = $("input:checkbox[name='supply_balance']").eq(0).is(":checked");
+	if(balance == true){
+		member_card.supply_balance=true;
+	}else{
+		member_card.supply_balance=false;
+	}
+	//是否开启购买会员卡功能
+	var supplyBuy = $("input:checkbox[name='supply_buy']").eq(0).is(":checked");
+	
+	if($("input[name='supply_discount']:checked").val()=="1"){
+		member_card.discount=100-parseInt($("#discount").val())*10;	
+	}
+	//激活设置
+	if($("input[name='active_set']:checked").val() == 1){
+		//自动激活
+		member_card.auto_activate = true;
+		//member_card.activate_url = "";
+	}else {
+		member_card.auto_activate = false;
+		member_card.activate_url="http://#(authUser.app_id).dbumama.com/user/active_card";
+	}
+	
+	//member_card.name="见上述示例";
+	//member_card.tips="立即查看";
+	//member_card.url="http://www.dbumama.com";
+	//自定义商城入口
+	//member_card.custom_url_name="购物商城";
+	//member_card.custom_url="http://#(authUser.app_id).dbumama.com/";
+	//member_card.custom_url_sub_title="会员卡购物有优惠"; 
+	
+	card.member_card=member_card;
+	var cardJson = new Object();
+	cardJson.card = card;
+	obz.showMessage("确定发布会员卡吗？", function(){
+		$(".content").mask("正在保存...");
+		obz.ajaxJson(obz.ctx+"/card/save", {card : JSON.stringify(cardJson), supply_buy: supplyBuy}, function(json) {
+			$(".content").unmask();
+			if(json.code==200){
+				obz.msg("提交成功", function(){
+					location.href = "#(webctx)/card";
+				});
+			}
+		},"json");
+		return false;
+	});
+}
+
+//更新会员卡
+function update(){
+	var cardData = new Object();
+	cardData.card_id = $("#card_id").val();
+	var member_card = new Object();
+	cardData.member_card = member_card;
+	var base_info = new Object();
+	member_card.base_info = base_info;
+	base_info.logo_url=$(".avatar-img").attr('src');
+	base_info.color=$(".card-color-show").attr("data-code");
+	base_info.notice="请出示二维码核销卡券"; 
+	base_info.service_phone=$("#servicePhone").val();
+	base_info.description=$("#description").val() == null ? "" : $("#description").val();
+	base_info.code_type="CODE_TYPE_QRCODE";
+	var date_info=new Object();
+	var termDaysRadio=$("input[name='termDaysRadio']:checked").val();
+	if(termDaysRadio=="1"){
+		date_info.type="DATE_TYPE_PERMANENT";//永久有效类型(DATE_TYPE_PERMANENT) 
+	}else{
+		date_info.type="DATE_TYPE_FIX_TIME_RANGE";
+		date_info.begin_timestamp=new Date($("#start_date").val()).getTime()/1000;  //type为DATE_TYPE_FIX_TIME_RANGE时专用
+		date_info.end_timestamp=new Date($("#end_date").val()).getTime()/1000;
+	}
+	//自定义商城入口
+	base_info.date_info=date_info;
+	base_info.custom_url_name="购物商城";
+	base_info.custom_url="http://#(authUser.app_id).dbumama.com/";
+	base_info.custom_url_sub_title="会员卡折扣"; 
+	base_info.get_limit=1;//每人限制领取1张
+	//特权说明
+	member_card.prerogative=$("#prerogative").val();
+	//会员卡折扣优惠
+	if($("input[name='supply_discount']:checked").val()=="1"){
+		member_card.discount=100-parseInt($("#discount").val())*10;
+	}
+	//是否支持会员积分优惠
+	var bonus = $("input:checkbox[name='supply_discount']").eq(1).is(":checked");
+	if(bonus == true){
+		var bonusRules = new Object();
+		bonusRules.cost_money_unit=parseInt($("#cost_money_unit").val()) * 100;//单位为分
+		bonusRules.increase_bonus=$("#increase_bonus").val();
+		bonusRules.cost_bonus_unit=$("#cost_bonus_unit").val();
+		bonusRules.reduce_money=parseInt($("#reduce_money").val()) * 100;
+		if($("#cost_money_unit").val() == "" || $("#increase_bonus").val()=="" || $("#cost_bonus_unit").val()=="" || $("#reduce_money").val()==""){
+			obz.error("请完善会员卡积分优惠规则");
+			return;
+		}
+		if($("#max_increase_bonus").val() != ""){
+			bonusRules.max_increase_bonus = $("#max_increase_bonus").val(); 
+		}
+		if($("#init_bonus").val() != ""){
+			bonusRules.init_increase_bonus = $("#init_bonus").val();
+		}
+		member_card.bonus_rule = bonusRules;
+		member_card.supply_bonus=true;
+	}else{
+		member_card.supply_bonus=false;
+	}
+	//激活设置
+	if($("input[name='active_set']:checked").val() == 1){
+		//自动激活
+		member_card.auto_activate = true;
+		//member_card.activate_url = "";
+	}else {
+		member_card.auto_activate = false;
+		member_card.activate_url="http://#(authUser.app_id).dbumama.com/user/active_card";
+	}
+	//是否支持存储卡
+	var balance = $("input:checkbox[name='supply_balance']").eq(0).is(":checked");
+	if(balance == true){
+		member_card.supply_balance=true;	
+	}else{
+		member_card.supply_balance=false;
+	}
+	//是否开启购买会员卡功能
+	var supplyBuy = $("input:checkbox[name='supply_buy']").eq(0).is(":checked");
+	//alert("supplyBuy:" + supplyBuy);
+	obz.showMessage("确定更新会员卡吗？", function(){
+		$(".content").mask("正在保存...");
+		obz.ajaxJson(obz.ctx+"/card/update", {card : JSON.stringify(cardData), supply_buy:supplyBuy}, function(json) {
+			$(".content").unmask();
+			if(json.code==200){
+				obz.msg("更新成功", function(){
+					location.href = "#(webctx)/card";
+				});
+			}
+		},"json");
+		return false;
+	});
+}
+
+$(document).ready(function(){
+	$("#title").blur(function(){
+		if($(this).val() != ""){
+			$("#card_name").text($(this).val());
+		}
+	});
+	bindSetTableAEvent();
+	$('#name').blur(function() {
+		var name=$(this).val();
+		$(".member-type").html(name);
+    });
+	$("#discount").blur(function(){
+		if($(this).val() != ""){
+			$("#prerogative").val("会员卡享受" + $(this).val() + "折优惠");
+		}
+	});
+	//时间限制
+	$("input[name='termDaysRadio']").change(function(){
+		if($(this).val()==1){
+			$("#date_div").hide();
+		}else{
+			$("#date_div").show();
+		}
+	});
+	//激活设置
+	$("input[name='active_set']").change(function(){
+		if($(this).val()==1){
+			$("#active_div").hide();
+		}else{
+			$("#active_div").show();
+		}
+	});
+	//会员卡优惠
+	$("input[name='supply_discount']").click(function(){
+		if($(this).val() == 0){
+			if($(this).is(':checked')){
+				$("#js_bonus_rule_detail").show();	
+			}else{
+				$("#js_bonus_rule_detail").hide();				
+			}
+		}else{
+			if($(this).is(':checked')){
+				$("#discount_div").show();	
+			}else{
+				$("#discount_div").hide();				
+			}
+		}
+	});
+	//储值卡
+	$("input[name='supply_balance']").click(function(){
+		if($(this).is(":checked")){
+			//$("#balance_table").show();
+			$("#balance_tips").show();
+		}else{
+			$("#balance_table").hide();
+			$("#balance_tips").hide();
+		}
+	});
+	
+	//支持购买
+	$("input[name='supply_buy']").click(function(){
+		if($(this).is(":checked")){
+			//$("#balance_table").show();
+			$("#buyer_table").show();
+		}else{
+			$("#buyer_table").hide();
+		}
+	});
+	
+	$(".js-btn-save").click(function(){
+		var card_id = $("#card_id").val();
+		if(card_id != ""){
+			update();
+		}else{
+			save();
+		}
+	});
+});
+</script>
+

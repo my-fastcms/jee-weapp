@@ -1,0 +1,59 @@
+<view class='weui-content'>
+  <view class="weui-navbar">
+    <block wx:for-items="{{tabs}}" wx:key="id">
+      <view id="{{index}}" class="weui-navbar__item proinfo-tab-tit {{activeIndex == index ? 'weui-bar__item--on' : ''}}" bindtap="tabClick">{{item}}
+      </view>
+    </block>
+  </view>
+
+  <view class="weui-tab__bd proinfo-tab-con">
+    <block wx:if="{{orders.length>0}}">
+      <scroll-view style="height:{{scollHeight}}px;" class='mt-20' scroll-y="true" bindscrolltolower="lowerview">
+      
+        <view class="weui-panel" bindtap="toCommissionDetail" wx:for="{{orders}}" wx:key="orderId" wx:for-index="idx" wx:for-item="order" data-id="{{order.orderId}}">
+          <view class="weui-panel__hd">
+            <view class="weui-cell padding_0">
+              <view class="weui-cell__bd weui-cell_primary">
+                <view>{{order.sn}}</view>
+              </view>
+              <view class="weui-cell__ft act">
+                <text class="">{{order.status}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="weui-panel__bd">
+            <view class="weui-media-box weui-media-box_appmsg" wx:for="{{order.orderItems}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+              <view class="weui-media-box__hd">
+                <image class="weui-media-box__thumb" src="{{item.productImg}}" alt="" />
+              </view>
+              <view class="weui-media-box__bd">
+                <view class="weui-media-box__desc">{{item.productName}}</view>
+                <view>
+                  <view class="weui-media-box__desc price">
+                  ¥{{item.price}}　×{{item.quantity}}
+                  </view>
+                  <!-- <view class='right_view'>
+                  <block wx:if="true">
+                    <button type="warn" size="mini">撤销退款</button>
+                  </block>
+                  </view> -->
+                </view>
+                
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+    <block wx:else>
+      <view class="no-group">
+        <view class="text-center">
+          <image src="/style/images/no-orders.png"></image>
+          <view class="mt-20">暂无订单</view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>
+
+

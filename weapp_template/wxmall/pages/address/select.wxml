@@ -1,0 +1,22 @@
+<view class="container">
+  <view>
+    <view wx:for="{{addressList}}" class="weui-cell" wx:key="id">
+      <view class="weui-cell__hd" bindtap="selectAddress" id="{{item.id}}">
+        <icon wx:if="{{item.isSelected}}" class="weui-icon-checkbox_success" type="success" size="22"></icon>
+        <icon wx:else class="weui-icon-checkbox_circle" type="circle" size="22"></icon>
+      </view>
+      <view class="weui-cell__bd page__bd_spacing" bindtap="selectAddress" id="{{item.id}}">
+        <view class="blod">{{item.receiverName}} {{item.phone}}</view>
+        <view>{{item.address}}</view>
+      </view>
+      <view class="weui-cell__ft">
+        <navigator url="../address/add?id={{item.id}}" hover-class="none" hover-class="none" data-index="{{index}}" open-type='redirect'>
+          <image src="../../style/images/iconfont-edit.png" class="icon" />
+        </navigator>
+      </view>
+    </view>
+  </view>
+  <view class="bottom-box" >
+    <button type="primary" size="default" bindtap="addAddess" style='background: {{navbar_bgcolor}}' >新增收货地址</button>
+  </view>
+</view>

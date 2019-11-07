@@ -1,0 +1,217 @@
+#include ("/_includes/header.html")
+<style>
+.bootstrap-dialog-message{padding-left: 12px;padding-top: 0px;}
+div.actdetail-box figure {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: 1s transform;
+  font-size: 1.6rem;
+}
+div.actdetail-box figure img {
+  width: 100%; height: auto;
+  
+}  
+div.actdetail-box figure figcaption {
+  position: absolute;
+  width: 100%; height: 100%; top: 0;
+  transform: rotateY(.5turn) translateZ(1px);
+  background: rgba(255,255,255,0.9);
+  opacity: 0.6;
+  transition: 1s .5s opacity;
+}   
+div.actdetail-box figure figcaption pre{
+  width: 100%;
+  height: 100%;
+  padding: 25px 80px;
+  font-size:1.1em;
+  overflow-x:scroll;	 
+  background: rgba(251,251,251,0.3);
+}  
+.actdetail{
+	position: absolute;
+	bottom: 20px;
+	left: 15px;
+}    
+.actjoin,.actback{
+	position: absolute;
+	bottom: 20px;
+	right: 15px;
+}   
+.button {
+    background-color: #999;
+    background-image: -webkit-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+    background-image:    -moz-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+    background-image:     -ms-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+    background-image:      -o-linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+    background-image:         linear-gradient(hsla(0,0%,100%,.05), hsla(0,0%,0%,.1));
+    border: none;
+    border-radius: .5em;
+    box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2),
+                inset 0 2px 0 hsla(0,0%,100%,.1),
+                inset 0 1.2em 0 hsla(0,0%,100%,0.1),
+                inset 0 -.2em 0 hsla(0,0%,100%,.1),
+                inset 0 -.25em 0 hsla(0,0%,0%,.25),
+                0 .25em .25em hsla(0,0%,0%,.05);
+    color: #444;
+    cursor: pointer;
+    display: inline-block;
+    font-family: sans-serif;
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.5;
+    padding: .5em 1.5em .75em;
+    text-decoration: none;
+    text-shadow: 0 1px 1px hsla(0,0%,100%,.25);
+    vertical-align: middle;
+}
+.button:hover {
+    outline: none;
+}
+.button:hover,
+.button:focus {
+    box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2),
+                inset 0 2px 0 hsla(0,0%,100%,.1),
+                inset 0 1.2em 0 hsla(0,0%,100%,.1),
+                inset 0 -.2em 0 hsla(0,0%,100%,.1),
+                inset 0 -.25em 0 hsla(0,0%,0%,.25),
+                inset 0 0 0 3em hsla(0,0%,100%,.2),
+                0 .25em .25em hsla(0,0%,0%,.05);
+    color: #444;
+}
+.button:active {
+    box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.2),
+                inset 0 2px 0 hsla(0,0%,100%,.1),
+                inset 0 1.2em 0 hsla(0,0%,100%,.1),
+                inset 0 0 0 3em hsla(0,0%,100%,.2),
+                inset 0 .25em .5em hsla(0,0%,0%,.05),
+                0 -1px 1px hsla(0,0%,0%,.1),
+                0 1px 1px hsla(0,0%,100%,.25);
+    margin-top: .25em;
+    outline: none;
+    color:#444;
+    padding-bottom: .5em;
+}
+.blue {background-color: #1a7bb9; color: white;} 
+.yellow {background-color: #fff6c6;}    
+.actback {background-color: rgba(251,251,251,1);}   
+</style>
+#include ("/_includes/scripts.html")
+<div class="actdetail-box">
+  <input type="hidden" id="activityId" value="#(activity.id??)"/>
+  <figure>
+    <img src="#(img_domain)#(activity.imgPath??)" alt="">
+    <span class="button large regular blue actdetail">活动说明</span>       
+    <span class="button large regular blue actjoin">报名参加</span>       
+    <figcaption>
+    	<pre>#(activity.explain??)</pre>
+    	<span class="button large regular actback"><span style="float: left;">返  回&nbsp;&nbsp;</span><span style="width: 15px; height: 15px;display: inline-block;margin-top: 5px;"><img src="#(webctx)/resources/img/back.png" width="100%;" height="100%"/></span></span> 
+    </figcaption>
+  </figure>
+</div>
+
+<div id="layer-box">
+	<div style="padding: 10px">
+	<div class="form-group">
+       <input id="phone" type="text" class="form-control" placeholder="请输入手机号" required=""/>
+    </div>
+    <div class="form-group">
+    	<div class="input-group">
+			<input type="text" class="form-control" placeholder="短信验证码" id="phone_code"/>
+			<span class="input-group-btn"><a id="sendCodeBtn" href="javascript:void(0)" class="btn btn-primary">发送验证码</a></span>
+		</div>
+	</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){	
+	$(".actdetail").click(function(){
+		$(".actdetail-box").find("figure").css("transform","rotateY(.5turn)");
+		$(".actdetail-box").find("figcaption").css("opacity","1");
+	});
+	$(".actback").click(function(){
+		$(".actdetail-box").find("figure").css("transform","rotateY(1turn)");
+		$(".actdetail-box").find("figcaption").css("opacity","1");
+	});
+	$("#sendCodeBtn").click(function(){
+		if($("#phone").val() == null || $("#phone").val() == ""){
+			alert("请输入手机号码");
+			return;
+		}
+		$("#layer-box").mask("正在发送验证码...");
+		obz.ajaxJson(obz.ctx+"/sendCode", {phone:$("#phone").val()}, function(resp){
+			$("#layer-box").unmask();
+			if(resp.code == 200){
+				obz.msg("短信验证码已发送");//alert(resp.msg);
+			}
+		});
+	});
+	
+	$(".actjoin").click(function(){
+		var phone = '#(sellerUser.phone??)';
+		if(phone == null || phone == ""){
+			BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_WIDE,
+				title: "完善手机号码",
+		        message: $("#layer-box").html(),
+		        buttons: [ {
+		            label: '关闭',
+		            action: function(self){
+		                self.close();
+		            }},{
+		            label: '确定',
+		            cssClass : "btn-primary",
+		            action: function(self){
+				    	obz.ajaxJson(obz.ctx+"/activity/addPhone", {phone:$("#phone").val(),phoneCode:$("#phone_code").val()}, function(resp){
+							if(resp.code == 200){
+								self.close();
+								obz.msg("验证成功！");
+							}
+						});
+				    }}]
+		    });
+/* 			layer.open({
+			 	title:"完善手机号码",
+			    type: 1,
+			    area:['400px', 'auto'],
+			    btn: ['确定', '取消'],
+			    shade: 0.1,
+			    content:  $("#layer-box"),
+			    scrollbar: false ,
+			    yes: function(index, layero){
+			    	obz.ajaxJson(obz.ctx+"/activity/addPhone", {phone:$("#phone").val(),phoneCode:$("#phone_code").val()}, function(resp){
+						if(resp.code == 200){
+							layer.close(index); 
+							obz.msg("验证成功！");
+						}
+					});
+			       
+			    },
+			    end: function(index, layero){
+			    	$("#layer-box").find("input").val("");
+			        layer.close(index);
+			        return false;
+			    },
+			    cancel: function(index, layero){
+			    	$("#layer-box").find("input").val("");
+			        layer.close(index);
+			        return false;
+			    }
+			}); */
+		}
+		obz.showMessage("是否确认参加该活动", function(){
+			$("#actdetail-box").mask("正在提交...");
+			obz.ajaxJson(obz.ctx+"/activity/join", {activityId: $("#activityId").val()}, function(resp) {
+				$("#actdetail-box").unmask();
+				 if(resp.state == "ok"){
+					obz.msg("报名成功！");
+					setTimeout(function(){
+						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+						parent.layer.close(index); //再执行关闭
+						},2000);
+					
+				} 
+			}); 
+		});
+	})
+})
+</script>

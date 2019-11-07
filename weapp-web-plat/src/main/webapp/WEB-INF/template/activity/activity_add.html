@@ -1,0 +1,175 @@
+#include ("/_includes/_layout.html")
+#@layout("新增活动", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define css()
+<link rel="stylesheet" href="#(webctx)/resources/css/product.css"/>
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+#end
+#define content()
+<div class="wrapper wrapper-content">
+    <div class="row col-sm-12">
+	<div class="ibox-content active_statistics">
+		<div class="title_query padtop"> 
+			<form id="activityForm" class="form-horizontal">
+				<input type="hidden" name="active" id="active" value="#(platActivitys.active??)"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+				<input type="hidden" id="activityId" value="#(platActivitys.id??)"/>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">活动名称<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-3" id="error_name">
+		                <input id="name" name="name" value="#(platActivitys.name??)" maxlength="255" type="text" class="form-control check-value disabled-input" >
+		                <label class="control-label" for="name"></label>
+		            </div>
+		        </div>
+
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">活动时间<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-9">
+	                   	<div class="row">
+								<div class="col-lg-2 col-md-3" id="error_start_date">
+			                        <input type="text" id="start_date" name="start_date" readonly="readonly" style="min-width:112px; width:100%; padding-left:15px"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'end_date\',{d:-1})}'})"
+									class="Wdate check-value" value="#date(platActivitys.startDate??,'yyyy-MM-dd')" />
+									<label class="control-label" for="start_date"></label>
+			                    </div>
+			                    <div class="col-lg-2 col-md-3" id="error_end_date">
+			                        <input type="text" id="end_date" name="end_date" readonly="readonly" style="min-width:112px;width:100%;padding-left:15px"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\',{d:1})||$dp.$DV(\'%y-%M-%d\',{d:1})}'})"
+									class="Wdate check-value" value="#date(platActivitys.endDate??,'yyyy-MM-dd')" />	
+									<label class="control-label" for="end_date"></label>
+			                    </div>	
+		                </div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		        	<label class="col-md-2 control-label">活动图片<span style="color: red;"><em>*</em></span></label>
+		        	<div class="col-md-6" id="error_imgPath">
+		                <input id="activityImage" name="activityImage" value="#(platActivitys.imgPath??)" type="hidden">
+					    <div id="activity-image-div" class="main-image-div" style="width:400px; height:150px">
+					    	#if(platActivitys.imgPath??)
+                            	<img class="image-preview" src="#(img_domain)#(platActivitys.imgPath??)" >
+                                <a class="close-modal small hide" href="javascript:;" onclick="deleteImg();">×</a>
+                            #else 
+                        		<a class="main-image-add" onclick="addActivityImage(true);" href="javascript:;">+加图</a>
+                        	#end
+				        </div>
+					    <p class="size-remark">建议尺寸：640*480像素 </p>
+					    <label class="control-label" for="imgPath"></label>
+		        	</div>
+		        </div>
+		        <div class="form-group">
+		        	<label class="col-md-2 control-label">活动说明<span style="color: red;"><em>*</em></span></label>
+		        	<div class="col-md-6" id="error_explain">
+			        	<textarea id="explain" name="explain" class="form-control check-value" style="resize: vertical; height: 200px;" aria-required="true">#(platActivitys.explain??)</textarea>
+			        	<label class="control-label" for="explain"></label>
+		        	</div>
+		        </div>
+	        </form>  
+	    </div>
+		<div class="panel-footer" align="center">
+	   	 	<button id="saveActivity" onclick="saveActivity();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	   	 	<a href="javascript:history.go(-1);" class="btn btn-default btn-sm">取   消</a>
+		</div>
+	</div>
+</div>
+</div>
+<!-- HTML 模板结束 -->
+#define script()
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".main-image-div").hover(function(){
+		$(this).find(".close-modal").removeClass("hide");
+	   $(this).find(".close-modal").addClass("hover");
+	},function(){
+		 $(this).find(".close-modal").addClass("hide");  
+		 $(this).find(".close-modal").removeClass("hover");
+	});
+	
+	/* ===失去焦点再次判断是否有值,有则清除对应的错误提示=== */
+	$(".check-value").blur(function (){
+		loseblur(this);
+	})
+	function loseblur(obj){
+		if($(obj).val() != "" && $(obj).val() != null) {
+			$(obj).parent().removeClass("has-error");
+			$(obj).parent().find("label").empty();
+		}
+	}
+	
+});
+function saveActivity(){
+	var params = {}, error = {};
+	/*活动名称*/						/*活动开始时间 */
+	var name = $("#name").val(), startDate = $("#start_date").val(), 
+	/*活动结束时间*/								
+	endDate = $("#end_date").val(), 
+	/*活动海报*/							 /*活动说明*/
+	imgPath = $("#activityImage").val(), explain = $("#explain").val();
+
+	/*检验主表信息开始*/
+	if($.trim(name) == "") {error.error_name = "活动名称不能为空";} 
+	else {error.error_name = ""; params.name = name}
+	
+	if($.trim(startDate) == "") {error.error_start_date = "活动开始时间不能为空";} 
+	else {error.error_start_date = ""; params.startDate = startDate;}
+	
+	if($.trim(endDate) == "") {error.error_end_date = "活动结束时间不能为空";} 
+	else {error.error_end_date = ""; params.endDate = endDate;}
+
+	if($.trim(explain) == "") {error.error_explain = "活动说明不能为空";} 
+	else {error.error_explain = ""; params.explain = explain}
+	
+	if($.trim(imgPath) == "") {error.error_imgPath = "活动图片不能为空";} 
+	else {error.error_imgPath = ""; params.imgPath = imgPath;}
+	/*检验主表信息结束*/
+	
+	/*如果主表信息不完整，提示相关错误信息*/
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	
+	params.activityId = $("#activityId").val();
+	
+	$("#activityForm").mask("正在保存...");
+	obz.ajaxJson(obz.ctx+"/activity/save", params, function(resp) {
+		$("#activityForm").unmask();
+		console.log(JSON.stringify(resp))
+		if(resp.state == "ok"){
+			obz.msg("保存成功,等待跳转...", function(){
+				location.href = "#(webctx)/activity";					
+			});
+		}
+	});
+	
+}
+function addActivityImage(obj){
+	$("#error_imgPath").removeClass("has-error");
+	$("#error_imgPath").find("label").empty();
+	obz.selectImageOne(function(selImgs){
+		if(selImgs.length<=0){
+			obz.error("请选择一张图片");
+			return false;
+		}
+		var img = selImgs[0];
+        var h='<img class="image-preview" src="'+img.url+'" >';
+        h=h+'<a class="close-modal small hide" href="javascript:;" onclick="deleteImg();">×</a>';
+	    $("#activity-image-div").empty().append(h);     
+	    $('#activityImage').val(img.title);
+		return true;
+	});
+}
+function deleteImg(){
+	 var h='<a class="main-image-add" onclick="addActivityImage(true);" href="javascript:;">+加图</a>';
+	 $("#activity-image-div").empty().append(h);
+	 $('#activityImage').val('');  
+}
+Template.init("#menu-activity");
+</script>
+#end
+#end

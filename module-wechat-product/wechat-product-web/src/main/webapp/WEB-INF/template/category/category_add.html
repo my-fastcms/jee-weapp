@@ -1,0 +1,116 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/product.css"/>
+#end
+#@layout("增加商品分类", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox">
+		<div class="ibox-content">
+			<div class="title_query padtop"> 
+			<form id="qiandaoForm" class="form-horizontal">
+				  <div class="form-group">
+			            <label class="col-md-2 control-label">分类名称<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-8" id="error_name">
+			            	<input type="hidden" id="id" value="#(productCategory.id??)" class="input-xfat"  name="id"  >
+			                <input id="name" name="name" value="#(productCategory.name??)" maxlength="20" type="text" class="form-control" style="width: 200px" >
+			                <label class="control-label" for="name"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+		            <label class="col-md-2 control-label">图标</label>
+			            <div class="col-md-5" id="error_img_path">
+						  <div class="main-image-div">
+                             #if (productCategory.img_path??)
+                                    <img class="image-preview" src="#(img_domain)#(productCategory.img_path??)" >
+                                       <a class="close-modal small hide" href="javascript:;" onclick="deleteMainImg();">×</a>
+                                       <input id="img_path_input" name="img_path_input" value="#(productCategory.img_path??)" type="hidden">
+                             #else 
+				                <a class="main-image-add" onclick="addPicture(true);" href="javascript:;" >+加图</a>
+				             #end 
+				           </div>
+				           <p class="size-remark">建议尺寸：480*480像素 </p>
+						  <label class="control-label" for="error_img_path"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">排序<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_orders">
+			                <input id="orders" name="orders" value="#(productCategory.orders??)" maxlength="20" type="text" class="form-control"  onkeyup="this.value=this.value.replace(/\D/g,'')">
+			                <label class="control-label" for="error_orders"></label>
+			            </div>
+			        </div>
+			        <div class="panel-footer" align="center">
+				   	 	<button onclick="saveCategory();" type="button" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+				   	 	<a href="#(webctx)/category" class="btn btn-default btn-sm">取   消</a>
+					</div>
+				</form>
+			</div>
+	  </div>
+	</div>
+</div>
+#end
+<script type="text/javascript">
+function saveCategory(){
+
+	$("label.has-error").empty().removeClass("has-error");
+
+	var params = {},error = {};	
+	 params.id = $("#id").val();
+	 var img_path = $("#img_path_input").val();
+	 if(img_path){
+	   params.img_path=img_path;
+	 }
+	 params.name = $("#name").val();
+	 params.orders = $("#orders").val();
+	
+	
+	if($.trim(params.name) =="") {error.error_name = "分类名称不能为空"; } 
+	if($.trim(params.orders) =="") {error.error_orders = "分类排序不能为空"; }
+	//if($.trim(params.img_path) =="") {error.error_img_path = "请上传分类图标"; }
+	var hasError = false;
+	for(var key in error){
+		    hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+	
+	obz.ajaxJson(obz.ctx+"/category/save", params, function(resp) {
+		if(resp.code == 200){
+			location.href = "#(webctx)/category";
+		}
+	});
+}
+</script>
+<script type="text/javascript">
+	function addPicture(obj){
+		obz.selectImageOne(function(selImgs){
+			if(selImgs.length<=0){
+				obz.error("请选择一张图片");
+				return false;
+			}
+			var img = selImgs[0];
+			var h='<img class="image-preview" src="'+img.url+'" >';
+	        h=h+'<a class="close-modal small hide" href="javascript:;" onclick="deleteMainImg();">×</a>';
+	        h=h+'<input name="img_path_input" id="img_path_input" value="'+img.title+'" type="hidden">'
+	    	$(".main-image-div").empty().append(h);
+			return true;
+		});
+	}
+	
+	function deleteMainImg(){
+		 var h='<a class="main-image-add" onclick="addPicture(true);" href="javascript:;">+加图</a>';
+		 $(".main-image-div").empty().append(h);
+	}
+
+	//----
+	$(".main-image-div").hover(function(){
+		$(this).find(".close-modal").removeClass("hide");
+	    $(this).find(".close-modal").addClass("hover");
+	},function(){
+		$(this).find(".close-modal").addClass("hide");  
+		$(this).find(".close-modal").removeClass("hover");
+	});
+</script>

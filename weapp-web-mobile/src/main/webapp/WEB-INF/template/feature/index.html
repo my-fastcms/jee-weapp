@@ -1,0 +1,51 @@
+#include ("/_includes/_layout.html")
+#@layout("商品分类", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link rel="stylesheet" href="#(webctx)/resources/css/mpreview.css"/>
+<link rel="stylesheet" href="#(webctx)/resources/css/productList.css"/>
+#end
+#define content()
+	<div class="content home">
+		<div class="weui_tab_bd main-container" id="window">
+		</div>	
+	</div>
+#end	
+	<script type="text/javascript">
+
+$(document).ready(function() {
+
+	$.showLoading("正在加载...");
+	 param={};
+	 param.id=${entity.id};
+	 url="#(webctx)/feature/getPreviewHtml";
+	 $.ajax({
+	        url: url,
+	        data: param,
+	        type: "POST",
+	        success: function (data) {
+	        	$.hideLoading();
+	            if (data.Success) {
+	            	if(data.code && data.code == 200){
+	            		$('#window').html(data.data)
+	            		$(".swiper-container").swiper({
+	            			speed: 300,
+	            			loop: true,
+	            			autoplay: 3000
+	            		});		
+	            	}else {
+	            		alert(data.msg);
+	            	}
+	               
+	            } else {
+	            	showMsg("服务端没有响应,请联系客服......");
+	           }
+	        },
+	        error: function (request) {
+	        	showMsg("服务端没有响应,请联系客服......");
+	        }
+	    });
+ 
+});
+</script>
+
+

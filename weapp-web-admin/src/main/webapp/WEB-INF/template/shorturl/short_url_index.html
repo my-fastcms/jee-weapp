@@ -1,0 +1,58 @@
+#include ("/_includes/_layout.html")
+#@layout("短链接生成", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox-content">
+	<div class="page-showcase-attachment" id="mainTable">
+	   <div id="itemdlg">
+		  <div style="padding:10px;width:380px;">
+			<div class="container-fluid">
+				 <div class="form-group" style="margin-bottom:0px;text-align: center;">
+				  <label class="col-sm-4 control-label" style="line-height:45px">长链接:</label>
+					<div class="col-sm-8" style="padding: 0px">
+					 <input id="longUrl" type="text" class="form-control" name="longUrl" style="margin-top: 5px;width: 700px;">
+					</div>
+				 </div>
+			</div>	
+		  </div>   
+		  <div style="padding:10px;width:380px;">
+			<div class="container-fluid">
+				 <div class="form-group" style="margin-bottom:0px;text-align: center;">
+				  <label class="col-sm-4 control-label" style="line-height:45px">短链接:</label>
+					<div class="col-sm-8" style="padding: 0px">
+					 <input id="shortUrl" type="text" class="form-control" name="shortUrl" style="margin-top: 5px;width: 400px;">
+					</div>
+				 </div>
+			</div>	
+		  </div> 
+		  <div style="padding:10px;width:380px;padding-left: 135px">
+			  <a id="generateBtn" class="btn btn-success">生成短链接</a>  
+		  </div> 
+	  </div>
+	</div>
+	</div>
+</div>
+#end
+<script type="text/javascript">
+	
+	$(function(){
+		$("#generateBtn").click(function(){
+			var longUrl = $("#longUrl").val();
+			if(longUrl == null || longUrl ==""){
+				obz.msg("请输入长链接");
+				return;
+			}
+			
+			var params = {};
+			params.longUrl = longUrl;
+			obz.ajaxJson("#(webctx)/shorturl/generateUrl", params, function(resp) {
+				if(resp.code == "200"){
+					$("#shortUrl").val(resp.data.shortUrl);
+					obz.msg("短链接生成成功，请复制使用");
+				}
+			}); 
+			
+		});
+	})
+
+</script>

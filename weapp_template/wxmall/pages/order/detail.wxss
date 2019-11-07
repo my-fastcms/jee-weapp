@@ -1,0 +1,36 @@
+
+.weui-media-box__desc{
+  padding: 2px 0;
+}
+
+.status{
+  color:orangered;
+  font-family:"微软雅黑";
+}
+
+.price{
+  font-family:Arial, Helvetica, sans-serif;
+  color:#fa3c64;
+}
+.weui-media-box__bd .spec{
+  display: inline-block;
+  color:#fa3c64;
+  border:1px solid #fa3c64;
+  padding:4rpx 10rpx;
+  border-radius: 10rpx;
+  font-size:22rpx;
+}
+.order_info{
+    background:#fff;
+    margin:30rpx;
+    border-radius: 10rpx;
+    border:1px solid #eee;
+}
+.name-shou { padding:10rpx 0; color:#fa3c64; font-size:32rpx;}
+.addre-shou { font-size:28rpx; color:#666;}
+.weui-panel__hd { font-size:28rpx; color:#666; padding:20rpx 30rpx;}
+.weui-cell { padding:30rpx 40rpx;}
+.weui-media-box__desc { font-size:28rpx;}
+.weui-form-preview__bd button {  border:1px solid #fa3c64; color:#fa3c64; background: none;}
+.promotion-foot-menu-label { padding-left:30rpx; font-size:30rpx; }
+.weui-tabbar { background: #fff; border-top:1px solid #eee;}

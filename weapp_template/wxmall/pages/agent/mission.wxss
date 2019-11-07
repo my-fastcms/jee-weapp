@@ -1,0 +1,10 @@
+/* pages/agent/mission.wxss */
+.weui-media-box_appmsg .weui-media-box__hd {
+  width:40px;
+  height:40px;
+  margin-right:10px;
+}
+.weui-msg__number { font-size:90rpx; color:#fa3c64;}
+.weui-msg__title { font-size:32rpx; color:#fa3c64;}
+.weui-msg__desc { font-size:26rpx; color:#666; margin-top:60rpx;}
+.content-padded .weui-btn { background:#fa3c64; width:600rpx; height:88rpx; line-height: 88rpx; font-size:30rpx; }

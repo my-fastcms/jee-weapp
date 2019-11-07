@@ -1,0 +1,391 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<style>
+.radio-inline {
+    vertical-align: middle; 
+}
+
+.keywords_prtview{
+	width:310px;
+	height: 500px;
+	overflow: hidden;
+	float: left;
+}
+.keywords_menu{
+	/* margin:30px 10px; */
+	overflow: hidden;
+}
+.pre_keywords_item{
+	cursor:pointer;
+	border-radius:5px;
+	padding:5px 15px;
+	display:inline;
+	border: 1px solid gray;
+	line-height: 3em;	
+}
+.keywords_menu a{
+	width:auto;
+	color:gray;	
+}
+.keywordsBgColor{
+	background: #2f4050;
+	color:white;
+}
+
+.modal-body{
+	overflow: hidden;
+}
+.img-rounded{
+	width: 100%;
+	height: 100%;
+}
+.img-box{
+	float: left;
+	width:90px;
+	height:90px;
+	margin: 10px 38px;
+}
+.img-border{
+	border: 5px solid rgb(50, 255, 235);
+	overflow: hidden;
+}
+.btn-routine{
+	display: table;
+    margin-bottom: 10px;
+}
+.form-group {
+	overflow: hidden;
+}
+</style>
+#end
+#@layout("关键字回复", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+<div class="content ibox-content col-sm-10" style="padding-bottom: 45px">
+  <div class="menu_setting_area js_editBox"> 
+  <!-- 关键字区域 -->
+   <div class="keywords_preview_area">  
+   <div class="keywords_prtview">
+   		<div class="keywords_menu">
+	    <ul id="keywordsList"></ul>
+	    </div>
+	    <a id="add_keywords_btn" href="javascript:void(0)" class="btn btn-primary">新增关键字</a>
+   </div>
+   </div> 
+    <!-- 菜单编辑区域 -->
+    <div class="menu_form_area"> 
+    <div id="js_rightBox" class="portable_editor to_left" style="display: block;">
+     <div class="editor_inner" style="display: none;"> 
+     	<div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">关键字设置</h4> 
+      </div>
+      <div class="menu_form_bd"> 
+      	<div class="menu_content_container"> 
+        	<div class="menu_content" id="keywords_text_container" style="overflow:hidden;">
+				<input type="text" id="keywords_text" class="keywords_text_val" maxlength="255"/>
+        	</div>
+       	</div> 
+      </div> 
+     
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">回复规则设置</h4> 
+      </div> 
+      <div class="menu_form_bd"> 
+      	<div class="menu_content_container"> 
+        	<div class="menu_content" style="overflow:hidden;">
+       		<label class="radio-inline" for="rdo1">
+				<input id="rdo1" name="keywords_enable" value="1" type="radio" checked="checked" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+				<span class="label-text" style="vertical-align: middle">启用</span>
+			</label>
+             <label class="radio-inline" for="rdo0">
+				<input id="rdo0" name="keywords_enable" value="0" type="radio" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+				<span class="label-text">关闭</span>
+			</label>
+      		</div> 
+      	</div>
+      </div>
+      
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">标签设置</h4> 
+      </div> 
+      <div class="menu_form_bd">
+	      <div class="menu_content_container">
+	      <div class="menu_content" style="overflow:hidden;">
+		      <div class="form-group">
+		          <span class="col-md-4">自动打标签</span>
+		          <div class="col-md-8" id="error_tags_expand">
+		              <select class="form-control" id="tags_expand" name="tags_expand" style="width: 160px;text-align: center;text-align-last:center;"></select>
+		              <label class="control-label" for="send_tags_expand"></label>
+		          </div>
+		      </div>
+		      <div class="form-group">
+		          <span class="col-md-4">自动取消标签</span>
+		          <div class="col-md-8" id="error_tags_invitee">
+		              <select class="form-control" id="tags_invitee" name="tags_invitee" style="width: 160px;text-align: center;text-align-last:center;"></select>
+		              <label class="control-label" for="send_tags_invitee"></label>
+		          </div>
+		      </div>
+	      </div>
+      </div>
+      </div>
+     
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">回复内容设置</h4> 
+      </div> 
+      <div class="menu_form_bd" id="view"> 
+      	<div id="config-list" class="menu_content_container"> 
+        	<div class="menu_content_container" style="padding-bottom: 10px;"> 
+		        <div class="menu_content url jsMain"> 
+		         <a href="javascript:void(0)" class="type_text" onclick="WxmMsg.textClick(this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_image_itme" onclick="WxmMsg.openImageClick(this)" style="text-decoration: underline;">图片</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_routine" onclick="WxmMsg.routineClick(this)" style="text-decoration: underline;">小程序</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_zan_item" onclick="WxmMsg.openProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;
+				 <a href="javascript:void(0)" class="type_wechat_media" onclick="WxmMsg.openWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+				 <a href="javascript:void(0)" class="type_custom_media" onclick="WxmMsg.openCustomMediaDialog(this)" style="text-decoration: underline;">自定义图文</a> &nbsp;/&nbsp;
+		         <a href="javascript:void(0)" onclick="WxmMsg.delRow(this)" style="text-decoration: underline;color: red;" class="del_config">删除行</a>
+		        </div>
+		        <div class="menu_content select_content" style="overflow:hidden;"></div>
+	       	</div>
+       	</div>
+       	<div class="msg_sender_msg mini_tips warn"> 
+	       	<a id="add_reply_config" href="javascript:void(0)" class="btn btn-primary btn-xs" title="每新增一行，增加一条回复消息">新增一条回复</a>
+	    </div>
+      </div> 
+     </div> 
+   </div> 
+  </div>
+	</div>
+	<div class="panel-footer" align="center">
+   	 	<button id="saveMenu" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+	</div>
+	<div class="help col-sm-2" style="float: right; padding:0px">
+       	<div>
+             <h5>功能描述</h5>
+             <ul class="list-unstyled project-files">
+                 <li><a href="javascript:void(0)">用户输入设置的关键字，可以自动回复多条消息</a></li>
+                 <li><a href="javascript:void(0)">一条回复消息，可以包含最多8个商品或8个微信素材，可混搭</a></li>
+             </ul>
+             <br/>
+             <h5><font color="blue">温馨提示</font></h5>
+             <ul class="list-unstyled project-files">
+             	 <li><a href="javascript:void(0)">每个关键字回复信息独立配置</a></li>
+                 <li><a href="javascript:void(0)">用户输入匹配的关键字会自动回复一条或多条信息</a></li>
+                 <li><a href="javascript:void(0)">配置的自动回复会在店铺绑定的公众号消息上面叠加回复</a></li>
+                 <li><a href="javascript:void(0)">关键字自动回复功能是基于有赞公众号插件开发，跟有赞消息独立分开，即不会影响有赞里面配置好的消息回复功能</a></li>
+             </ul>
+         </div>
+     </div>
+</div>
+<!-- html 模板文件开始 -->
+<script type="text/template" id="keywords_item_tpl">
+<a href="javascript:void(0);" class="pre_keywords_link col-md-3 col-xs-6">
+ 	<li class="pre_keywords_item" keywordsId="{{id}}" id="keywords_{{index}}"> 
+       	<span class="js_l1Title">{{keywords}}</span>
+	</li> 
+</a>
+</script>
+<script type="text/template" id="keywords_container">
+<input type="text" id="keywords_text"  keywordsId="{{id}}" value="{{keywords}}"/>
+</script>
+#include ("/_includes/msg_reply_tpl.html")
+<!-- html 模板文件结束 -->
+#define script()
+<script type="text/javascript" src="#(webctx)/resources/js/Sortable.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//回复内容可进行排序
+	WxmMsg.createSortable();
+	//新增一条回复
+	$("#add_reply_config").click(function(){
+		WxmMsg.addRow("config-list");
+	});
+	//绑定新增关键字点击事件
+	$("#add_keywords_btn").click(function (){
+		clearLicss();
+	    $(".editor_inner").show();
+	    $keywordsLiId = null;
+	  	//启用，停用状态赋值
+		setConfig(true);
+	    //点击列表之后需要把对应的内容清掉
+		$("#config-list").find("div.menu_content_container").remove();
+		$("#config-list").append($("#reply_type_tpl").html());
+		$("#keywords_text_container").find("input#keywords_text").remove();
+		$("#keywords_text_container").append(template("keywords_container"));
+		
+		$("#tags_expand").val("");
+		$("#tags_invitee").val("");
+	});
+	//数据提交
+	$("#saveMenu").click(function(){
+		//获取设置的回复内容数据
+		var keywordsConfigArray = WxmMsg.getContent();
+		if(keywordsConfigArray == null){
+			return false;
+		}
+		if(console) console.log($("div.select_content").length);
+		//获取关键字
+		var keywordsText = $("#keywords_text").val();
+		//获取所关键字的ID
+		var keywordsId = $("#keywords_text").attr("keywordsId");
+		//获取通知规则
+		var enableKeywords = $(':radio[name="keywords_enable"]:checked').val();
+		//提交到后台
+		var params = {};
+		params.keywordsConfig = JSON.stringify(keywordsConfigArray);
+		params.keywordsText = keywordsText;
+		params.keywordsId = keywordsId;
+		params.enableKeywords = enableKeywords;
+		
+		var autoTagid = $("#tags_expand").val();
+		var cancelTagid = $("#tags_invitee").val();
+		
+		if(autoTagid != ""){
+			params.autoTagid = autoTagid;
+		} 
+		
+		if(cancelTagid != ""){
+			params.cancelTagid = cancelTagid;
+		}
+		
+		$(".menu_form_area").mask("正在保存关键字...");
+		obz.ajaxJson("#(webctx)/keywords/save", params, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				var keyword = resp.data;
+				if($("#keywords_text").attr("keywordsId") == ""){
+					var classIndex = $("#keywordsList a").length;
+					keyword.index = keyword.id + "";
+					//新增关键词添加
+					var itemHtml = template("keywords_item_tpl", keyword);
+					$("#keywordsList").append(itemHtml);
+					$("#keywords_"+keyword.id).addClass("size1of"+classIndex+"").addClass("keywordsBgColor");
+					$("#keywords_text").attr("keywordsId",keyword.id);
+					//给新添加的关键字绑定点击事件
+					bindLiClick();
+				}else{
+					$("#keywords_"+keyword.id).children().text(keyword.keywords);
+				}
+					obz.msg("保存成功");
+			}
+		});
+	});
+	 //清除关键字数据
+	function clearKeywords(){
+		$("#keywordsList li.jsMenu").remove();
+	}
+	//加载菜单数据
+	function getKeywords(){
+		$(".keywords_preview_area").mask("正在读取关键词数据...");
+		obz.ajaxJson(obz.ctx+"/keywords/list", {}, function(resp){
+			$(".keywords_preview_area").unmask();
+			if(resp.state == "ok"){
+				clearKeywords();
+				var data = resp.data;
+				var classIndex = data.length;
+				for(var i=0;i<data.length;i++){
+					var keyword = data[i];
+					keyword.index = keyword.id + "";
+					//直接显示菜单
+					var itemHtml = template("keywords_item_tpl", keyword);
+					$("#keywordsList").append(itemHtml);
+					$("#keywords_"+keyword.id).addClass("size1of"+classIndex+"");
+					if(i==0){
+						clearLicss();
+						$("#keywords_"+keyword.id).addClass("keywordsBgColor");
+						$(".editor_inner,.menu_content_container").show();
+						//加载菜单配置数据 
+						var keywordsId = keyword.id;
+						getKeyWordsReplyConfigs(keywordsId);
+					}
+				}
+				unBindLiClick();
+				bindLiClick();
+			}
+		});
+	}
+	getKeywords();
+	function unBindLiClick (){
+		$("#keywordsList li").unbind("click");
+	}
+	//绑定菜单点击事件
+	function bindLiClick() {
+		//菜单点击
+		$("#keywordsList li").click(function(){
+			clearLicss();
+			$(this).addClass("keywordsBgColor");
+			$(".editor_inner,.menu_content_container").show();
+			//加载菜单配置数据 
+			var keywordsId = $(this).attr("keywordsId");
+			getKeyWordsReplyConfigs(keywordsId);
+		});
+	}
+	function getKeyWordsReplyConfigs(keywordsId){
+		$(".menu_form_area").mask("正在加载菜单配置...");
+		obz.ajaxJson("#(webctx)/keywords/reply/list", {keywordsId: keywordsId}, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				var data = resp.data;
+				if(!data) return;
+				//关键字赋值
+				$("#keywords_text_container").find("input#keywords_text").remove();
+				$("#keywords_text_container").append(template("keywords_container", resp.keywords));
+				//启用，停用状态赋值
+				setConfig(resp.keywords.enableKeywords);
+				
+				var _keywordObj = resp.keywords;
+				
+				obz.ajaxJson("#(webctx)/wxtag/list", {}, function(resp){
+					if(resp.state == "ok"){
+						$("#tags_expand").empty();
+						$("#tags_invitee").empty();
+						var tags = resp.tags;
+						log("===========tags:" + tags);
+						var data = tags.attrs.tags;
+						$("#tags_expand").append("<option value=''> —— 请选择 —— </option>");
+						$("#tags_invitee").append("<option value=''> —— 请选择 —— </option>");
+						for(var i=0;i<data.length;i++){
+							var tag = data[i];
+							log("===============tagname:" + tag.name + ",count:" + tag.count + ", id:" + tag.id);
+							$("#tags_expand").append("<option data-count='"+tag.count+"' value='"+tag.id+"'>"+tag.name+"("+tag.count+")</option>");
+							$("#tags_invitee").append("<option data-count='"+tag.count+"' value='"+tag.id+"'>"+tag.name+"("+tag.count+")</option>");
+						}
+
+						$("#tags_expand").val(_keywordObj.autoTagId);
+						$("#tags_invitee").val(_keywordObj.cancelTagId);
+						
+					}
+				});
+				
+				$("#config-list").find("div.menu_content_container").remove();
+				for(var i=0;i<data.length;i++){
+					var keywordsRpCfgDto = data[i];
+					var keywordsRpCfg = keywordsRpCfgDto.keywordsReplyConfig;
+					if(keywordsRpCfgDto.replyNews){
+						keywordsRpCfg.replyNews = keywordsRpCfgDto.replyNews;
+					}
+					WxmMsg.setContent(keywordsRpCfg);
+				}
+			}
+		})
+		return false;
+	}
+	//开启，停用
+	function setConfig(enableKeywords){
+		var enabelInt = enableKeywords == false ? 0 : 1;
+		$(":radio[name='keywords_enable'][value='" + enabelInt + "']").prop("checked", "checked");
+	}
+	//清除li元素 css
+	function clearLicss(){
+		$("#keywordsList li").each(function(){
+			if($(this).hasClass("keywordsBgColor")){
+				$(this).removeClass("keywordsBgColor");				
+			}
+		});
+	} 
+	
+});
+</script>
+#end
+#end

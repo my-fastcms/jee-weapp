@@ -1,0 +1,145 @@
+.weui-media-box__desc {
+  padding: 4rpx 0;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.status {
+  border: 1px solid orangered;
+  color: white;
+  background: orangered;
+  padding: 1px;
+}
+
+.act {
+  color: orangered;
+}
+
+.padding_0 {
+  padding: 0px;
+}
+
+.price {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fa3c64;
+}
+
+.spec {
+  color: green;
+}
+
+.icon {
+  height: 15px;
+  width: 15px;
+  border-radius: 50%;
+}
+
+.topl {
+  padding: 1px;
+  color: white;
+  background: #3c0;
+  border: 1px solid #3c0;
+}
+
+.no-group {
+  position: absolute;
+  width: 100%;
+}
+
+.no-group image {
+  width: 300rpx;
+  height: 300rpx;
+}
+
+.no-group>view {
+  margin-top: 240rpx;
+}
+
+image {
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-20 {
+  margin-top: 20rpx;
+}
+
+.weui-panel {
+  background-color: #fff;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  border-radius: 10rpx;
+}
+.weui-panel:before, .weui-panel:after { border:0;}
+.weui-panel__hd {
+  padding: 10rpx 30rpx;
+  height: 68rpx;
+  line-height: 68rpx;
+  font-size: 28rpx;
+}
+
+.weui-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  z-index: 500;
+  top: 0;
+  left:0;
+  padding:20rpx 0;
+  border-bottom: none !important;
+  background:#f8f8f8;
+}
+
+.type-container {
+  width: 100%;
+  height: 75rpx;
+  background-color: #fff;
+  overflow: hidden;
+  display: flex;
+  position: fixed;
+  z-index: 500;
+  top: 0;
+}
+
+.type-navbar {
+  white-space: nowrap;
+  height: 76rpx;
+  width: 100%;
+  background-color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+.type-box {
+  width: 140rpx;
+  box-sizing: content-box;
+  font-size: 26rpx;
+  line-height: 70rpx;
+  text-align: center;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.type-navbar-item {
+  border-bottom: 4rpx solid #fff;
+}
+
+.type-item-on {
+  border-bottom: 4rpx solid #e64340;
+}
+
+.weui-content {
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+.weui-navbar__item.proinfo-tab-tit { font-size:28rpx;}
+.bk-order { display: inline-block; border:1px solid #fa3c64; color:#fa3c64; font-size:22rpx; padding:4rpx 8rpx; border-radius: 10rpx;}

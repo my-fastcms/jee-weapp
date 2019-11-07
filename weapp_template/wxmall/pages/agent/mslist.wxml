@@ -1,0 +1,19 @@
+<!--主体-->
+<view style="height:{{scollHeight}}px;">
+  <scroll-view style="height:{{scollHeight}}px;"  scroll-y="true"  bindscrolltolower="lower">
+    <view class="item" wx:for="{{mssionRcds}}" wx:key="orderSn" wx:for-index="idx"  wx:for-item="item">
+      <view class="weui-media-box weui-media-box_appmsg">
+        <view class="weui-media-box__hd"><image style='border-radius:50%;vertical-align:top;width:40px;height:40px;' src="{{item.buyerHeader}}" alt=""/></view>
+        <view class="weui-media-box__bd">
+          <view class="weui-media-box__desc">{{item.buyerNick}}</view>
+          <view class="price">订单佣金:¥<em class="num">{{item.commission}}（{{item.status}}）</em></view>
+          <view>
+            <li class="weui-media-box__info__meta">时间:<em class="num">{{item.created}}</em></li>
+            <li class="weui-media-box__info__meta">订单编号:<em class="num">{{item.orderSn}}</em></li>
+          </view >
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+

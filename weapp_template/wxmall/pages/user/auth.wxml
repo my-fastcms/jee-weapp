@@ -1,0 +1,33 @@
+<!--pages/user/auth.wxml-->
+<view class="container">
+  <view class="weui-msg__icon-area">
+    <view class="weui-media-box weui-media-box_appmsg">
+      <view class="weui-media-box__hd">
+        <open-data class="weui-media-box__thumb headimg" type='userAvatarUrl' />
+      </view>
+      <view class="weui-media-box__bd">
+        <view class="weui-media-box__title">
+          <open-data type="userNickName" lang="zh_CN"></open-data>
+        </view>
+        <view style='font-size:12px;'>
+          <open-data type="userProvince" lang="zh_CN"></open-data>
+          <open-data type="userCity" lang="zh_CN"></open-data>
+        </view>
+        <!-- <view class="user-integral">待返还金额：<em class="num">500.0</em>元</view> -->
+      </view>
+      <!-- <block wx:else>
+        <button bindgetuserinfo="onGetUserInfo" open-type="getUserInfo" type="primary">用户授权</button>
+      </block> -->
+    </view>
+  </view>
+
+  <view class="weui-msg__text-area">
+    <view class="weui-msg__desc">系统需要获取您的头像跟昵称以及openid</view>
+  </view>
+
+  <view class="content-padded">
+	  <button type="primary" bindgetuserinfo="onGetUserInfo" open-type="getUserInfo" class="weui-btn weui-btn_primary">授权登录</button>
+
+    <button bindtap="onCancelAuth" class="weui-btn weui-btn_default">取消授权</button>
+	</view>
+</view>

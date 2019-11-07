@@ -1,0 +1,267 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<style>
+.radio-inline {
+    vertical-align: middle
+}
+.mobile_bd>:first-child{
+ 	margin-top:20px;
+}
+.msgType{
+ 	margin-top:8px;
+ 	overflow: hidden;
+}
+.mobile_menu_preview{
+	padding-bottom:10px;
+	height:auto;
+	min-height:500px;
+	background-color: #eee;
+}
+.chat-discussion{
+	height: auto;
+	margin-top: 12px;
+}
+.chat-user{
+	overflow: hidden;
+}
+.chat-user p{
+	margin: 0px;
+	line-height: 40px;	
+}
+.msg_weChat P{
+	line-height: 1.7em;	
+}
+.msgTitle_black{
+	text-align:center;
+	display:none;
+	border-top:1px solid #eee;
+	padding: 10px 0px;
+}
+.message-content{
+	white-space:pre;
+	word-wrap:break-word;
+	white-space:normal;
+}
+.modal-body{
+	overflow: hidden;
+}
+.btn-routine{
+	display: table;
+    margin-bottom: 10px;
+}
+.form-group {
+	overflow: hidden;
+}
+.routine-bottom{
+	border-top: 1px solid #e9d8d8;
+    position: relative;
+    top: 10px;
+    right: 20px;
+    width: 122%;
+    padding: 2px 0px
+}
+.routine-bottom span{
+	color: gray;
+	font-size: 15px;
+	font-family: "微软雅黑";
+	padding-left: 25px;
+	
+}
+.chat-user .chat-width{
+	float: left;
+	width: 80%;
+}
+.mobile_bd .ibox-content img{
+	width: 40px; 
+    height: 40px
+}
+.mobile_bd .ibox-content>:first-child{
+	height: 200px;
+	width: 100%;
+	position: relative;
+	border: none;
+	overflow: visible;
+}
+.mobile_bd .ibox-content>:nth-child(2){
+	border-top:1px solid #e7eaec; 
+}
+.mobile_bd .ibox-content>:first-child div{
+	position: absolute;
+	bottom:-40px;
+	display:inline;
+	text-align: center;
+	z-index: 1;
+	border-top:1px solid #e7eaec;
+	background-color:white;
+	width: 285px;
+	right:-20px;
+}
+.mobile_bd .ibox-content>:first-child img{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top:0px;
+	padding-bottom: 15px;
+}
+</style>
+#end
+#@layout("关注后回复", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+ <div class="content row ibox-content col-sm-10" style="padding-bottom: 45px;">
+  <div class="menu_setting_area js_editBox"> 
+   <div class="menu_preview_area" style="display: none;"> 
+    <div class="mobile_menu_preview"> 
+     <div class="mobile_hd tc">
+     	#if(session.weapp_in_session??) 
+     		#(session.weapp_in_session.nick_name) 
+     	#end
+     </div> 
+     <div class="mobile_bd">
+     </div> 
+    </div>
+   </div> 
+   
+    <!-- 菜单编辑区域 -->
+    <div class="menu_form_area"> 
+    <div id="js_rightBox" class="portable_editor to_left" style="display: block;"> 
+     <div class="editor_inner" style="display: black;">
+     
+     <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">回复规则设置</h4> 
+      </div> 
+      <div class="menu_form_bd" id="menu_form_bd"> 
+      	<div class="menu_content_container"> 
+        	<div class="menu_content" style="overflow:hidden;">
+       		<label class="radio-inline" for="rdo1">
+				<input id="rdo1" name="enable_config" value="1" type="radio" checked="checked" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+				<span class="label-text" style="vertical-align: middle">启用</span>
+			</label>
+             <label class="radio-inline" for="rdo0">
+				<input id="rdo0" name="enable_config" value="0" type="radio" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+				<span class="label-text">关闭</span>
+			</label>
+      		</div> 
+      	</div>
+      </div>
+      
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">回复内容设置</h4> 
+      </div> 
+      <div class="menu_form_bd" id="view"> 
+      	<div id="config-list" class="menu_content_container"> 
+        	<div class="menu_content_container module" style="padding-bottom: 10px;"> 
+		        <div class="menu_content url jsMain"> 
+		         <a href="javascript:void(0)" class="type_text" onclick="WxmMsg.textClick(this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_image_itme" onclick="WxmMsg.openImageClick(this)" style="text-decoration: underline;">图片</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_routine" onclick="WxmMsg.routineClick(this)" style="text-decoration: underline;">小程序</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_zan_item" onclick="WxmMsg.openProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;
+				 <a href="javascript:void(0)" class="type_wechat_media" onclick="WxmMsg.openWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+				 <a href="javascript:void(0)" class="type_custom_media" onclick="WxmMsg.openCustomMediaDialog(this)" style="text-decoration: underline;">自定义图文</a> &nbsp;/&nbsp;
+		         <a href="javascript:void(0)" onclick="WxmMsg.delRow(this)" style="text-decoration: underline;color: red;" class="del_config">删除行</a>
+		        </div>
+		        <div class="menu_content select_content" style="overflow:hidden;"></div>
+	       	</div>
+       	</div>
+       	<div class="msg_sender_msg mini_tips warn"> 
+	       	<a id="add_reply_config" href="javascript:void(0)" class="btn btn-primary btn-xs" title="每新增一行，增加一条回复消息">新增一条回复</a>
+	    </div>
+      </div> 
+     </div> 
+    </div>
+   </div> 
+  </div>
+  <div align="center" style="margin-top: 10px;">
+   	 <button id="saveMenu" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+  </div>
+ </div>
+	
+  <div class="help col-sm-2" style="float: right; padding:0px">
+     <h5>功能描述</h5>
+     <ul class="list-unstyled project-files">
+         <li><a href="javascript:void(0)">用户关注公众号后，可以自动回复多条消息</a></li>
+         <li><a href="javascript:void(0)">一条回复消息，可以包含最多8个商品或8个微信素材，可混搭</a></li>
+     </ul>
+     <br/>
+     <h5><font color="blue">温馨提示</font></h5>
+     <ul class="list-unstyled project-files">
+         <li><a href="javascript:void(0)">配置的自动回复会在店铺绑定的公众号消息上面叠加回复</a></li>
+         <li><a href="javascript:void(0)">菜单自动回复功能是基于有赞公众号插件开发，跟有赞消息独立分开，即不会影响有赞里面配置好的消息回复功能</a></li>
+     </ul>
+  </div>
+</div>
+
+<!-- html 模板文件开始 -->
+#include ("/_includes/msg_reply_tpl.html")
+<!-- html 模板文件结束 -->
+#define script()
+<script type="text/javascript" src="#(webctx)/resources/js/Sortable.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//回复内容可进行排序
+	WxmMsg.createSortable();
+	//新增一条回复
+	$("#add_reply_config").click(function(){
+		$("#config-list").append($("#reply_type_tpl").html());
+	});
+	/* ==start== saveMenu.click*/
+	$("#saveMenu").click(function(){
+		//获取设置的回复内容数据
+		var followConfigArray = WxmMsg.getContent();	//消息行配置
+		if(followConfigArray == null) {
+			return false;
+		}
+		//获取通知规则
+		var enableConfig = $(':radio[name="enable_config"]:checked').val();
+		//提交到后台
+		var params = {};
+		params.followConfig = JSON.stringify(followConfigArray);
+		params.enableConfig = enableConfig;
+		$(".menu_form_area").mask("正在保存配置...");
+		obz.ajaxJson("#(webctx)/follow/save", params, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				obz.msg("保存成功");
+			}
+		});
+	});
+	/* ==end== saveMenu.click*/
+	
+	//加载回复配置数据  
+	getFollowConfig();
+	
+	/* == start== 加载回复配置数据*/
+	function getFollowConfig(){
+		obz.ajaxJson(obz.ctx+"/follow/list", {}, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				var data = resp.data;
+				if(!data) return;
+				//启用，停用状态赋值
+				setConfig(resp.followConfig.enableConfig);
+				if(data.length>0){
+					$("#config-list").find("div.menu_content_container").remove();
+				}
+				for(var i=0;i<data.length;i++){
+					log("=======================i:" + i);
+					var followRpCfgDto = data[i];
+					var followRpCfg = followRpCfgDto.replyConfig;
+					if(followRpCfgDto.replyNews){
+						followRpCfg.replyNews = followRpCfgDto.replyNews;						
+					}
+					WxmMsg.setContent(followRpCfg);
+				}
+			}
+		});
+	}
+	/* ==end== 加载回复配置数据*/
+	//开启，停用
+	function setConfig(enableConfig){
+		var enabelInt = enableConfig == false ? 0 : 1;
+		$(":radio[name='enable_config'][value='" + enabelInt + "']").prop("checked", "checked");
+	}
+});
+</script>
+#end
+#end

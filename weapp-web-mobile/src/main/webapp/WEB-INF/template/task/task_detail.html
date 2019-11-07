@@ -1,0 +1,246 @@
+#include ("/_includes/_layout.html")
+#@layout("商品详情", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link rel="stylesheet" href="#(webctx)/resources/css/product-detail.css"/>
+<style>
+.weui-media-box__info{
+	margin-top : 0px !important;
+}
+</style>
+#end
+#define content()
+<div class="weui-content">
+  <!--产品详情-->
+  <div class="weui-tab">
+    <div class="weui-navbar" style="position:fixed; top:0; left:0; right:0; height:44px;">
+      <a class="weui-navbar__item proinfo-tab-tit">商品详情</a>
+    </div>
+    <div class="weui-tab__bd proinfo-tab-con">
+      <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+        <!--主图轮播-->
+        <div class="swiper-container swiper-zhutu">
+          <div class="swiper-wrapper">
+            <!-- <div class="swiper-slide"><img src="upload/zhutu01.jpg" /></div> -->
+            #for(image : productDetail.imageList)
+				<div class="swiper-slide"><img src="#(image)" height="300px"></div>
+			#end
+          </div>
+          <div class="swiper-pagination swiper-zhutu-pagination"></div>
+        </div>
+        <div class="wy-media-box-nomg weui-media-box_text">
+          <h4 class="wy-media-box__title" style="font-size: 18px">#(productDetail.product.name)</h4>
+          #if(productDetail.promotionInfo??)
+          	<div class="wy-pro-pri mg-tb-5">¥<em class="num font-20">#(productDetail.promotionInfo.promotionPrice)</em> <s>￥#(productDetail.product.price)</s></div>
+          #else
+            <div class="wy-pro-pri mg-tb-5">¥<em class="num font-20">#(productDetail.product.price)</em></div>
+          #end
+          #if(productDetail.promotionInfo??)
+            <div class="weui-media-box__info">
+            	<span class="weui-media-box__desc"><font style="font-weight:bold;font-size: 14px;color: red;">#(productDetail.promotionInfo.promotionTag) #(productDetail.promotionInfo.promotionInfo)</font>&nbsp;&nbsp;#(productDetail.promotionInfo.promotionTime)</span>
+            </div>
+          #end
+          <p class="weui-media-box__desc">剩余:<span>#(productDetail.product.stock)</span> <!-- 销量:<span>#(productDetail.product.sales)</span> --></p>
+        </div>
+        
+        <div class="pro-detail">
+         #if(productDetail.product.introduction??)#(productDetail.product.introduction)#end
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>
+<span id="tophovertree" title="返回顶部"></span>
+<!--底部导航-->
+<div class="foot-black"></div>
+<div class="weui-tabbar wy-foot-menu">
+  <a onclick="purchase(#(id??))" class="weui-tabbar__item red-color open-popup assisfree">
+   <p class="promotion-foot-menu-label">立即领取</p>
+  </a> 
+</div>
+#end
+<script>
+$(".swiper-zhutu").swiper({
+    loop: true,
+	paginationType:'fraction',
+    autoplay:5000
+});
+</script>
+<script>
+function initTopHoverTree(hvtid, times, right, bottom) {
+	$("#" + hvtid).css("right", right).css("bottmo", bottom);
+	$("#" + hvtid).on("click", function () { goTopHovetree(times); })
+	$(window).scroll(function () {
+		if ($(window).scrollTop() > 268) {
+			$("#" + hvtid).fadeIn(100);
+		}
+		else {
+			$("#" + hvtid).fadeOut(100);
+		}
+	})
+}
+//返回顶部动画
+//goTop(500);//500ms内滚回顶部
+function goTopHovetree(times) {
+if (!!!times) {
+	$(window).scrollTop(0);
+	return;
+}
+var sh = $('body').scrollTop();//移动总距离
+var inter = 13.333;//ms,每次移动间隔时间
+var forCount = Math.ceil(times / inter);//移动次数
+var stepL = Math.ceil(sh / forCount);//移动步长
+var timeId = null;
+function aniHovertree() {
+!!timeId && clearTimeout(timeId);
+timeId = null;
+//console.log($('body').scrollTop());
+if ($('body').scrollTop() <= 0 || forCount <= 0) {//移动端判断次数好些，因为移动端的scroll事件触发不频繁，有可能检测不到有<=0的情况
+$('body').scrollTop(0);
+return;
+}
+forCount--;
+sh -= stepL;
+$('body').scrollTop(sh);
+timeId = setTimeout(function () { aniHovertree(); }, inter);
+}
+aniHovertree();
+}
+
+$(function (){initTopHoverTree("tophov"+"ertree",30,10,10); })
+
+var sys_item;
+var productPrice="#(productDetail.product.price)";
+var productStock="#(productDetail.product.stock)";
+var price='';
+var promPrice="";//折扣价
+var stock='';
+//ajax请求价格、库存
+function getPrice(){
+	 $.ajax({
+			type: "post",
+			url: "#(webctx)/product/stocks",
+			data: {productId:#(productDetail.product.id)},
+			async: true,
+			success: function(resp){
+				if(resp.code!=200){
+					$.alert(resp.msg);
+					return;
+				}
+				sys_item=resp.data;
+			}
+	});
+}
+function getAttrPrice(){
+	var defaultstats=true;
+	 var _val='';
+	$("ul.app-image-list .goods-style").each(function(){
+		 var i=$(this);
+         var v=i.attr("data-attrval");
+         if(!v){
+             defaultstats=false;
+         }else{
+             _val+=_val!=""?",":"";
+             _val+=v;
+         }
+	});
+	if($("ul.app-image-list .goods-style").length==1){
+		 defaultstats=false;
+	}
+	price=productPrice;
+	stock=productStock;
+	if(!defaultstats){
+		$.each(sys_item, function(key,item){
+			if(key == _val){
+				price=item.price;
+				stock=item.stock;
+				if(item.promPrice !=null && item.promPrice !="")
+					promPrice = item.promPrice;
+				return;
+			}
+		});
+	}
+	$(".sys_item_price").text(price);
+	$(".sys_item_stock").text(stock);
+	if(promPrice != null  && promPrice !=""){
+		$(".sys_item_promprice").text(promPrice);
+	}
+}
+$().ready(function() {
+	getPrice();
+	<!--禁用微信分享按钮-->
+	function onBridgeReady() {
+		// 通过下面这个API隐藏右上角按钮
+	    WeixinJSBridge.call('hideOptionMenu');
+	}
+
+	if (typeof WeixinJSBridge == "undefined") {
+	    if (document.addEventListener) {
+	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+	    } else if (document.attachEvent) {
+	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+	    }
+	} else {
+	    onBridgeReady();
+	}
+});
+
+$(function() {
+	$(".weui-navbar__item").click(function(){
+		$(".weui-navbar__item").each(function(){
+			$(this).removeClass("weui_bar__item_on");
+		});
+		var me = $(this);
+		me.addClass("weui_bar__item_on");
+		if(me.attr("id") == "a_detail"){
+			$("#div_detail").show();
+			$("#div_review").hide();
+		}else {
+			$("#div_detail").hide();
+			$("#div_review").show();
+		}
+	});
+	
+	//全选
+	$(".swiper-container").swiper({
+		speed: 300,
+		loop: true,
+		autoplay: 3000
+	});
+});
+
+function getAllImg() {
+    var aa = [];
+    var i = 0;
+    var src = [];
+    aa = $("img");
+    for (i = 0; i < aa.length; i++) {
+    	if(aa[i].id !="_cart"){
+            var imgsrc = aa[i].src;
+            src[i] = imgsrc;  //把所有的src存到数组里    		
+    	}
+    }
+    return src;
+}
+$("img").click(function(){
+	if($(this).attr("id") != "_cart"){
+		var imgsrc = $(this).attr('src');
+	    wx.previewImage({
+	        current: imgsrc, // 当前显示图片的http链接
+	        urls: getAllImg() // 需要预览的图片http链接列表
+	    });
+	}
+});
+
+function purchase(id){
+	//立即领取
+	var itemsArray = new Array();
+	var entity = new Object();
+	var awardSendId = "#(awardSendId??)";
+	entity.productId = id;
+	entity.pcount = 1;
+	entity.speci = "";				
+	itemsArray.push(entity);
+	//location.href = "#(webctx)/pay/taskBalance?items="+JSON.stringify(itemsArray)+"&awardSendId="+awardSendId+"&pId="+id;
+};
+</script>

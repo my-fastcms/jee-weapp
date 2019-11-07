@@ -1,0 +1,45 @@
+<script type="text/javascript" src="#(webctx)/resources/js/ZeroClipboard/jquery.zclip.js"></script>
+<div style="text-align: -webkit-center">
+	<img alt="" width="200" height="200"src="#(webctx)/qrcode/genio?url=#(map.url??)">
+</div>
+<div style="text-align: -webkit-center">
+	<a href="" onclick="downloadUrl()">下载二维码</a>&nbsp;&nbsp;&nbsp;&nbsp;
+	<input  id="url" name="url" value="#(map.url??)" type="hidden"/>
+	<a id="copyUrl">复制原链接</a>&nbsp;&nbsp;&nbsp;&nbsp;
+	<input  id="shortUrl" name="shortUrl" value="#(map.shortUrl??)" type="hidden"/>
+	<a id="copyshortUrl">复制短链接</a>
+</div>
+<div class="form-group" style="padding-left: 36px;padding-top: 25px">
+	<p class="m-b-xs">提示：</p>
+	<p class="m-b-xs">1、微信广告投放需要原链接；</p>
+	<p class="m-b-none">2、提供活动专题页对应的H5链接，公众号二维码进行投放</p>
+</div>
+<script type="text/javascript">
+	$(function() {
+		$(".modal-dialog").attr("style","width:500px;")
+		//实现复制功能
+		$("#copyUrl").zclip({
+			path : '#(webctx)/resources/js/ZeroClipboard/ZeroClipboard.swf',
+			copy : function() {
+				return $('#url').val();
+			},
+			afterCopy : function() {
+				obz.msg("原链接复制成功");
+			}
+		});
+		//实现复制功能
+		$("#copyshortUrl").zclip({
+			path : '#(webctx)/resources/js/ZeroClipboard/ZeroClipboard.swf',
+			copy : function() {
+				return $('#shortUrl').val();
+			},
+			afterCopy : function() {
+				obz.msg("短链接复制成功");
+			}
+		});
+	});
+	
+	function downloadUrl(){
+		window.open("#(webctx)/qrcode/genio?url=#(map.url??)","_blank");
+	}
+</script>

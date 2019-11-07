@@ -1,0 +1,60 @@
+
+.dsSelect{
+    width: 100%;
+    text-align: center;
+}
+.dsSelect>.left,.dsSelect>.center,.dsSelect>.right{
+    height: 400px;
+    border: solid thin #73879C;
+    margin: 0px auto;
+    float: left;
+    overflow: auto;
+}
+.dsSelect .center{
+    width: 100px;
+    text-align: center;
+    vertical-align:middle;
+    border: none;
+}
+.dsSelect .left{
+    width: 40%;
+}
+
+.dsSelect  .dsList{
+    list-style: none;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+.dsSelect .dsList li{
+    border: solid thin #73879C;
+    width: 90%;
+    margin: 2px auto;
+    font-size: 16px;
+    line-height: 35px;
+    cursor: pointer;
+}
+
+.dsSelect .dsList li:hover{
+    background-color:#485d74;
+    color: #FFFFFF;
+}
+
+.dsSelect .dsList .selectItem{
+    background-color:#485d74;
+    color: #FFFFFF;
+}
+.dsSelect .right{
+    width: 40%;
+}
+.dsSelect .center .dsButton{
+    width: 80px;
+    background: #73879C;
+    color: #FFFFFF;
+    line-height: 30px;
+    margin: 30% auto;
+    cursor: pointer;
+}
+.dsSelect .center .dsButton:hover{
+    background-color:#485d74;
+}

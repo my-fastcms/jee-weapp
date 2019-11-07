@@ -1,0 +1,196 @@
+/*单选框*/
+.province a{
+	color:#000 !important;
+}
+.pretty {
+	display:block;
+	line-height: 1;
+	position: relative;
+	margin: 0 10px 5px 0
+}
+.pretty-box{
+	overflow: hidden;
+    position: absolute;
+    bottom: 25px;
+}
+.pretty label {
+	font-weight: normal;
+	padding-top: 1px;
+}
+.pretty span {
+	font-size: 12px;
+}
+.pretty>input[type='radio'] {
+	position: absolute;
+	z-index: 99999999;
+	top: 0;
+	left: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	cursor: pointer;
+	opacity: 0
+}
+.pretty i {
+	font-size: 12px !important;
+	position: relative;
+	box-sizing: initial;
+	min-width: 1em;
+	margin-right: 2px;
+	padding: 0px 1px;
+	text-align: center
+}
+.pretty i:before {
+	position: relative;
+	left: 0;
+	display: inline-block;
+	vertical-align: bottom;
+	color: transparent;
+	background-color: #fff
+}
+.pretty i:after {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	content: '\0000';
+	color: transparent;
+	border: 1px solid #b9b9b9;
+	border-radius: 0
+}
+.pretty>input[type='radio']+label>i.default:before {
+	left: 0;
+	min-width: 1em;
+	content: '\0000';
+	color: transparent;
+	border-radius: 0;
+	background: #fff;
+	-webkit-transform: scale(0.8);
+	transform: scale(0.8)
+}
+.pretty>input[type='radio']:checked+label>i.default:before {
+	background-color: #b9b9b9 !important
+}
+.pretty.info input[type='radio']:checked+label i.default:before {
+	background-color: #337ab7 !important;
+	color: transparent
+}
+.pretty.info input[type='radio']:checked+label i.default:after {
+	background-color: initial !important;
+	border-color: #337ab7
+}
+
+/*权限区域选择*/
+.city-box {
+    width: 100%;
+}
+.city-box li {
+
+    list-style: none;
+}
+.city-box .agentsright {
+    float:right;
+}
+.city-box .city-item{
+    float: right;
+    text-align: center;
+    display: inline-block;
+}
+.city-box .open-city{
+    padding-right: 5px;
+    display: inline-block;
+}
+.city-box .open-area{
+    padding-right: 5px;
+    display: inline-block;
+}
+.city-box .last-area{
+}
+.city-box .waitBox {
+    display: inline-block;
+    width: 100%;
+    border: #ccc solid 1px;
+    border-radius: 6px;
+    min-height: 400px;
+}
+.city-box .waitBox h2 {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: #f2f2f2 solid 1px;
+    margin: 0;
+}
+.city-box .waitBox ul {
+    padding: 0px;
+    margin: 0;
+}
+.city-box .activity{
+    color: yellowgreen;
+}
+.city-box .waitBox > ul {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.city-box .waitBox ul a {
+    padding: 6px 0px 6px 10px;
+}
+
+.city-box .waitBox ul ul a {
+
+    padding: 6px 0px 6px 45px;
+}
+
+.city-box .waitBox ul ul ul a {
+    padding: 6px 0px 6px 75px;
+}
+
+.city-box .waitBox li a {
+    display: block;
+    border-bottom: #f9f9f9 solid 1px;
+    padding: 4px 10px;
+    margin: 4px;
+    text-decoration: none;
+}
+.clearfix{}
+.clearfix::after {
+     display: block;
+     content: "";
+     clear: both;
+ }
+.js-sureArea{
+	padding: 0px 25px 5px;
+	max-height: 400px;
+    overflow-y: auto;
+}
+.checkbox{
+    font-size: 12px;
+    cursor: pointer;
+}
+.checkbox i{
+    font-size: 12px;
+    font-style: normal;
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    text-align: center;
+    line-height: 12px;
+    color: #fff;
+    vertical-align: middle;
+    margin: -2px 2px 1px 0px;
+    border: #2489c5 1px solid;
+}
+.iconfont{
+	font-size: 14px !important;
+}
+.oprate-container{
+	position: relative;
+    height: 400px;	
+}
+.operate-box{
+	position: absolute;
+	bottom: 0px
+}

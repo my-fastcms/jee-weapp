@@ -1,0 +1,40 @@
+.container {
+
+}
+
+.icon {
+  height:20px;
+  width:20px;
+  color:aquamarine;
+}
+
+
+.bottom-box{
+  position: fixed;
+  bottom:0;
+  width:100%;
+  height:128rpx;
+  padding: 10px 0;
+}
+.bottom-box button, .bottom-box .button-hover { width:600rpx; height:98rpx; line-height: 98rpx; margin:0 auto; color:#fff; background: #fa3c64; font-size:30rpx;}
+.address_list_delete {
+  position: absolute;
+  right: -180rpx;
+  top: 0;
+  width: 100rpx;
+  height: 100%;
+  line-height: 160rpx;
+  text-align: center;
+  background: #e04904;
+  color: #fff;
+  font-size: 30rpx;
+}
+.address-list{
+    width: 100%;
+    background-color: #fff;
+    margin-top: 20rpx;
+}
+.weui-cell { margin:30rpx; padding:30rpx; border-radius: 10rpx; background: #fff; border:1px solid #eee;}
+.weui-cell:before, .weui-cell:after{ border:0;}
+.blod { font-weight: 900; font-size:32rpx; padding:10rpx 0; color: #fa3c64;}
+

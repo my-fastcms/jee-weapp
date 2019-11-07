@@ -1,0 +1,7 @@
+/**product list.wxss**/
+.item{
+  border-bottom:1rpx solid #e1e1e1;
+}
+.price{
+  color:red;
+}

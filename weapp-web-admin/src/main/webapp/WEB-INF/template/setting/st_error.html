@@ -1,0 +1,23 @@
+#include ("/_includes/_layout.html")
+#@layout("绑定小程序异常", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	    <div class="ibox float-e-margins col-sm-12">
+			<div id="wrapper" class="wrapper wrapper-content animated fadeInRight" style="padding-left: 160px;">
+			    <div class="panel-body">
+				 	<a href="#(webctx)/weixin/auth2" class="btn btn-success"><i class="glyphicon glyphicon-plus"></i>&nbsp;新增授权账号&nbsp;<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('只有认证过的小程序才能绑定。', this, {tips: [1, '#3595CC'],time: 0});"></i></a>
+				</div>
+				<div class="ibox float-e-margins col-sm-10">
+					<div class="row">
+						<font color="red">#(error)</font>	            
+					</div>
+					<div class="row">
+					<a href="#(webctx)/authuser">重新授权</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>    
+#end

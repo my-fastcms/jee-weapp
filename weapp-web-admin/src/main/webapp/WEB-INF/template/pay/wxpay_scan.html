@@ -1,0 +1,44 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link href="#(webctx)/resources/css/pay.css" rel="stylesheet" type="text/css" />
+#end
+#@layout("续费服务--微信扫码支付", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="container" style="width:1000px;">
+		<div class="row" style="margin-bottom:10px;margin-top:10px;">
+			<!-- <div class="span4">
+				<span style="height: 64px;line-height: 64px;margin-left: 4px;color: #999;font-size: 18px;">点步科技微信小程序拼团服务</span>
+			</div> -->
+			<div class="span4">
+				<span style="height: 64px;line-height: 64px;margin-left: 4px;color: #999;font-size: 18px;">微信支付</span>
+			</div>
+		</div>
+		<div class="row" style="margin-bottom:12px;margin-top:12px;">
+			<div class="span6" style="font-size: 14px;font-size: 14px;">
+				请使用微信扫描下方二维码付款
+			</div>
+		</div>
+		<div class="row" style="margin-bottom:12px;margin-top:12px;">
+			<div class="span6">
+				应付金额 &nbsp;<span style="color: red;font-weight:600;font-size: 16px;">#(payfee)</span>&nbsp;元
+			</div>
+		</div>
+		
+	    <div class="pay-scan">
+           <div class="p-w-left">
+               <div class="p-w-box">
+                   <div class="pw-box-hd">
+                       <img src="#(webctx)/qrcode/genImage64?url=#(qrcode)" width="400" height="400">
+                   </div>
+                   <div class="pw-retry j_weixiRetry" style="display: none;">
+                       <a class="ui-button ui-button-gray j_weixiRetryButton" href="javascript:getWeixinImage2();">获取失败 点击重新获取二维码  </a>
+                   </div>
+               </div>
+           </div>
+           
+            <div class="p-w-sidebar"></div> 
+            <div style="clear:both;"></div>
+       </div>
+		
+</div>
+#end

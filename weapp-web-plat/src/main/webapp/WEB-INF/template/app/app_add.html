@@ -1,0 +1,281 @@
+#include ("/_includes/_layout.html") 
+#define css()
+<link rel="stylesheet" href="#(webctx)/resources/css/product.css" />
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet" />
+<style>
+.main-image-add{
+    height: 100%;
+    line-height: 80px;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    display: block;
+    color: #337ab7;
+    text-decoration: none;
+}
+</style>
+#end 
+#define script()
+<script type="text/javascript" charset="utf-8" src="#(webctx)/resources/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="#(webctx)/resources/ueditor/ueditor.all.min.js"></script>
+#end 
+#@layout("应用编辑", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="row col-sm-12">
+		<div class="ibox-content active_statistics">
+			<div class="title_query padtop">
+				<form id="inputForm" action="#(webctx)/app/save" class="form-horizontal" method="post">
+					<input type="hidden" id="appId" name="appId" value="#(app.id??)" class="form-control" />
+					<div class="form-group">
+						<label class="col-md-2 control-label">应用分类<span style="color: red;"><em>*</em></span></label>
+						<div class="col-md-5">
+							<select id="app_category" name="app_category"class="form-control" style="width: 160px;">
+								<option value="">请选择应用分类</option>
+								<option value="0">通用插件</option>
+								<option value="1">红包插件</option>
+								<option value="2">吸粉插件</option>
+								<option value="3">营销插件</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-md-2 control-label">支持类型<span style="color: red;"><em>*</em></span></label>
+						<div class="col-md-5">
+							<select id="app_type" name="app_type"class="form-control" style="width: 160px;">
+								<option value="">请选择支持类型</option>
+								<option value="0">全部支持</option>
+								<option value="1">公众号</option>
+								<option value="2">小程序</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+			            <label class="col-md-2 control-label">应用名称<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-3" id="error_name">
+			                <input id="app_name" name="app_name" value="#(app.app_name??)" maxlength="255" type="text" class="form-control check-value disabled-input" >
+			                <label class="control-label" for="name"></label>
+			            </div>
+			        </div>
+			        
+					<div class="form-group">
+			            <label class="col-md-2 control-label">应用描述<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-3" id="error_name">
+			                <input id="app_desc" name="app_desc" value="#(app.app_desc??)" maxlength="255" type="text" class="form-control check-value disabled-input" >
+			                <label class="control-label" for="name"></label>
+			            </div>
+			        </div>
+			        
+			        <div class="form-group">
+		           		<label class="col-md-2 control-label">应用主图<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-8" id="error_expire">
+				        	<input id="app_image" name="app_image" value="#(app.app_image??)" type="hidden">
+						    <div id="news-image-div" class="main-image-div"> 
+					     	#if(app.app_image??)
+                              	 <img class="image-preview" src="#(webctx)/#(app.app_image??)" >
+	                              <a class="close-modal small hide" href="javascript:;" onclick="deleteNewsImage();">×</a>
+                            #else
+				                  <a class="main-image-add" onclick="addNewsImage(true);" href="javascript:;">+加图</a>
+				                #end
+				            </div>
+			            </div>
+			        </div>
+
+					<div class="form-group">
+						<label class="col-md-2 control-label">应用展示图<span style="color: red;"><em>*</em></span></label>
+						<div class="col-md-10">
+							<ul class="app-image-list" id="app-image-list">
+								#if(images??l) 
+								#for(image:images)
+								<li class="sort"><img src="#(img_domain)#(image)" class="js-img-preview" /> 
+									<input name="imgList" value="#(image)" type="hidden" class="js-img-preview" />
+									<a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a></li>
+								#end
+								#end
+								<li><a href="javascript:void(0);" onclick="addImagList(false);" class="add-goods">+加图</a></li>
+							</ul>
+							<p class="size-remark">建议尺寸：480*480像素</p>
+							<label id="image_error_msg" style="color: red;"></label>
+						</div>
+					</div>
+
+			        <div class="form-group">
+				        <label class="col-md-2 control-label">应用介绍</label>
+			            <div class="col-md-5" id="error_course_content">
+			                <div id="step-content-region">
+							 <div class="app-sidebar-inner js-sidebar-region" style="width: 396px; z-index: 1;padding-top: 20px;">    
+							   <script type="text/plain" id="editor" name="app_content"></script>
+							 </div>		 
+						    </div>
+			            </div>
+		            </div>
+				</form>
+			</div>
+			<div class="panel-footer" align="center">
+				<button id="saveApp" onclick="saveApp();"class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+				<a href="javascript:history.go(-1);" class="btn btn-default btn-sm">取消</a>
+			</div>
+		</div>
+	</div>
+</div>
+#end
+<script type="text/javascript">
+var listImg = "";
+var listImgUrl = "";
+var selectImg = new Array();
+
+$(function(){
+	$(".main-image-div").hover(function(){
+		$(this).find(".close-modal").removeClass("hide");
+	   $(this).find(".close-modal").addClass("hover");
+	},function(){
+		 $(this).find(".close-modal").addClass("hide");  
+		 $(this).find(".close-modal").removeClass("hover");
+	});
+	
+	$(".app-image-list").hover(function(){
+		$(this).find(".close-modal").removeClass("hide");
+	   $(this).find(".close-modal").addClass("hover");
+	},function(){
+		 $(this).find(".close-modal").addClass("hide");  
+		 $(this).find(".close-modal").removeClass("hover");
+	});
+	
+	#if(app??)
+		$("#app_category").val("#(app.app_category??)")
+		$("#app_type").val("#(app.app_type??)")
+	#end
+	
+});
+
+var ue = UE.getEditor('editor', {
+	toolbars : [ [ "bold", "italic", "underline", "strikethrough",
+			"forecolor", "backcolor", "justifyleft", "justifycenter",
+			"justifyright", "|", "insertunorderedlist",
+			"insertorderedlist", "blockquote", "simpleupload",
+			"insertimage", "insertvideo", "link", "removeformat", "|",
+			"rowspacingtop", "rowspacingbottom", "lineheight", "paragraph",
+			"fontsize", "inserttable", "deletetable",
+			"insertparagraphbeforetable", "insertrow", "deleterow",
+			"insertcol", "deletecol", "mergecells", "mergeright",
+			"mergedown", "splittocells", "splittorows", "splittocols" ] ],
+	autoClearinitialContent : false,
+	enableAutoSave : false,
+	autoFloatEnabled : !0,
+	wordCount : !1,
+	elementPathEnabled : !1,
+	initialContent : '#(app.app_content??)',
+	/* 	initialFrameWidth: 396, */
+	initialFrameHeight : 350,
+	focus : !1,
+	pasteplain : !1
+});
+
+function addImagList() {
+	obz.selectImage(function(selImgs) {
+		for (var i = 0; i < selImgs.length; i++) {
+			var imgObj = selImgs[i];
+
+			$html = $('<li class="sort"><img src="'+imgObj.url+'"  class="js-img-preview">'
+					+ '<input name="imgList" value="'+imgObj.title+'" type="hidden"  class="js-img-preview">'
+					+ '<a class="close-modal small hide" onclick="deleteImg(this);">×</a></li>');
+			$html.hover(function() {
+				$(this).find("a").removeClass("hide");
+				$(this).find("a").addClass("hover");
+			}, function() {
+				$(this).find("a").addClass("hide");
+				$(this).find("a").removeClass("hover");
+			});
+
+			$("#app-image-list").find("li:last-child").before(
+					$html);
+		}
+		return true;
+	});
+}
+
+function deleteNewsImage(){
+	 var h='<a class="main-image-add" onclick="addNewsImage(true);" href="javascript:;">+加图</a>';
+	 $("#news-image-div").empty().append(h);
+	 $('#news_image').val('');
+}
+
+function addNewsImage(obj){
+	obz.selectImageOne(function(selImgs){
+		if(selImgs.length<=0){
+			obz.error("请选择一张图片");
+			return false;
+		}
+		var img = selImgs[0];
+		
+		var h='<img class="image-preview" src="'+img.url+'" >';
+       h=h+'<a class="close-modal small hide" href="javascript:;" onclick="deleteNewsImage();">×</a>';
+	    $("#news-image-div").empty().append(h); 
+	    $('#app_image').val(img.title);
+		return true;
+	});
+}
+
+function deleteImg(obj){
+	$(obj).parent().remove();
+}
+
+function saveApp(){
+	var params = {};
+	var app_image = $("#app_image").val(), app_category = $("#app_category").val(), 
+	app_name = $("#app_name").val(), id = $("#appId").val(),app_content = UE.getEditor('editor').getContent()
+	app_desc = $("#app_desc").val(),app_type = $("#app_type").val();
+	/*检验主表信息开始*/
+	if($("input[name='imgList']").length<1){
+		obz.error("展示图至少有一张");
+		return;
+	}else{
+		var flag = true;
+		$("input[name='imgList']").each(function(){
+			if(flag){
+				params.imgList = $(this).val();
+				flag = false;
+			}else{
+				params.imgList = params.imgList +"," +$(this).val();
+			}
+		});
+	}
+	if($.trim(app_name) == ""){
+		obz.error("应用名称不能为空");
+		return;
+	}
+	if($.trim(app_category) == ""){
+		obz.error("请选择应用类型");
+		return;
+	}
+	if($.trim(app_type) == ""){
+		obz.error("请选择支持类型");
+		return;
+	}
+	if($.trim(app_image) == ""){
+		alert(app_image);
+		obz.error("请选择应用主图");
+		return;
+	}
+	/*检验主表信息结束*/
+	
+	params.id=id;
+	params.app_image=app_image;
+	params.app_category=app_category;
+	params.app_name=app_name;
+	params.app_content=app_content;
+	params.app_desc=app_desc;
+	params.app_type=app_type;
+	
+	$("#inputForm").mask("正在保存商品...");
+	obz.ajaxJson(obz.ctx+"/app/save", params, function(resp) {
+		$("#inputForm").unmask();
+		if(resp.state == "ok"){
+			obz.msg("保存成功,等待跳转...", function(){
+				location.href = "#(webctx)/app";					
+			});
+		}
+	});
+}
+</script>

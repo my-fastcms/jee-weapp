@@ -1,0 +1,19 @@
+#include ("/_includes/_layout.html")
+#@layout("奖品", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="content weui-msg">
+  <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+  <div class="weui-msg__text-area">
+    <h2 class="weui-msg__title">获取商品详情出错</h2>
+    <p class="weui-msg__desc">#(error)</p>
+  </div>
+  #if(taskid??)
+  <div class="weui-msg__opr-area">
+    <p class="weui-btn-area">
+      <a href="#(webctx)/task/poster?taskid=#(taskid)" class="weui-btn weui-btn_primary">回到任务中心</a>
+    </p>
+  </div>
+  #end
+</div>
+#end
+

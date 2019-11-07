@@ -1,0 +1,45 @@
+<img class="qr-code" style="width: 200px;height: 200px;" src="#(qrcode)"/>
+<div style="color: red;">请让收款人的微信扫描该二维码</div>
+<input id="scenceId" type="hidden" value="#(scenceId)"/>
+<script>
+function closeDialog(){
+	if(addNotifyerDialog) addNotifyerDialog.close();
+}
+
+setTimeout(function(){
+	isScanSucceed();
+}, 1000 * 3);
+
+function isScanSucceed(){
+    if($("#scenceId").val() != null){
+    	log("======isScanSucceed:" + Math.random());
+        $.ajax({url: "#(webctx)/companypay/checkScan",
+            type: "POST",
+            data: { "scenceId": $("#scenceId").val(), "csrf_token": $("#CSRF_TOKEN_HIDDEN").val()},
+            cache: false
+        }).done(function (resp){
+        	if(resp ==null || resp.state != "ok"){
+        		var error = resp.message ? "系统错误" : resp.message;
+                obz.error(error, function(){
+                	closeDialog();
+                });
+                return;
+        	}
+        	
+        	if(resp !=null && resp.state == "ok"){
+        		if(!resp.data){
+        			setTimeout(isScanSucceed, 1500);
+        		}else{
+                    log("=============="+resp.data);
+                    getPayee();
+                    closeDialog();
+        		}
+        	}
+       }).fail(function () {
+           setTimeout(isScanSucceed, 1500);
+       });
+    }else{
+        setTimeout(isScanSucceed, 1000 * 3);
+    }
+}
+</script>

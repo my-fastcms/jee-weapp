@@ -1,0 +1,72 @@
+#include ("/_includes/_layout.html")
+#@layout("红包领取失败","wxmall,点步科技","Wxmall社区","wxmall") 
+<style>
+.repack-bg{
+	height: 100%;
+	position: relative;
+}
+.repack-box{
+	display:block;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left:0;
+	right:0;
+	margin:50% 0;
+	border-radius: 10px;
+}
+.weui-content{
+	height: 100%
+}
+h2{
+	font-size: 20px;
+	margin-top:10px;
+	font-family: "微软雅黑";
+}
+.tip{
+	display: inline-block;
+    width: 90%;
+    color: #999;
+    margin-top: 10px;
+    font-size: 18px;
+}
+</style>
+#define content()
+<div class="repack-bg">
+	<div class="repack-box">
+		<div class="repack-msg">
+			<div style="text-align: center;"><img src="#(webctx)/resources/images/redpack-ico.png" /></div>
+			<div style="text-align: center;">
+				<h2>红包发送失败</h2>
+				<span class="tip">红包发送出现异常,请稍后重试或联系公众号客服人员。</span>
+			</div>
+			</div>
+	</div>
+</div>
+#define script()
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	<!--禁用微信分享按钮-->
+	function onBridgeReady() {
+		// 通过下面这个API隐藏右上角按钮
+        WeixinJSBridge.call('hideOptionMenu');
+    	// 通过下面这个API隐藏底部导航栏
+        WeixinJSBridge.call('hideToolbar');
+    }
+
+    if (typeof WeixinJSBridge == "undefined") {
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+    } else {
+        onBridgeReady();
+    }
+    
+})
+</script>
+#end
+#end

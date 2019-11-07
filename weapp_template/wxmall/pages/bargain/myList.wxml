@@ -1,0 +1,25 @@
+<view bindtap="bindViewTap" class="item" wx:for="{{multigroup}}" wx:key="item.id" wx:for-index="idx" bindtap="toDetails" wx:for-item="item" data-id="{{item.id}}" data-baruserid="{{item.bargainUserId}}">
+  <view class="weui-media-box weui-media-box_appmsg">
+  <view class="goods-box">
+      <view class="img-box">
+        <image src="{{item.img}}" mode='aspectFill' class="image" />
+      </view>
+  </view>
+    <view class="weui-media-box__bd" style='width:100%'>
+        <view class="goods-title">{{item.name}}</view>
+        <!-- <view class='group'><text class='c-group' style='border:1px solid {{navbar_bgcolor}}; color:{{navbar_bgcolor}};'>砍价</text></view> -->
+       
+        <view class='flex-x-between flex-y-center'>
+          <view>
+            <view class="goods-price" style='color:{{navbar_bgcolor}}'><text class='size-price'>¥</text>{{item.baragainPrice}}</view> 
+            <view class='p-cost'><text>原价:</text>{{item.price}}</view> 
+          </view>
+          <view class='multigroup' style='background:{{navbar_bgcolor}}'>去砍价</view>
+        </view>
+
+        <view class='goods-title' style='margin-top: 10rpx;font-size: 28rpx;color:#999;'>{{item.curtime}}</view>
+
+    </view>
+  </view>
+</view>
+<view class="loading complete" hidden='{{!endFlag}}'>没有数据了</view>

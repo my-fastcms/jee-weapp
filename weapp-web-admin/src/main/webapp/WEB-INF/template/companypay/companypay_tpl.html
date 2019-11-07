@@ -1,0 +1,51 @@
+<div id="payDiv" class="chat-users" style="min-height:300px;">
+    <div class="users-list"></div>
+</div>
+
+<script type="text/template" id="user_item_tpl">
+<div class="chat-user col-md-12">
+	<div style="display: inline;" class="col-md-10">
+		<input type="radio" name="payee_box" data-img="{{headimgurl}}" data-nick="{{nickname}}" data-id="{{id}}" style="float:left;margin:11px 30px 0 0;height: 15px;width: 15px;"/>
+    	<img class="chat-avatar" src="{{headimgurl}}" alt="">
+    	<div class="chat-user-name">
+        	<a href="javascript:void(0)">{{nickname}}</a>
+    	</div>
+	</div>
+	<div style="display: inline;padding-top: inherit;color:red;" class="col-md-2">
+    	<a href="javascript:void(0)" onclick="deletePayee({{id}})">删除</a>
+	</div>
+</div>
+</script>
+<script>
+function getPayee(){
+	$("#users-list").mask("正在读取用户数据...");
+	obz.ajaxJson("#(webctx)/companypay/list", {}, function(resp){
+		$("#users-list").unmask();
+		if(resp.state == "ok"){
+			var data = resp.data;
+			if(!data){
+				$(".users-list").html("<div class='users-list' style='text-align: -webkit-center;font-size: 18px;padding-top: 20px;'>请先新增收款人</div>");
+				return;
+			}
+			$(".users-list").empty();
+			var users = data;
+			for(var i=0;i<users.length;i++){
+				var user = users[i];
+				//直接历史收款人列表
+				var itemHtml = template("user_item_tpl", user);
+				$(".users-list").append(itemHtml);
+			}
+		}
+	});
+}
+function deletePayee(id){
+	obz.showMessage("确定删除该收款人吗?", function(){
+		$("#users-list").mask("正在删除...");
+		obz.ajaxJson("#(webctx)/companypay/deletePayee", {id:id}, function(resp){
+			$("#users-list").unmask();
+			getPayee();
+		});
+	});
+}
+getPayee();
+</script>

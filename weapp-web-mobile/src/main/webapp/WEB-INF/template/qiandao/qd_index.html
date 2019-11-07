@@ -1,0 +1,73 @@
+#include ("/_includes/_layout.html")
+#@layout("签到", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/qiandao.css">
+#end
+#define content()
+<div class="content">
+	<div class="qiandao_calendar content-padded"></div>
+	<div class="content-padded">
+		<a id="submit_qd" href="javascript:void(0);" class="weui-btn weui-btn_primary">立即签到</a>
+	</div>
+	<div class="content-padded">
+		<div class="card">
+		<div class="card-header">#(qiandao.qiandaoName )</div>
+		<div class="card-content">
+			<div class="card-content-inner">
+				<ul>
+					<!-- <li>
+						<div class="timer">
+				 			<span></span>天<span></span>小时<span></span>分<span></span>秒
+				 		</div>
+					</li> -->
+					#if(qiandao.qiandaoType == 1) 
+						<li><p>您已连续签到<span><font color="#f60">
+							#if(!qiandaoUser??)0#end
+							#if (qiandaoUser??)#(qiandaoUser.CQiandaoCount )#end
+							</font></span>天</p>
+						</li>
+					#end
+					#if(qiandao.qiandaoType ==2)
+						<li><p>您已累计签到<span><font color="#f60">
+							#if(!qiandaoUser??)0#end
+							#if(qiandaoUser??)#(qiandaoUser.qiandaoCount)#end
+							</font></span>天</p>
+						</li>
+					#end
+				</ul>
+			</div>
+		</div>
+		</div>
+		<div class="card">
+			<div class="card-header">签到规则</div>
+			<div class="card-content">
+				<div class="card-content-inner">
+					<ul>
+						#for(qitem:qiandaoItems)
+							#if(qitem.signType == 1&& qiandao.qiandaoType == 1)
+								<li>连续签到 #(qitem.signDay)天,送#(qitem.prizeName );</li>
+							#end
+							#if(qitem.signType == 2&& qiandao.qiandaoType == 2)
+								<li>累计签到 #(qitem.signDay)天,送#(qitem.prizeName );</li>
+							#end
+							#if(qitem.signType == 3)
+								<li>指定 #(qitem.signDay)日签到,送#(qitem.prizeName);</li>
+							#end
+						#end
+		         	 </ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br><br>
+</div>
+<input type="hidden" id="end_timestamp" value="#(end_timestamp) "/>
+<input type="hidden" id="qiandao_id" value="#(qiandao.id )"/>
+#for(qRecord:qiandaoRecords)
+	<input class="qiandao_time" type="hidden" value="#(qRecord )"/>
+#end
+
+#end
+<script type="text/javascript" src="#(webctx)/resources/js/qiandao.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/menu_qiandao.js"></script>
+

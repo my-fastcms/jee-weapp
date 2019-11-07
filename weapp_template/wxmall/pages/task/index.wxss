@@ -1,0 +1,42 @@
+.task-li{
+  overflow: hidden;
+  font-size: 26rpx;
+  color:#666;
+  padding-top: 16rpx;
+  line-height: 1.8;
+}
+.task-title{
+  color: rgb(165, 165, 165);
+}
+.task-otitle{
+  color: rgb(165, 165, 165);
+  float: left;
+}
+.task-obox{
+  display: inherit
+}
+.task-status{
+  color: #fa3c64;
+}
+.bottom-box{
+  border:1px solid #fa3c64;
+  border-radius:44rpx;
+  color:#fa3c64;
+  margin:0 30rpx;
+  height:80rpx;
+  left:0;
+  right:0;
+  font-size: 30rpx;
+  position: fixed;
+}
+.no-task-tip{
+  color: #666;
+  text-align: center;
+  padding-top: 250rpx;
+}
+.go-task-list{
+  color: #666;
+  text-align: center;
+  padding-top: 20rpx
+}
+.weui-panel__bd { background: #fff; border:1px solid #eee; margin:20rpx; border-radius: 10rpx;}

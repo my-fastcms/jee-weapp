@@ -1,0 +1,176 @@
+#include ("/_includes/_layout.html")
+#define css()
+<style type="text/css">
+.wizard-big.wizard > .content{
+    min-height: 450px;
+}
+.t-step{ display: table; overflow: hidden; width: 100%; box-sizing: border-box; border: 1px solid #e7eaec; border-left: 0; border-radius: 3px;}
+.t-steps{ display: table-cell; padding: 6px; position: relative; padding-left: 65px; border-left: 1px solid #ddd;}
+.t-steps:before,.t-steps:after{position: absolute; z-index: 2;content: ''; display: block; top: 50%; margin-top: -13px; right:-20px; border:solid; border-width:13px 10px; border-color:transparent transparent transparent #ccc;}
+.t-steps:after{ border-color:transparent transparent transparent #fff; right: -19px; z-index: 3;}
+.t-steps i,.t-steps span{ position: absolute; left: 20px; display: inline-block; line-height: 30px; top: 50%; margin-top: -15px;}
+.t-steps i{ font-size: 30px; display:none;}
+.t-steps.complete i{ display: block; color: #1AB394;}
+.t-steps.complete span{ display: none;}
+.t-steps span{ width: 28px; height: 28px; line-height: 28px; border: 1px solid #999; color: #999; font-size: 18px; text-align: center; border-radius: 50%; box-sizing: border-box;}
+.t-steps.active{ background: #1AB394; color: #fff;}
+.t-steps.active i{ display:none;}
+.t-steps.active span{ border-color: #fff; color: #fff;}
+.t-steps.active:before,.t-steps.active:after{ border-color:transparent transparent transparent #1AB394;}
+.t-steps.disabled{ color: #999; background: #f9f9f9;}
+.t-steps.disabled:after{ border-color:transparent transparent transparent #f5f5f5;}
+.t-steps h2{ font-size: 16px;}
+.global-themes { margin-top: 5px; margin-left: -3px; width: 370px;}
+.clearfix { zoom: 1; }
+.global-themes .theme-item { float: left; /* padding: 2px; */ margin: 0 20px 5px 0; height: 16px; border: 1px solid #fff; cursor: pointer;}
+.global-themes .theme-item.active { border: 2px solid #0080f9;}
+.global-themes .theme-item .color-item { display: inline-block; width: 16px; height: 16px;}
+img { width: auto\9; height: auto; max-width: 100%; vertical-align: middle; border: 0; -ms-interpolation-mode: bicubic; position: relative;}
+.example-imgs { width: calc(100% - 130px); margin-top: 5px;}
+</style>
+#end
+#@layout("小程序发布", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	  <div class="container-fluid">
+	    <div class="row">
+	        <div class="ibox  col-sm-12">
+				<div class="ibox-content">
+					<div class="t-step">
+		                <div class="t-steps active"> 
+		                    <span class="t-steps-n">1</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>选择模板</h2>
+		                </div>
+		                <div class="t-steps disabled">
+		                    <span class="t-steps-n">2</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>设置体验者</h2>
+		                </div> 
+		                <div class="t-steps disabled">
+		                    <span class="t-steps-n">3</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>预览新版</h2>
+		                </div>
+		                 <div class="t-steps disabled">
+		                    <span class="t-steps-n">4</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>提交审核</h2>
+		                </div>
+		            </div>
+		            
+		            <form action="" method="post" class="form-horizontal col-sm-10" style="padding-top: 20px;">
+						<div>
+							<input type="hidden" id="sel_app_id" name="id" value="#(authUser.id)"/>
+							<!-- <div class="form-group">
+					            <label class="col-md-2 control-label">小程序appid</label>
+					            <div class="col-md-5" id="error_app_id">
+					                <input type="text" id="app_id" name="app_id" class="form-control" value="#(authUser.app_id)" readonly="readonly"/>
+					                <label class="control-label" for="app_id"></label>
+					            </div>
+					        </div> -->
+					        <div class="form-group">
+					            <label class="col-md-2 control-label">小程序</label>
+					            <div class="col-md-5" id="error_pay_mch_id">
+					                <input type="text" id="nick_name" name="nick_name" class="form-control" value="#(authUser.nick_name)" readonly="readonly"/>
+					                <label class="control-label" for="nick_name"></label>
+					            </div>
+					        </div>
+					        <div class="form-group">
+					            <label class="col-md-2 control-label">小程序Logo</label>
+					            <div class="col-md-9">
+					                <img style="width: 60px;height: 60px;" src="#(authUser.head_img)"/>
+					            </div>
+					        </div>	
+					        <div class="form-group">
+					            <label class="col-md-2 control-label">小程序模板<span style="color: red;"><em>*</em></span></label>
+					           	<div class="col-md-5" id="error_pay_secret_key">
+					                <select id="template_sel" name="template__sel" class="form-control">
+					                	#for(tpl:templates)
+					                		<option value="#(tpl.id)" #if(selTpl?? && selTpl.id==tpl.id) selected="selected" #end>#(tpl.template_name)_v#(tpl.version)_tpl#(tpl.template_id)</option>
+					                	#end
+					                </select>
+					                <label class="control-label" for="template_sel"></label>
+					            </div>
+					        </div>
+					        
+						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label">选择配色方案<span style="color: red;"><em>*</em></span></label>
+							<div class="col-md-10">
+								<div class="global-themes clearfix">
+									#for(style : styles)
+									<div class="theme-item #if (currStyle?? && currStyle.id==style.id) active #end" index="#(style.id)">
+										#(style.display_html)
+									</div>
+									#end
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-2 control-label">当前风格示例</label>
+							<div class="col-md-10">
+								<img src="#(webctx)/resources/assets/img/1.png" alt="example" id="example_img"/>
+							</div>
+						</div>
+						
+						<div class="panel-default">
+						  	<div class="panel-body" align="center">
+								<button id="pack_btn" type="button" class="btn btn-success btn-sm">下一步</button>
+								<a href="#(webctx)/weapp/sets" class="btn btn-default btn-sm">取   消</a>
+						  	</div>
+					  	</div>
+				  	</form>
+				</div>
+			</div>
+		</div>	 	
+	</div>
+</div>
+#end
+<script type="text/javascript">
+$(".theme-item").click(function(){
+	$(".theme-item").each(function(){
+		$(this).removeClass("active");
+	})
+	$(this).addClass("active");
+	var c = $(this).attr("index");
+	$("#example_img").attr("src", "#(webctx)/resources/assets/img/"+c+".png");
+});
+
+$(".theme-item").each(function(){
+	if($(this).hasClass("active")){
+		$("#example_img").attr("src", "#(webctx)/resources/assets/img/"+$(this).attr("index")+".png");
+	}
+})
+
+$("#pack_btn").click(function(){
+	if($("#template_sel").val() == ""){
+		obz.warn("请选择模板");
+		return;
+	}
+	
+	var styleId = "";
+	$(".theme-item").each(function(){
+		if($(this).hasClass("active")){
+			styleId = $(this).attr("index");
+			return false;
+		}
+	})
+	
+	if(styleId == ""){
+		obz.warn("请选择配色方案");
+		return;
+	}
+	
+	$(".ibox-content").mask("正在处理中...");
+	obz.ajaxJson("#(webctx)/weapp/sets/commitCode", {"templateId":$("#template_sel").val(), "styleId": styleId}, function(resp){
+		$(".ibox-content").unmask();	
+		if(resp.code == 200){
+			obz.msg("已上传代码", function(){
+				location.href = "#(webctx)/weapp/sets/step2";
+			});				
+		}
+	});
+});
+</script>

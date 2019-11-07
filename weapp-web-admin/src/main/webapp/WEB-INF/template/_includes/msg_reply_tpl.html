@@ -1,0 +1,53 @@
+<script type="text/template" id="text_tpl">
+<textarea class="form-control" style="resize: vertical;" aria-required="true"></textarea>
+<a onclick="WxmMsg.insertNick(this)" href="javascript:void(0)">插入微信昵称</a>
+</script>
+<script type="text/template" id="wechat_media_sel_tpl">
+<div class="newsmsg_item" data-type="{{msgOrgType}}" data-url="{{msgUrl}}" data-title="{{msgTitle}}" data-desc="{{msgDesc}}" data-image="{{msgPic}}" style="padding-left:3px;"><a href="{{msgUrl}}" target="_blank" title="{{msgTitle}}"><font color="red">{{if msgOrgType == 1}}(有赞商品){{else if msgOrgType==2}}(微信素材){{else if msgOrgType==3}}(自定义素材){{else}}(未知类型){{/if}}</font>{{msgTitle}}</a>&nbsp;<a href="javascript:void(0)" onclick="WxmMsg.delNewsRow(this)"><font color="red">移除</font></a></div>
+</script>
+<!-- 图片素材 -->
+<script type="text/template" id="image_sel_tpl">
+<div class="imagemsg_item" data-image="{{msgPic}}" data-media-id="{{mediaId}}" style="float:left;padding-left:3px;"><img style="width:120px;height:120px;" src="{{msgPic}}"/></a><br><a href="javascript:void(0)" onclick="WxmMsg.delNewsRow(this)"><font color="red">移除</font></div>
+</script>
+<!-- 小程序素材 -->
+<script type="text/template" id="routine_sel_tpl">
+<div class="form-group" style="overflow: hidden"> 
+  <div class="col-sm-10 form-control-static"> 
+   <div id="miniprogram_inputs_div">
+    <input type="text" id="app_id" name="app_id" class="form-control" style="max-width:500px;" placeholder="输入小程序Appid，小程序需先与当前公众号关联" maxlength="255"/><br>
+    <input type="text" id="app_path" name="app_path" class="form-control" style="max-width:500px;" placeholder="输入小程序路径，例如：pages/index/index" maxlength="255"/><br>
+    <input type="text" id="app_title" name="app_title" class="form-control" style="max-width:500px;" placeholder="输入小程序标题" maxlength="255"/>  
+   </div>
+  </div>
+</div>
+<a href="javascript:void(0)" style="margin-top:10px" onclick="WxmMsg.routineImageClick(this)">选择小程序封面图</a> 
+</script>
+<script type="text/template" id="reply_type_tpl">
+<div class="menu_content_container module" style="padding-bottom: 10px;"> 
+   <div class="menu_content url jsMain"> 
+    <a href="javascript:void(0)" class="type_text" onclick="WxmMsg.textClick(this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp; 
+    <a href="javascript:void(0)" class="type_image_itme" onclick="WxmMsg.openImageClick(this)" style="text-decoration: underline;">图片</a> &nbsp;/&nbsp; 
+	<a href="javascript:void(0)" class="type_routine" onclick="WxmMsg.routineClick(this)" style="text-decoration: underline;">小程序</a> &nbsp;/&nbsp; 	
+    <a href="javascript:void(0)" class="type_zan_item" onclick="WxmMsg.openProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="type_wechat_media" onclick="WxmMsg.openWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="type_custom_media" onclick="WxmMsg.openCustomMediaDialog(this)" style="text-decoration: underline;">自定义图文</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="del_config" onclick="WxmMsg.delRow(this)" style="text-decoration: underline;color: red;">删除行</a>
+   </div>
+   <div id="sel_div_{{id}}" data-type="{{msgType}}" class="menu_content select_content" style="overflow:hidden;"></div>
+</div>
+</script>
+
+<script type="text/template" id="reply_type_tpl_unsub">
+<div class="menu_content_container module" style="padding-bottom: 10px;"> 
+   <div class="menu_content url jsMain"> 
+    <a href="javascript:void(0)" class="type_text" onclick="WxmMsg.textClick('select_content_unsub', this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp; 
+    <a href="javascript:void(0)" class="type_image_itme" onclick="WxmMsg.openImageClick('select_content_unsub', this)" style="text-decoration: underline;">图片</a> &nbsp;/&nbsp; 
+	<a href="javascript:void(0)" class="type_routine" onclick="WxmMsg.routineClick('select_content_unsub', this)" style="text-decoration: underline;">小程序</a> &nbsp;/&nbsp; 	
+    <a href="javascript:void(0)" class="type_zan_item" onclick="WxmMsg.openProductDialog('select_content_unsub', this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="type_wechat_media" onclick="WxmMsg.openWechatMediaDialog('select_content_unsub', this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="type_custom_media" onclick="WxmMsg.openCustomMediaDialog('select_content_unsub', this)" style="text-decoration: underline;">自定义图文</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="del_config" onclick="WxmMsg.delRow(this)" style="text-decoration: underline;color: red;">删除行</a>
+   </div>
+   <div id="sel_div_{{id}}" data-type="{{msgType}}" class="menu_content select_content_unsub" style="overflow:hidden;"></div>
+</div>
+</script>

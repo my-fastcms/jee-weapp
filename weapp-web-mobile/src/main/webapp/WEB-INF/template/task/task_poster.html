@@ -1,0 +1,78 @@
+#include ("/_includes/_layout.html")
+#@layout("邀请好友做任务","wxmall,点步科技","Wxmall社区","wxmall") 
+<style>
+.poster-bg{
+	background: rgb(57,57,62);
+	height: 94%;
+	position: relative;
+}
+.poster-box{
+	display:block;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left:0;
+	right:0;
+	margin: auto 0;
+	padding: 10% 3%;
+}
+.poster{
+	width: 100%; 
+	height: 100%;
+}
+.menu{
+	display: table;
+	height: 6%;
+	width: 100%;
+}
+.menu div{
+	display: table-cell;
+	vertical-align: middle;
+}
+.weui-content{
+	height: 100%
+}
+</style>
+#define content()
+<div class="poster-bg">
+	<div class="poster-box">
+		<img class="poster" src="#(img_domain)#(poster.poster_img??)"/>
+	</div>
+</div>
+<div class="menu">
+	<div style="padding-left: 20px; color: #999">已邀请人数：#if(followerCount??) #(followerCount) #else 0 #end</div>
+	<div style="padding-right: 20px; text-align: right;"><a href="#(webctx)/task/detail?taskid=#(taskid??)" style="color: rgb(30,148,224);">任务明细 >></a></div> 
+</div>
+#define script()
+<script type="text/javascript">
+$(document).ready(function(){
+	wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
+		//自定义“分享给朋友”及“分享到QQ”按钮的分享内容（1.4.0） #(session._buyerUser.open_id)
+		wx.updateAppMessageShareData({ 
+	        title: '#(user.nickname??)邀请你参加活动', 
+	        desc: '好朋友,请和我一起完成任务吧', 
+	        link: 'http://#(appId??).dbumama.com/task/poster?taskid=#(taskid??)&openid=#(openid??)', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+	        imgUrl: '#(user.headimgurl)', // 分享图标
+	        success: function () {
+	        	// 设置成功
+	        }
+		})
+		//自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容（1.4.0）
+		wx.updateTimelineShareData({ 
+	        title: '#(user.nickname??)邀请你参加活动', // 分享标题
+	        link: 'http://#(appId??).dbumama.com/task/poster?taskid=#(taskid??)&openid=#(openid??)', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+	        imgUrl: '#(user.headimgurl??)', // 分享图标
+	        success: function () {
+	          // 设置成功
+	        }
+		});
+	});
+})
+$(window).bind('resize load', function() {
+        $("body").css("zoom", $(window).width() / 400);
+        $("body").css("display", "block");
+        $("body").css("zoom", $(window).width() / 400);
+    });
+</script>
+#end
+#end

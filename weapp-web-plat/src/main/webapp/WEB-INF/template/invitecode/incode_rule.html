@@ -1,0 +1,107 @@
+#include ("/_includes/_layout.html")
+#define css()
+<style type="text/css">
+.col-md-5 select{
+ width: 30%;
+ float: left;
+}
+</style>
+#end
+#@layout("邀请码规则管理", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+		<div class=" content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content" >
+		       	   <a href="#(webctx)/invitecode/rule" class="J_menuTab active">邀请码规则</a>
+		           <a href="#(webctx)/invitecode" class="J_menuTab">邀请码统计</a>
+		           <a href="#(webctx)/invitecode/cash" class="J_menuTab">提现管理</a>
+		       </div>
+		   	</nav>
+		</div>
+		<div class=" ibox-content">
+			<div class="alert alert-success">
+				<i class="fa fa-info-circle"></i><strong>提示:</strong><p>平台注册用户的一种激励机制</p>
+				<p>邀请者获取佣金比例不可以超过订单金额的10%。<font color="red">比如订单金额为100元，佣金比例为5%，则邀请者获取5元佣金</font></p>
+				<p>被邀请者购买平台小程序模板同样享有折扣。<font color="red">比如商城模板是100元一年，使用邀请码后享受8折的话，只需要支付80元即可购买模板</font></p>
+			</div>
+		
+			<form id="_myForm_" class="form-horizontal" style="padding-top: 10px;">
+				<div>
+					<input type="hidden" id="id" name="id" value="$(incodeRule.id??)"/>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">邀请者获取佣金比例：<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-5">
+			            	<div class="input-group m-b">
+                              	<input type="text" id="mission_rate"  name="mission_rate" class="form-control" value="#(incodeRule.mission_rate??)" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+			                	<span class="input-group-addon">%</span>        
+                            </div>
+			                <label class="control-label" for="mission_rate"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">使用者折扣比例：<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-5">
+			            	<div class="input-group m-b">
+			                <input type="text" id="discount_rate" name="discount_rate" class="form-control" value="#(incodeRule.discount_rate??)" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+			                <span class="input-group-addon">%</span>
+			                </div>
+			                <label class="control-label" for="discount_rate"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">是否启用邀请码：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('启用邀请码功能后，注册用户才能通过邀请码获取佣金。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+			            <div class="col-md-5">
+			                <input id="active" name="active" type="checkbox" #if(incodeRule?? && incodeRule.active==true) checked="checked" #end class="i-checks"/>
+			                <label class="control-label" for="active"></label>
+			            </div>
+			        </div>
+				</div>
+				<div class="panel-default">
+				  	<div class="panel-body" align="center">
+						<button type="submit" class="btn btn-success btn-sm">保存</button>
+				  	</div>
+			  	</div>
+		  	</form>
+		
+	</div>
+</div>
+#end
+<script type="text/javascript">
+$().ready(function() {
+	//validate signup form on keyup and submit
+	var icon = "<i class='fa fa-times-circle'></i> ";
+	$("#_myForm_").validate({
+		//debug:true,
+		errorElement: "em",
+	    success: function(em) {
+	        em.text("").addClass("success");//验证通过的动态CSS
+	    },
+	    submitHandler: function() {
+	    	obz.showMessage("确认保存吗?", function(){
+	    		$("#_myForm_").mask("正在保存...");
+		    	var params = $("#_myForm_").wxmall_serialize();
+		    	$.post(obz.ctx+"/invitecode/saveRule", params, function(json) {
+		    		$("#_myForm_").unmask();
+					if(json.code!=200){
+						obz.error(json.msg);
+					}else{
+						obz.msg('保存成功', function(){
+							location.reload();
+						});					
+					}
+				},"json");
+	    	});
+	    },
+	    rules: {
+	    	mission_rate: "required", discount_rate: "required"
+	    },
+	    messages: {
+	    	mission_rate: icon + "请输入佣金比率", discount_rate: icon + "请输入使用者折扣"
+	    }
+	});
+});
+</script>
+<script>
+Template.init("#menu-invitecode");
+</script>

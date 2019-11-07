@@ -1,0 +1,199 @@
+<!--pages/group/info.wxml-->
+<import src="/pages/template/toast.wxml"/>
+<template is="toast" data="{{toast:toast}}"/>
+<!-- groupstatus 0 为拼团中 -->
+<view wx:if="{{groupInfo.groupStatus==0}}" class="grouping">
+<block wx:if="{{groupInfo.isGrouped}}">
+	<view class="group-goods bg-fff" bindtap="showGoodsDetail" data-id="{{groupInfo.productId}}">
+		<image src="{{groupInfo.productImage}}" mode="aspectFill"></image>
+		<view class="goods-info pull-right">
+			<view class="goods-title">{{groupInfo.productName}}</view>
+			<view class="goods-sale">{{groupInfo.multiGroupInfo.groupNum}}人团·已团3.5万件</view>
+			<view class="goods-price">¥{{groupInfo.multiGroupInfo.collagePrice}}</view>
+		</view>
+	</view>
+	<view class="notice text-center bg-fff">
+		<view class="">
+			还差<text class="text-red">{{groupInfo.diffUserCount}}</text>人，
+			<text>{{leftTime}}</text>后结束
+		</view>
+		<view style="padding: 30rpx 24rpx;">
+			<button class="btn" open-type="share">邀请好友参团</button>
+		</view>
+	</view>
+	<view class="group-info mt-20">
+		<view class="user-img text-center bg-fff">
+			<text class="group-header">团长</text>
+			<block wx:for="{{groupInfo.groupUsers}}" wx:key="unique">
+				<image src="{{item.headimg}}" mode="aspectFill"></image>
+			</block>
+		</view>
+		<view class="goods-title-1 mt-10 flex-row bg-fff">
+			<view class="flex-grow-0 flex-y-center" style="line-height: 90rpx;">商品名称</view>
+			<view class="flex-grow-1" style="line-height:90rpx;text-align: right;">
+				<text>{{groupInfo.productName}}</text>
+			</view>
+		</view>
+		<view class="group-time flex-row bg-fff">
+			<view class="flex-grow-0">参团时间</view>
+			<view class="flex-grow-1" style="padding-right: 24rpx;text-align: right;">
+				{{groupInfo.joinTime}}
+			</view>
+		</view>
+	</view>
+</block>
+<block wx:else>
+	<view class="group-goods bg-fff" bindtap="showGoodsDetail" data-id="{{groupInfo.productId}}">
+		<image src="{{groupInfo.productImage}}" mode="aspectFill"></image>
+		<view class="goods-info pull-right">
+			<view class="goods-title">{{groupInfo.productName}}</view>
+			<view class="goods-sale">{{groupInfo.multiGroupInfo.groupNum}}人团·已团3.5万件</view>
+			<view class="goods-price">¥{{groupInfo.multiGroupInfo.collagePrice}}</view>
+		</view>
+	</view>
+
+	<view class="group-info text-center bg-fff mt-20">
+		<view class="user-img">
+			<text class="group-header">团长</text>
+			<block wx:for="{{groupInfo.groupUsers}}" wx:key="unique">
+				<image src="{{item.headimg}}" mode="aspectFill"></image>
+			</block>
+		</view>
+				<view class="mt-10">
+					仅剩<text class="text-red" style="padding: 0 10rpx;">{{groupInfo.diffUserCount}}</text>个名额，{{leftTime}}后结束
+				</view>
+				<view class="mt-20" style="padding: 20rpx 24rpx;">
+					<button class="btn" bindtap="setModalStatus" data-status="1">一键参团</button>
+				</view>
+	</view>
+</block>
+</view>
+<!-- end grouping groupstatus==1 为拼团成功-->
+
+<view wx:if="{{groupInfo.groupStatus==1}}" class="grouped">
+	<block wx:if="{{groupInfo.isGrouped}}">
+		<view class="notice text-center bg-fff">
+			<view class="warn-primary">拼团成功</view>
+			<view class="warn-notice">商家正在努力发货，请耐心等待！</view>
+			<button class="btn" bindtap="goToHome">去首页逛逛</button>
+		</view>
+		<view class="user-img text-center bg-fff">
+			<text class="group-header">团长</text>
+			<block wx:for="{{groupInfo.groupUsers}}" wx:key="unique">
+				<image src="{{item.headimg}}" mode="aspectFill"></image>
+			</block>
+		</view>
+		<view class="list-group mt-20 bg-fff">
+			<view class="list-item">商品名称</view>
+			<view class="list-item-aside goods-title">{{groupInfo.productName}}</view>
+		</view>
+		<!-- <view class="list-group bg-fff">
+			<view class="list-item">收货人</view>
+			<view class="list-item-aside">
+				{{groupInfo.address.userName}}
+				{{groupInfo.address.telNumber}}
+			</view>
+		</view>
+		<view class="list-group bg-fff">
+			<view class="list-item">收货地址</view>
+			<view class="list-item-aside">
+				{{groupInfo.address.provinceName}}
+				{{groupInfo.address.cityName}}
+				{{groupInfo.address.countyName}}
+				{{groupInfo.address.detailInfo}}
+				</view>
+		</view> -->
+		<view class="list-group bg-fff">
+			<view class="list-item">参团时间</view>
+			<view class="list-item-aside">{{groupInfo.joinTime}}</view>
+		</view>
+	</block>
+	<block wx:else>
+	<view class="group-goods bg-fff" bindtap="showGoodsDetail" data-id="{{groupInfo.productId}}">
+		<image src="{{groupInfo.productImage}}" mode="aspectFill"></image>
+		<view class="goods-info pull-right">
+			<view class="goods-title">{{groupInfo.productName}}</view>
+			<view class="goods-sale">
+				{{groupInfo.multiGroupInfo.groupNum}}人团·已3.5万团件
+			</view>
+		</view>
+	</view>
+	<view class="user-img text-center bg-fff">
+		<text class="group-header">团长</text>
+		<block wx:for="{{groupInfo.groupUsers}}" wx:key="unique">
+			<image src="{{item.headimg}}" mode="aspectFill"></image>
+		</block>
+	</view>
+	<view class="text-center">团已满</view>
+	<button class="btn" bindtap="showGoodsDetail" data-id="{{groupInfo.productId}}">再次一键开团</button>
+	</block>
+</view>
+
+<!-- groupStatus==2 为拼团失败 -->
+<view wx:if="{{groupInfo.groupStatus==2}}" class="groupFail">
+	<view class="group-goods bg-fff" bindtap="showGoodsDetail" data-id="{{groupInfo.productId}}">
+		<image src="{{groupInfo.productImage}}" mode="aspectFill"></image>
+		<view class="goods-info pull-right">
+			<view class="goods-title">{{groupInfo.productName}}</view>
+			<view class="goods-sale">
+				{{groupInfo.multiGroupInfo.groupNum}}人团·已3.5万件
+			</view>
+			<view class="goods-price">￥{{groupInfo.multiGroupInfo.collagePrice}}</view>
+		</view>
+	</view>
+	<view class="group-item bg-fff mt-20">
+		<view class="user-img text-center">
+			<text class="group-header">团长</text>
+			<block wx:for="{{groupUsers}}" wx:key="unique">
+				<image src="{{item.headimg}}" mode="aspectFill"></image>
+			</block>
+		</view>
+		<view class="text-center group-fail-text">拼团不成功，款项将原路返还</view>
+		<button class="btn" bindtap="showGoodsDetail" data-id="{{groupInfo.productId}}">再次一键开团</button>
+	</view>
+</view>
+
+
+<!-- sku选择弹出框begin -->
+  <view animation="{{animationData}}" class="drawer_attr_box" wx:if="{{showModalStatus}}">
+     <view class="close_icon" bindtap="setModalStatus" data-status="0" >×</view>
+      <view class="order_comment_item">
+        <view class="weui-flex">
+          <view class="title_img"><image src="{{groupInfo.productImage}}" class="order_comment_img"></image></view>
+            <view class="weui-flex__item order_comment_textarea_box">
+               <view class="cell_title">{{groupInfo.productName}}</view>
+               <view>
+                <text class="price_blod">拼团价¥ {{ groupInfo.multiGroupInfo.collagePrice }}</text>
+                <text class="price_del" style='padding-left:10px;'> ¥ {{groupInfo.productPrice }}</text>
+              </view>
+            </view>
+          </view>
+      </view>
+
+      <view class="wy-media-box weui-media-box_text" wx:for="{{attrValueList}}" wx:for-item="attrValueObj" wx:for-index="attrIndex" wx:key="id">
+      <view class="weui-media-box_appmsg">
+              <view class="weui-media-box__hd proinfo-txt-l"><span class="promotion-label-tit">{{attrValueObj.attrKey}}</span></view>
+                <view class="promotion-sku clear">
+                <ul class="app-image-list">
+                    <li class="attr_value {{attrValueObj.attrValueStatus[valueIndex]?(value==attrValueObj.selectedValue?'active':''):''}}" bindtap="selectAttrValue" data-status="{{attrValueObj.attrValueStatus[valueIndex]}}" data-sfid="{{attrValueObj.attrKeyId}}" data-id="{{attrValueObj.attrValuesId[valueIndex]}}"
+        data-value="{{value}}" data-key="{{attrValueObj.attrKey}}" data-index="{{attrIndex}}" data-selectedvalue="{{attrValueObj.selectedValue}}" wx:for="{{attrValueObj.attrValues}}" wx:for-item="value" wx:for-index="valueIndex" wx:key="id"><a href="javascript:;">{{value}}</a></li>
+                  </ul>              
+      </view>
+        </view>
+    </view>
+
+        <view class="weui-flex nuber_box">
+             <view class="promotion-label-tit" style="padding-top:7px;">购买数量：</view>
+              <view class="stepper">
+                <text  data-index="{{index}}" catchtap="bindMinus">-</text>
+                <input maxlength="5" type="number" data-index="{{index}}" style="color:red;" catchchange="bindManual" catchtap="bindManualTapped" value="{{num}}" />
+                <text  data-index="{{index}}" catchtap="bindPlus">+</text>
+              </view>
+          </view>
+
+          <view class="cofrimbar"> 
+              <view class="totalPrice"><text>￥{{totalPrice}}</text></view>
+              <view class="okbox" bindtap="pay"><text>确定</text></view>
+          </view>
+  </view>
+<!-- sku选择弹出框end -->  

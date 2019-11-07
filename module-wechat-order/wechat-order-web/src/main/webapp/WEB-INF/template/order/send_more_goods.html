@@ -1,0 +1,160 @@
+<link href="#(webctx)/resources/css/delivery.css" rel="stylesheet"/>
+<input type="hidden" id="orderIds" value="#(orderIds)"/>     
+ <div id="page-trade-delivery" class="app__content page-trade-delivery" style="margin-right: 20px;">
+	 <div class="freight-list">
+		<div class="freight-content" style="display: block;">
+		    <div class="freight-template-list-wrap js-freight-template-list-wrap">
+			    <ul class="deliveryLotGrid"></ul>
+		    </div>
+	    </div>
+	 </div>
+ </div>
+
+<script type="text/template" id="freight-template">
+ <li class="freight-template-item" order_id="{orderId}">
+     <h4 class="freight-template-title">
+    <b>订单号：{orderSn}</b> 
+    <div class="pull-right">
+    <span class="c-gray">下单时间    {orderCreated}  </span>
+    </div>    
+    </h4>
+   <table class="freight-template-table">
+   <tbody id="body_{orderId}">
+   <tr>
+		<td class="col-md-4"><table><tbody id="js-freight-cost_{orderId}"></tbody></table></td>
+        <td class="col-md-4">
+                       <div class="col-md-6">
+	                       <select id="exp_key_{orderId}"  name="exp_key" class="form-control" style="width:160px;">
+							<option value="">请选择快递公司</option>
+							#for(company: expresscomps)
+								<option value="#(company.expKey)" expcode = "#(company.expCode)" expName="#(company.expName)">
+									#(company.expName)
+								</option>
+							#end
+		                   </select>
+		                   <label class="error_exp_key" style="color:red;" for="exp_key"></label>
+	     </div> 
+         </td>
+           <td class="col-md-4">
+           <span class="col-md-4 control-label">快递单号:</span>
+                   <div class="col-md-6">
+	                <input type="text" id="bill_number_{orderId}" name="bill_number" class="form-control" value="" style="width:180px;"/>
+	                <label class="error_bill_number" style="color:red;" for="bill_number"></label>
+                   </div>
+          </td>
+        </tr>
+        <tr>
+             <td colspan="3">
+             收货地址: <span>{receiverProvince} {receiverCity} {receiverCountry}  {receiverAddr},{receiverName},{receiverPhone}</span>
+             <td/>
+        </tr>
+       </tbody>   
+        </table>
+        </li>
+</script>
+
+<script type="text/template" id="freight-template_table">
+<tr><td><img src="{productImg}" style="margin: 2px" width="30" height="30">X {quantity} {totalPrice} {productName}</td></tr>
+</script>	  	
+<script type="text/javascript">
+var order_type="#(order_type)";
+$(document).ready(function() {
+	var searchItems_send = function(){
+		var params = {};
+		params.orderIds="#(orderIds)";
+		params.order_type="#(order_type)";
+		params.groupIds = "#(groupIds)";
+		
+		$(".deliveryLotGrid").mask("加载中...");
+		var url = obz.ctx + "/order/sendMoregoods";
+		if(params.groupIds && params.groupIds != null){
+			url = obz.ctx + "/order/sendMoregoodsGroup";
+		}
+		obz.ajaxJson(url, params, function(resp){
+			$(".deliveryLotGrid").unmask();
+			var result = resp.data;
+			$(".deliveryLotGrid").empty();
+			for(var i=0;i<result.length;i++){
+				var order = result[i];
+				var trTradeHtml = obz.dataTemplate4obj($("#freight-template").html(), order);
+				$(".deliveryLotGrid").append(trTradeHtml);
+				for(var k=0;k<order.orderItems.length;k++){
+					var orderItem = order.orderItems[k];
+					if(orderItem.productName.length > 8){
+						orderItem.productName = orderItem.productName.substring(0, 8) + "...";
+					}
+					var trOrderHtml = obz.dataTemplate4obj($("#freight-template_table").html(), orderItem);
+					$("#js-freight-cost_" + order.orderId).append(trOrderHtml);
+				}
+			}
+		});
+	}
+	searchItems_send();	
+});
+
+function sendGoods(){
+	clearError();
+	var params={};
+	var itemsAll = new Array();
+	var hasErr = false;
+	var orderIds = $("#orderIds").val();
+	
+	if(orderIds == null || orderIds == ""){
+		$(".deliveryLotGrid").children("li").each(function(){
+			orderIds += $(this).attr("order_id") + "-";
+		});
+	}
+	
+	if(orderIds.indexOf("-")!=-1){
+		orderIds=orderIds.substring(0,orderIds.length-1);
+	}
+	
+	var orderid=orderIds.split("-");
+	for(var i=0;i<orderid.length;i++){
+		 $("#body_"+orderid[i]+" tr").each(function(i,obj){
+		 		var exp_key = $(obj).find("select[name='exp_key']");
+		 		if(exp_key.children('option:selected').val()==""){	
+		 			if(!hasErr) hasErr=true;
+		 			exp_key.css("border-color", "#ff5454");
+		 			$(obj).find(".error_exp_key").html("物流公司不能为空");
+				}
+		 		var bill_number = $(obj).find("input[name='bill_number']");		
+		 		if(bill_number.val()==""){
+		 			if(!hasErr) hasErr=true;
+		 			bill_number.css("border-color", "#ff5454");
+		 			$(obj).find(".error_bill_number").html("快递单号不能为空");
+				}
+			}); 
+	}
+	if(hasErr){
+		return false;
+	}
+	for(var i=0;i<orderid.length;i++){
+		 var entity = new Object();
+		 var exp_key = $("#exp_key_"+orderid[i]).children('option:selected').val(), bill_number = $("#bill_number_"+orderid[i]).val();
+		 entity.orderId=orderid[i];
+		 entity.exp_key=exp_key;
+		 entity.bill_number=bill_number;
+		 itemsAll.push(entity);		
+	}
+	params.items =JSON.stringify(itemsAll);
+ 	$("#main").mask("正在保存...");
+ 	obz.ajaxJson(obz.ctx+"/order/saveSendMoreGoods", params, function(json) {
+		$("#main").unmask();
+		 if(json.code!=200){
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+		}else{
+			obz.msg('发货成功', function(){
+				location.reload();
+			});						
+		}
+},"json");
+}
+function clearError(){
+	$(".error_bill_number,.error_exp_key").empty();
+	var exp_key=$("select[name='exp_key']");
+	exp_key.css("border-color", "");
+	var bill_number=$("input[name='bill_number']");
+	bill_number.css("border-color", "");
+}
+</script>

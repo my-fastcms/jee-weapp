@@ -1,0 +1,47 @@
+<view class="weui-context">
+
+  <view class="weui-panel__heard">
+    <view>
+      <view class='weui_commis'>分销佣金</view>
+      <view class='weui_commis'>
+        <text>{{totalMission}}</text>
+        <text>元</text>
+      </view>
+    </view>
+    
+    <view class='weui-pan_h_cms' bindtap='navigateToAgentCmsRcd' >
+      <text class='weui-pan_h_cmsn' style='border: 1rpx solid {{navbar_bgcolor}};'>佣金明细</text>
+    </view>
+  </view>
+
+  <view class="weui-panel_body">
+    <view>
+      <view class='weui_body_commis'>可提现佣金</view>
+    </view>
+    <view class='weui-pan_h_cms'>
+      <text class='weui-pan_cmmisson'>{{canGetMission}}元</text>
+    </view>
+  </view>
+
+  <view class="weui-panel_body">
+    <view>
+      <view class='weui_body_commis'>已提现佣金</view>
+    </view>
+    <view class='weui-pan_h_cms'>
+      <text class='weui-pan_cmmisson'>{{GetMission}}元</text>
+    </view>
+  </view>
+
+  <view class="weui-panel_body">
+    <view>
+      <view class='weui_body_commis'>用户须知</view>
+      <view style='margin-left: 40rpx;font-size: 25rpx;'>最终解释权归本店所有</view>
+    </view>
+   
+  </view>
+
+  
+</view>
+<button type="warn" class="buttom_margin" bindtap='navigateToAgentMission' style='background: {{navbar_bgcolor}}'>我要提现</button> 
+
+

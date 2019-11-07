@@ -1,0 +1,71 @@
+#define layout(title, keywords, description, page)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <title>#(title?? '点步微拼团')</title>
+   #include ("/_includes/header.html")
+   #@css?()
+</head>
+<body class="fixed-sidebar full-height-layout" style="overflow:hidden;">
+<!-- Site wrapper -->
+<div id="wrapper">
+		#include ("/_includes/menus.html")
+	<!--右侧部分开始-->
+    <div id="page-wrapper"> <!-- navbar-static-top -->
+        <nav class="navbar" role="navigation" style="margin-bottom: 0;border-color: #e7eaec;border-bottom-style: solid;border-width: 1px;">
+		    <ul class="nav navbar-top-links navbar-right">
+      			<li class="dropdown hidden-xs">
+	        		<a href="#(webctx)/user">
+	        		#shiroAuthenticated()
+					   #shiroPrincipal() 您好，#(principal.nick) #end
+					#end
+					</a>
+	      		</li>
+		        <li class="hidden-xs"><a href="#(webctx)/logout"><i class="fa fa-power-off"></i>退出</a></li>
+		    </ul>
+		</nav>
+        <div class="J_mainContent" id="content-main">#@content?()</div>
+    </div>
+     <!--右侧部分结束-->
+     #include ("/_includes/footer.html")
+</div>
+<!-- ./wrapper -->
+<script type="text/javascript">
+$(document).ready(function(){
+	fix();
+});
+function fix() {
+    var neg = $('.main-header').outerHeight() + $('.main-footer').outerHeight();
+    var window_height = $(window).height();
+    var sidebar_height = $(".sidebar").height();
+    
+    if (window_height >= sidebar_height + neg) {
+      $(".content-wrapper, .right-side").css('min-height', window_height - neg);
+    } else {
+      $(".content-wrapper, .right-side").css('min-height', sidebar_height );
+    }
+}
+$.validator.setDefaults({
+    highlight: function (element) {
+        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+    },
+    success: function (element) {
+        element.closest('.form-group').removeClass('has-error').addClass('has-success');
+    },
+    errorElement: "span",
+    errorPlacement: function (error, element) {
+        if (element.is(":radio") || element.is(":checkbox")) {
+            error.appendTo(element.parent().parent().parent());
+        }else if (element.parent().hasClass("input-group")) {
+            error.appendTo(element.parent().parent());
+        }
+        else {
+            error.appendTo(element.parent());
+        }
+    }
+});
+</script>
+#@script?()
+</body>
+</html>
+#end

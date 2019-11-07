@@ -1,0 +1,13 @@
+package #(serviceImplPackageName);
+
+import #(servicePackage).#(tableMeta.modelName)Service;
+import #(modelPackage).#(tableMeta.modelName);
+import com.dbumama.market.service.base.WxmServiceBase;
+import io.jboot.aop.annotation.Bean;
+import io.jboot.components.rpc.annotation.RPCBean;
+
+@Bean
+@RPCBean
+public class #(tableMeta.modelName)ServiceImpl extends WxmServiceBase<#(tableMeta.modelName)> implements #(tableMeta.modelName)Service {
+
+}

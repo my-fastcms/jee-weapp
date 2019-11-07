@@ -1,0 +1,61 @@
+<form class="form-horizontal m-t" id="commentForm" novalidate="novalidate">
+	<input type="hidden" id="media_id" value="#(media.id??)"/>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">标题</label>
+        <div class="col-sm-8">
+            <input id="m_title" name="m_title" type="text" value="#(media.title??)" class="form-control" required="" aria-required="true">
+            <a onclick="insertNick(this)" href="javascript:void(0)">插入微信昵称</a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">描述</label>
+        <div class="col-sm-8">
+            <input id="m_desc" name="m_desc" type="text" value="#(media.desc??)" class="form-control" required="" aria-required="true">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">链接地址</label>
+        <div class="col-sm-8">
+            <input id="m_url" name="m_url" type="url" value="#(media.viewUrl??)" class="form-control" placeholder="http://">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">封面图片</label>
+        <div class="col-sm-8">
+        	#if(media??)
+        	<div class="imagemsg_item" data-image="#(media.picUrl)" data-media-id="#(media.picMideaId)" style="float:left;padding-left:3px;"><img style="width:120px;height:120px;" src="#(media.picUrl)"/><br><a href="javascript:void(0)" onclick="delNewsRow(this)"><font color="red">移除</font></a></div>
+        	#end
+            <a onclick="openMediaImageClick(this)" href="javascript:void(0)">选择图片</a>
+        </div>
+    </div>
+</form>
+
+<script>
+function insertNick(obj){
+	$("#m_title").insertAtCaret("#微信昵称#");
+}
+
+function openMediaImageClick(obj){
+	obz.selectImageOne(function (selImgs) {
+		
+		if(selImgs.length>0){
+			var imgObj = selImgs[0];
+			var entity = {};
+    		entity.mediaId = imgObj.mediaId;
+    		log("=====entity.mediaId:" + entity.mediaId);
+    		entity.msgPic = imgObj.url;
+    		if(entity.mediaId == null || entity.mediaId == ""){
+    			obz.error("该图片无法发送消息，请先上传到微信服务器");
+    			return false;
+    		}
+    		
+    		$(obj).parent().find("div.imagemsg_item").remove();
+    		$(obj).parent().append(template("image_sel_tpl", entity));
+    		
+    		return true;
+		} 
+		
+	});
+	return false;
+}
+</script>

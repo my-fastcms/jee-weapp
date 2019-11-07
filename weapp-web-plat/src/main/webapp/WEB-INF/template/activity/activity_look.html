@@ -1,0 +1,106 @@
+#include ("/_includes/_layout.html")
+#@layout("活动详情", "wxmall,点步科技", "Wxmall社区","wxmall") 
+<link href="#(webctx)/resources/css/bootstrap-table.min.css" rel="stylesheet"/>		
+<script src="#(webctx)/resources/js/bootstrap-table.js"></script>
+<script src="#(webctx)/resources/js/bootstrap-table-export.js"></script>
+<style>
+#mainTable th,td{
+	text-align: center;
+}
+</style>
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content ibox-content">
+	<div style="width: 1000px; margin: 0 auto;">
+		<div class="panel-body" style="float: left; width: 100%; padding: 15px 0px">
+			<input type="hidden" id="activityId" value="#(activityId??)"/>
+			<div style="float: left; margin-right: 20px">
+			<table width="100%" border="0">
+				<tr>
+					<td colspan="3" style="text-align: left;">
+						<input type="text" id="name" placeholder="公众号名称" class="control-inline" />
+					</td>
+					<td colspan="3" style="text-align: left;">
+						<button id="myqueryBtn" style=" margin:0 10px" class="btn btn-success btn-sm">查询</button>
+					</td>
+					#if(!activity??)
+					<td colspan="3" style="text-align: left;">
+						<button id="stopBtn" style="background-color: #da0404; color: white;" class="btn btn-sm">停止统计</button>
+					</td>
+					#end
+				</tr>
+			</table>
+			</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px; float: right;"></div>	
+		</div>
+		
+		<table id="mainTable" data-toggle="table" border="0">
+		  <thead>
+			  <tr>
+				<th>排名</th>
+				<th>公众号名称</th>
+				<th>增长粉丝数</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	  	</div>
+	</div>   
+</div>
+<script type="text/html" id="item_table_tr_tpl">
+{{each list as item i}}
+<tr class="package">
+	<td>{{item.num}}</td>
+	<td>{{item.nick_name}}</td>
+	<td>{{item.fansCount}}</td>
+</tr>	
+{{/each}} 	
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="3" class="center">没有结果集</td></tr>
+</script>
+#end
+<script type="text/javascript">
+$(document).ready(function() {
+	#if(activityId??)
+		var activityId = '#(activityId)';
+		var params = {};
+		params.activityId = activityId;
+		tableDate(params)
+	#end
+	
+	$("#myqueryBtn").click(function(){
+		var params = {};
+		var activityId = $("#activityId").val();
+		params.activityId = activityId;
+		params.nickName = $("#name").val();
+		tableDate(params)
+	});
+	
+	$("#stopBtn").click(function(){
+		obz.showMessage("确认之后停止统计粉丝增长数", function(){
+			obz.ajaxJson(obz.ctx+"/activity/stop", {activityId: $("#activityId").val()}, function(resp) {
+				 if(resp.state == "ok"){
+					obz.msg("操作成功！");
+				} 
+			}); 
+		});
+	});
+});
+function tableDate(params){
+	var table = new obz.TableView("pager", obz.ctx + "/activity/lookList", params, function(resp){
+		$(".itemsLotGrid").empty();
+		if(resp && resp.list && resp.list.length>0){
+			console.log(JSON.stringify(resp))
+			$('.itemsLotGrid').html(template('item_table_tr_tpl', resp));
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+	table.init();
+}
+Template.init("#menu-activity");
+</script>

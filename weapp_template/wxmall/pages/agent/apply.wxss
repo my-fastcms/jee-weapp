@@ -1,0 +1,131 @@
+page{
+    height: 100%;
+}
+.container{
+    /* background-color: #f5f5f9; */
+    justify-content: initial;
+    margin:30rpx;
+    border: 1px solid #eee; 
+    background: #fff;
+    border-radius: 10rpx;
+    padding:20rpx;
+}
+.form-box{
+    width:100%;
+    background-color: #fff;
+    margin-top: 20rpx;
+}
+.row-wrap{
+    display: flex;
+    padding: 20rpx 0;
+    font-size: 28rpx;
+    align-items: center;
+    /*justify-content: space-between;*/
+}
+.row-wrap .label{
+    width: 160rpx;
+    padding:6rpx 0rpx;
+    color: #333;
+}
+
+.row-wrap .label2{
+    width: 160rpx;
+    color: #000
+}
+.row-wrap .label-right{
+    flex: 1;
+   
+}
+.row-wrap .label-right input{
+    height: 32rpx;
+    font-size: 28rpx;
+    padding-right: 30rpx;
+}
+.row-wrap .right-box{
+    margin-right: 30rpx; 
+}
+.arrow-right{
+    width: 15rpx;
+    height: 24rpx;
+}
+.save-btn,
+.cancel-btn{
+    width: 690rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    text-align: center;
+    margin-top:30rpx; 
+    border-radius: 6rpx;
+    box-sizing: border-box;
+}
+.save-btn{
+    background-color: #e64340;
+    color:#fff;
+}
+button[type="default"]{
+    background-color: #ffffff;
+    color:#000;
+}
+.addr-details{
+    height: auto;
+    padding: 30rpx 0;
+    margin-left:30rpx;
+    border-bottom: 1rpx solid #eee;
+    display: flex;
+    font-size: 28rpx;
+}
+.addr-details .label{
+    margin:auto 0 auto 0;
+    width: 160rpx;
+    color: #000
+}
+.addr-details textarea{
+    box-sizing: border-box;
+    width: 520rpx;
+    max-height: 200rpx;
+    overflow: scroll;
+}
+picker {
+    min-width: 20rpx;
+    height: 100%;
+    margin-right: 20rpx;
+    max-width:170rpx;
+}
+.hui{
+    color: #777;
+}
+
+.tools{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+   
+}
+
+
+.confimBox{
+    margin: 10px 20px;
+    width:140px;
+    background-color:green;
+     color: white;
+    font-family:"微软雅黑";
+    font-size: 13px;
+}
+
+.boxBack{
+    margin: 10px 20px;
+    color: black;
+    font-family:"微软雅黑";
+    font-size: 13px;
+     background-color:white;
+}
+.bottom-box{
+  /* border-top: 1px solid #cbcbcb; */
+  padding: 5px 10px;
+}
+.weui-cells { font-size:28rpx;}
+.weui-cells:before, .weui-cells:after, .weui-cell:before, .weui-cell:after { border:0;}
+.weui-cell__hd { padding:0 10rpx;}
+.content-padded .submit-b {  height:88rpx; line-height: 88rpx; font-size:30rpx; margin-top:20rpx;background: #fa3c64; color:#fff;}
+.weui-cell__ft .weui-vcode-btn { border:1px solid #eee; background: none; font-size:28rpx;}

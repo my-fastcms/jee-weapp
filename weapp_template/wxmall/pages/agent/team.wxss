@@ -1,0 +1,81 @@
+page {
+  background:#f7f7fa;
+}
+.weui-content {
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+
+.myimg{
+  width:52px; 
+  height:52px; 
+  margin: 10rpx;
+  border: 1rpx solid white;
+  border-radius: 50%;
+
+}
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+.class_flex{
+  display: flex;
+}
+
+.weui-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  z-index: 500;
+  top: 0;
+  left:0;
+  padding:20rpx 0;
+  border-bottom: none !important;
+  background:#f8f8f8;
+}
+.weui-navbar__item.proinfo-tab-tit { font-size:28rpx;}
+
+.border_segmentation {
+  width: 100%;
+  height: 4rpx;
+  background-color: #f8f8f8;
+}
+
+
+.class_margin {
+  margin: 20rpx 10rpx;
+ 
+}
+
+.folat_left_raght {
+  position: absolute;
+  right:35rpx;
+  
+}
+
+.padding_top {
+  padding-top: 0px;
+}
+.weui-media-box {
+  padding: 8px;
+  position: relative;
+}
+.createtime_padding_top {
+  padding-top: 20rpx;
+}
+
+.weui-media-box__thumb_my {
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
+  border-radius: 50%;
+}
+.clss_textright {
+  text-align: right;
+  /* color: #999999; */
+}
+
+.weui-panel__hd{padding:0px 0px ;}

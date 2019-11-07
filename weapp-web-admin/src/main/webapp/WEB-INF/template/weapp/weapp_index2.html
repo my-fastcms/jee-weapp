@@ -1,0 +1,47 @@
+#include ("/_includes/_layout.html")
+#@layout("小程序管理", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	       	   <a href="#(webctx)/authuser" class="J_menuTab">公众号</a>
+	           <a href="#(webctx)/weapp/list" class="J_menuTab active">小程序</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-content">
+	<!-- <div class="alert alert-warning">请注意：小程序绑定到当前账号之后就不可更改，取消小程序授权，也不能解绑.</div> -->
+	<div class="panel-body">
+	 	<a href="#(webctx)/weixin/auth2" class="btn btn-success btn-sm"><i class="glyphicon glyphicon-plus"></i>&nbsp;授权小程序&nbsp;<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('一键扫码绑定你的小程序。', this, {tips: [1, '#3595CC'],time: 0});"></i></a>
+	</div>
+	#for (weapp: weapps)
+	<div class="col-sm-4">
+       <a style="cursor: pointer;text-decoration: underline;color: blue;" href="#(webctx)/authuser/set/?weappId=#(weapp.id)">	
+       <div class="contact-box" style="cursor: pointer;">
+        <div class="col-sm-4">
+            <div class="text-center">
+                <img alt="image" class="img-circle m-t-xs img-responsive" src="#(weapp.head_img)">
+                <!-- <div class="m-t-xs font-bold">TEST</div> -->
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <h3><strong>#(weapp.nick_name)</strong></h3>
+            <p>#if(weapp.service_type==2)<i class="fa fa-get-pocket"></i> 认证服务号 #elseif(weapp.service_type==1) <i class="fa fa-adn"></i> 认证订阅号  #elseif(weapp.service_type==0) <i class="fa fa-cc"></i> 认证小程序 #else 未知类型 #end</p>
+        </div>
+        <div class="clearfix"></div>
+        <i class="fa fa-angle-right fa-2x" style="position: absolute; right: 20px;top:35px;" aria-hidden="true"></i>
+        </div>
+        </a>
+     </div>
+     #else
+     <div class="col-sm-12">
+         <div class="text-center animated fadeInRightBig" style="margin-top:80px;">
+             <h3 class="font-bold">您还没有绑定小程序</h3>
+             <div class="error-desc">您可以点击左上角"新增小程序"按钮，扫码授权绑定您的小程序</div>
+         </div>
+     </div>
+     #end
+	</div>
+</div>
+#end

@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <title>点步微助手--提现明细</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+   <meta name="renderer" content="webkit"/>
+   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=375px, user-scalable=no"/>
+   #include ("/_includes/header.html")
+   <link rel="stylesheet" href="#(webctx)/resources/css/weui.min.css"/>
+   <style>
+   .wrapper{
+		padding: 0px;
+	}
+   .weui-tab {
+    	position: relative;
+    	height: 100%;
+	}
+	.weui-navbar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    width: 100%;
+    background-color: #fafafa;
+	}
+	.weui-navbar__item:after {
+    content: " ";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    bottom: 0;
+    border-right: 1px solid #ccc;
+    color: #ccc;
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+    -webkit-transform: scaleX(.5);
+    transform: scaleX(.5);
+	}
+	.weui-navbar:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+    color: #ccc;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+	}
+	.weui-navbar__item {
+	color: #888;
+    position: relative;
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    padding: 13px 0;
+    text-align: center;
+    font-size: 15px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+	}
+	.weui-navbar__item.proinfo-tab-tit {
+    padding: 10px 0;
+	}
+	.weui-navbar__item.weui-bar__item--on {
+    color: #e21323;
+    font-weight: bold;
+    background-color: inherit;
+	}
+	.weui-navbar__item.proinfo-tab-tit.weui-bar__item--on:before {
+    content: "";
+    width: 34px;
+    height: 3px;
+    background: #e21323;
+    position: absolute;
+    left: 50%;
+    margin-left: -17px;
+    bottom: -1px;
+    z-index: 10;
+	}
+	.weui-tab__bd {
+    	padding: 50px 0px 0px;
+	}
+	.input-group{
+		margin-top: 10px;
+	}
+	img{
+		border: 1px solid #ededed;
+	}
+	.footer-list-box{
+	background-color:#fdfdfd;	
+	text-align: left;
+	padding:10px 0px 10px 20px;
+	margin: 10px 0px;
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
+	}
+   </style>
+</head>
+<body>
+<div class="weui-tab">
+	<div class="weui-navbar " style="position:fixed;  left:0; right:0; height:44px; background:#fff;">
+    	<a href="#(webctx)/invitecode/app" class="weui-navbar__item proinfo-tab-tit font-14">邀请码生成</a>
+        <a href="#(webctx)/invitecode/app/stat" class="weui-navbar__item proinfo-tab-tit font-14">我邀请的人</a>
+        <a href="#(webctx)/invitecode/app/mission" class="weui-navbar__item proinfo-tab-tit font-14">我的佣金</a>
+        <a href="#(webctx)/invitecode/app/cashrcd" class="weui-navbar__item proinfo-tab-tit font-14 weui-bar__item--on">提现明细</a>
+	</div>
+	<div class="weui-tab__bd">
+		<div class="weui-tab__bd-item weui-tab__bd-item--active" id="detail_list"></div>
+		<div class="weui-loadmore">
+		    <i class="weui-loading"></i>
+		    <span class="weui-loadmore_tips">正在加载</span>
+		</div>
+	</div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="#(webctx)/resources/js/jquery-weui.js"></script>
+<script type="text/template" id="user_tpl">
+{{each list as item i}}
+<div class="footer-list-box">
+	<div style="color: black;font-size: 16px;"> 手机号：{{item.phone}} </div>
+	<div style="color: black;font-size: 16px;"> 提现金额：{{item.want_cash}} </div>
+	<div style="color: black;font-size: 16px;"> 提款类型：{{if item.cash_type == 1}} 支付宝 {{else}} 银行卡 {{/if}}  {{if item.status == 1}}待打款{{else if item.status==2}}已打款<br>{{/if}}</div>
+	<div style="color: black;font-size: 16px;"> 申请时间：{{item.created}}</div>
+</div>
+{{/each}} 
+</script>
+<script type="text/html" id="user_none_tpl">
+<div class="footer-box">
+	<div>暂无好友被邀请</div>
+</div>
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="8" class="center">没有结果集</td></tr>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+$(document).ready(function() {
+	submit(params)
+	var loading = false;  //状态标记
+	//滚动加载
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		loading = true;
+		page ++;
+		params.page = page;
+		submit(params);
+	});
+	function submit(arr){
+		$.ajax({
+			type: "post",
+			url: obz.ctx + "/invitecode/app/cashrcdlist",
+			data: arr,
+			async: true,
+			success: function(data){
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}else if(data.data == null){
+					$(document.body).destroyInfinite();
+					$('.weui-loadmore').remove();
+					$("#detail_list").append($("#user_none_tpl").html());
+					return;
+				};
+				if(data.data.length<=0 || data.data == null){
+					$(document.body).destroyInfinite();
+					$('.weui-loadmore').remove();
+					$("#detail_list").append($("#user_none_tpl").html());
+				}else{
+					$("#detail_list").append(template('user_tpl', data.data))
+						loading = false;
+					 if(data.data.list.length<10){
+						$(document.body).destroyInfinite();
+		                $('.weui-loadmore').remove();
+					}
+				}
+			},
+			error: function(){
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+});
+</script>

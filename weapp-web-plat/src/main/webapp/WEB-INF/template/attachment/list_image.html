@@ -1,0 +1,131 @@
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/product.css"/>
+<style type="text/css">
+.panel-body {
+    padding: 0;
+}
+.panel-body .category-list-region {
+    background: #f2f2f2 none repeat scroll 0 0;
+    box-sizing: border-box;
+    padding: 9px 0;
+    width: 160px;
+    height:450px;
+    float:left;
+}
+.panel-body .category-list-region li {
+    cursor: pointer;
+    height: 40px;
+    width:160px;
+    line-height: 40px;
+    overflow: hidden;
+    padding: 0 15px 0 15px;
+    position: relative;
+    text-overflow: ellipsis;
+}
+.panel-body .category-list-region li:hover {
+    background: #fafafa none repeat scroll 0 0;
+}
+.panel-body .category-list-region li.active {
+    background: #fff none repeat scroll 0 0;
+}
+.panel-body .category-list-region li span {
+    color: #999;
+    position: absolute;
+    right: 30px;
+    top: 0;
+}
+.bootstrap-dialog-message {
+  padding-left:5px;
+}
+ul {
+     padding-left:0px!important;
+    list-style:  none;
+}
+</style>
+<div class="panel-body">
+    <div class="category-list-region js-category-list-region">
+        <ul class="category-list">
+            <li data-id="" class="js-category-item active"><span>全部</span></li>
+        </ul>
+    </div>
+    <div id="imglistdiv" style="margin-left:170px;">
+	    <div style="height: 50px; padding: 10px 15px;">
+		    <button id="uploadImagess" type="button" class="btn btn-sm btn-success" style="margin-left:20px;;margin-bottom: 1px;float: left;">上 传 图 片</button>
+			<div id="pagerImage" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+		</div>
+	    <div id="listNewImg"><ul class="selectMonth app-image select-month-off" id="image-list"></ul></div>
+	    <div class="add-local-image-button"> + </div>
+	</div>    
+</div>
+<div class="panel-footer">
+	<div class="selected-count-region" style="float: left;">已选择<span class="js-selected-count">0</span>张图片</div>
+	<div style="text-align:center;">
+		<button id="saveImages" type="button" class="btn btn-sm btn-success" disabled="disabled"><i class="fa fa-dot-circle-o"></i>确      定</button>
+	</div>
+</div>
+<script type="text/javascript">
+$(".add-local-image-button").addClass("hidden");
+$("#imglistdiv").mask("加载中...");
+var table = new obz.TableView("pagerImage", obz.ctx + "/upload/getImageList", {rows : 21}, function(resp){
+	$("#imglistdiv").unmask();
+	$("#image-list").empty();
+	if(resp && resp.list && resp.list.length>0){
+		var result =resp;
+		var dataList = result.list;
+		if(dataList.length>0){
+			$(".add-local-image-button").addClass("hidden");
+			for(var i=0;i<dataList.length;i++){
+				var _li = dataList[i];
+				$("#image-list").append('<li data-mediaid="'+_li.mediaId+'" data-file="'+_li.imgPath+'" data-file-url="'+_li.imgUrl+'" data-id="'+_li.id+'">'
+          				 +' <img alt="" src="'+_li.imgPath+'">'
+      					 +' <div class="image-title">'+_li.imgUrl+'</div></li>');
+		    }	
+		}else{
+			$(".add-local-image-button").removeClass("hidden");
+		}
+		
+		$("ul.selectMonth li").click(function() {
+			if(!$(this).hasClass("active")){
+			    if(obz.selectModelSingle){
+					$("ul.selectMonth li").each(function(){	
+						 $(this).removeClass("active");
+					});
+				}
+			    $(this).addClass("active");
+		 	}else {
+		 		$(this).removeClass("active");
+		 	}
+			var count =$("ul.selectMonth li.active").length;
+			$(".js-selected-count").html(count);
+			if(count>0){
+			    $("#saveImages").removeAttr("disabled");
+			}else{
+			   	$("#saveImages").attr("disabled","disabled");
+			}
+		});
+	}
+});
+table.init();
+$("#saveImages").click(function() {
+	var selImgArr = new Array();
+	$("ul.selectMonth li.active").each(function(){
+		var imgEntity = new Object();
+		imgEntity.id = $(this).attr("data-id");
+		imgEntity.mediaId = $(this).attr("data-mediaid") || "";
+		imgEntity.title = $(this).attr("data-file-url");
+		imgEntity.url = $(this).attr("data-file");
+		selImgArr.push(imgEntity);
+	});
+ 	obz.doSelectImage(selImgArr);
+});
+$("#uploadImagess").click(function() {
+	var params={};
+	params.groupId=$("ul.category-list li.active").attr("data-id");
+	params.rows = 21;
+	obz.uploadImage(params);
+});
+$(".add-local-image-button").click(function() {
+	var params={};
+    params.groupId=$("ul.category-list li.active").attr("data-id"); 
+	obz.uploadImage(params);
+});
+</script>

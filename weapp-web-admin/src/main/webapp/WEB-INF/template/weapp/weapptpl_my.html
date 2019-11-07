@@ -1,0 +1,37 @@
+#include ("/_includes/_layout.html")
+#@layout("", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="#(webctx)/weapptpl" class="J_menuTab">模板市场</a>
+		       <a href="#(webctx)/weapptpl/my" class="J_menuTab active">我的模板</a>
+	       </div>
+	   	</nav>
+	</div>
+	
+	<div class="ibox-content">
+		<div>
+		#if(myModules!=null)
+		#for(module: myModules)
+		<div class="ibox">
+            <div style="padding:10px 15px 15px 15px;border-bottom:1px solid #FFE4C4">
+                <h2>#(module.module_name)</h2>
+                <p>#(module.module_memo)</p>
+                <div class="small m-b-xs">
+                    <span class="text-muted" style="color: red;"><i class="fa fa-clock-o"></i>#(module.end_date)后过期</span>
+                </div>
+                <div>
+                   <a class="btn btn-primary btn-xs" href="#(webctx)/weapptpl/detail/?id=#(module.id)">我要续费</a>
+                </div>
+            </div>
+        </div>
+		#end
+		#else
+		没有模板,<a href="#(webctx)/weapptpl">现在去模板市场</a>
+		#end
+        </div>
+	</div>
+</div>
+#end

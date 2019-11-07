@@ -1,0 +1,342 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/js/jquery/themes/ui-lightness/jquery-ui-1.10.3.custom.css"/>
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/fbuilder.css"></link>
+#end
+#@layout("任务宝订单", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content">
+	           <a href="#(webctx)/order" class="J_menuTab">普通订单</a>
+		       <a href="#(webctx)/order/agent" class="J_menuTab">佣金订单</a>
+		       <a href="#(webctx)/order/tuan" class="J_menuTab">拼团订单</a>
+		       <a href="#(webctx)/order/pickup" class="J_menuTab">自提商品订单</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-content">
+		<div style="padding:5px;margin-bottom:3px;">
+			<div id="myuserexpressdiv">
+				<!-- <font color="blue">可用快递:</font> -->
+				#for(express: expressList)
+					<div style="float: left; padding-right: 5px;">
+					<input id="__myexp_#(express_index)" #if(express.is_default==1) checked="checked" #end style="cursor: pointer;" name="myuseexpress" type="checkbox" 
+						value="#(express.exp_key)" />
+					<label style="cursor: pointer;" for="__myexp_#(express_index)">#(express.exp_name)
+						#if(express.is_default==1) <font color="blue">(默认)</font>#end 
+					</label>
+					<a class="exp_set" style="font-size: 12px;" exp_name="#(express.exp_name)" exp_key="#(express.exp_key)" href="javascript:void(0)">设置</a>
+					<a class="exp_del" style="font-size: 12px;" exp_name="#(express.exp_name)" exp_key="#(express.exp_key)" href="javascript:void(0)">删除</a> | 
+					</div>
+				#end
+				&nbsp;&nbsp;<a style="font-size: 12px;" onclick="Trade.addExpCompany()" href="javascript:void(0)" title="添加快递公司">添加快递</a>
+				
+				&nbsp;&nbsp;<input style="display: none;" type="checkbox" id="isViewAble"/><label style="display: none;" for="isViewAble" onmouseover="this.style.textDecoration='underline';this.style.cursor='pointer'" onmouseout="this.style.textDecoration='none'">打印预览</label>
+				&nbsp;&nbsp;<button id="myExpressPrintBtn" class="btn btn-info btn-xs">打印快递单</button>	
+				
+				&nbsp;&nbsp;<a style="font-size: 12px;" onclick="Trade.invTemplateSetting()" href="javascript:void(0)" title="设置发货模板">设置发货模板</a>
+				&nbsp;&nbsp;<button id="myInvoicePrintBtn" class="btn btn-info btn-xs">打印发货单</button>
+				
+			</div>
+		</div>
+	
+		<div>
+			<table width="100%" border="0" cellspacing="1" cellpadding="0" class="table table-striped table-bordered bootstrap-datatable datatable">
+				<tr>
+					<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+						<input type="text" id="start_date" name="start_date" style="width: 120px; cursor: pointer;"
+						onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+						class="Wdate" value="" />
+						&nbsp;&nbsp;至&nbsp;&nbsp; 
+						<input type="text" id="end_date" name="end_date" style="width: 120px; cursor: pointer;"
+						onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',mixDate:'#F{$dp.$D(\'start_date\');}'})"
+						class="Wdate" value="" />
+						
+						<a class="label label-default" href="javascript:dateTagBf(-7);">一周前</a>
+		                <a class="label label-default" href="javascript:dateTagBf(-30);">一个月前</a>
+		                <a class="label label-default" href="javascript:dateTagBf(-90);">三个月前</a>
+						
+						&nbsp;&nbsp;&nbsp; 
+						<select id="order_status_sel" class="control-inline">
+							<option value="unpaid_unshipped_unconfirmed">等待买家付款</option>
+							<option value="paid_unshipped_unconfirmed" selected="selected">买家已付款</option>
+							<option value="paid_shipped_unconfirmed">卖家已发货</option>
+							<option value="waitRefund">等待卖家退款</option>
+							<option value="refunded">卖家已退款</option>
+							<option value="paid_shipped_completed">交易已成功</option>
+							<option value="">全部订单</option>
+						</select> &nbsp;&nbsp;&nbsp; <a href="javascript:void(0)" id="mymoreCond">更多</a>
+						&nbsp;&nbsp;&nbsp;
+						<button id="myqueryBtn" class="btn btn-success btn-sm">查询</button>
+					</td>
+				</tr>
+			</table>
+			
+			<table id="moreCondition" class="table table-striped table-bordered" style="display: none;" class="t_c">
+				<tr>
+					<th>买家昵称</th>
+					<td><input id="nick_name" type="text"/></td>
+					<th>收货人</th>
+					<td><input id="receiver_name" type="text"/></td>
+					<th>收货人手机</th>
+					<td><input id="receiver_phone" type="text"/></td>
+				</tr>
+			</table>
+		
+			<div id="printToolsbar" class="panel-body">
+				<div id="pager" class="jqpager"></div>
+				<span id="checkedLines" style="float: left;">您选择了<label style="font-size:16px;color:#f00;font-weight:bold;margin:0 3px;">0</label>单</span>	
+				&nbsp;&nbsp;<button id="mySendProductBtn" class="btn btn-primary btn-xs">批量发货</button>	
+			</div>
+			<table id="mainTable" border="0" class="table table-striped table-bordered bootstrap-datatable datatable"> 
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+						<th>商品</th>
+						<th>金额（元）</th>
+						<th>买家</th>
+						<th>收件人</th>
+						<th>收件地址</th>
+						<th>下单时间</th>
+						<th>订单状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody class="tradeLotGrid"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- html 模板文件 -->
+<!-- 模板区域开始 -->
+<script type="text/template" id="order_table_tr_tpl">
+{{each list as item i}}
+<tr class="package">
+	<td valign="middle"><input type="checkbox" class="commchk" id="checkbox_{{item.orderId}}" style="margin-right: 4px; vertical-align: middle;"/></td>
+	<td><table>{{include 'order_item_table_tr_tpl' item}} <!--引入子模板--></table></td>
+	<td>{{item.totalPrice}} {{if item.postFee != null && item.postFee !=0}}<br><span>邮费：{{item.postFee}}</span>{{/if}}</td>
+	<td>{{item.buyerNick}}{{if item.buyerMemoSimple != null && item.buyerMemoSimple != ""}}<br><span style="color:red">{{item.buyerMemoSimple}}</span><i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('{{item.buyerMemo}}。', this, {tips: [1, '#3595CC'],time: 0});"></i>{{/if}}</td>
+	<td>{{item.receiverName}}<br>{{item.receiverPhone}}</td>
+	<td>{{item.receiverProvince}}{{item.receiverCity}}{{item.receiverCountry}}<br>{{item.receiverAddr}}</td>
+	<td>{{item.orderCreated}}</td>
+	<td>{{item.orderStatus}}{{if item.expName != null}}<br><span>{{item.expName}}</span>{{/if}} {{if item.billNumber != null}}<br><span>运单号:{{item.billNumber}}</span>{{/if}}</td>
+	<td><a id="detail#{{item.orderId}}" href="javascript:void(0)" style="text-decoration: underline;display:none;">详情</a>
+	<a id="a#{{item.orderId}}" href="javascript:void(0)" style="text-decoration: underline;{{if item.paymentStatusInt == 2 && item.shipStatusInt==0}} display:block; {{else}} display:none; {{/if}}">发货</a>
+    <a id="t#{{item.orderId}}" href="javascript:void(0)" style="text-decoration: underline;{{if item.paymentStatusInt == 5 || item.paymentStatusInt == 2}} display:block; {{else}} display:none; {{/if}}">退款</a></td>
+</tr>
+{{/each}}
+</script>
+<script type="text/template" id="order_item_table_tr_tpl">
+{{each orderItems as oItem}}
+<tr><td><img src="{{oItem.productImg}}" style="margin: 2px" width="30" height="30" number="1">&nbsp;&nbsp;{{oItem.specificationValueNames}}&nbsp;&nbsp;{{oItem.price}} X {{oItem.quantity}}<br/>{{oItem.productName}}</td></tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="9" class="center">没有结果集</td></tr>
+</script>
+<!-- 模板区域结束 -->
+#end
+<script type="text/javascript" src="#(webctx)/resources/js/jquery/ui/jquery-ui-1.10.3.min.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/LodopFuncs.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/trade/trade.context.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/trade/trade.core.js"></script>
+<script type="text/javascript">
+//查询条件
+	$(document).ready(function() {
+		if($("#order_status_sel").val() == "paid_unshipped_unconfirmed"){
+			$("#mySendProductBtn").show();
+		}else{
+			$("#mySendProductBtn").hide();
+		}
+		//打印发货单
+		$("#myInvoicePrintBtn").click(function(){
+			if(TBatch.getCheckedCount() <=0){
+				obz.info("请选择订单");
+				return false;
+			}
+			$("#mainTable").mask("正在加载订单数据...");
+			obz.ajaxJson(obz.ctx+"/order/getInvPrintData", {ids:TBatch.getChecked() }, function(resp){
+				$("#mainTable").unmask();
+				if(resp.code == 200){
+					var result = resp.data;
+					Trade.useInvtpl = result.invoiceTemplate;		//发货单模板
+					Trade.printInvoice(result.printData);			//打印的数据
+				}
+			});
+		});
+		//打印快递单
+		$("#myExpressPrintBtn").click(function(){
+			if(TBatch.getCheckedCount() <=0){
+				obz.info("请选择订单");
+				return false;
+			}
+			var exp = $('input[name="myuseexpress"]:checked').val(); 
+			if(!exp){
+				obz.info("请选择快递模板");
+				return false;
+			}
+			$("#mainTable").mask("正在加载订单数据...");
+			obz.ajaxJson(obz.ctx+"/order/getExpPrintData", {ids:TBatch.getChecked(), exp:exp}, function(resp){
+				$("#mainTable").unmask();	
+				if(resp.code == 200){
+					var result = resp.data;
+					Trade.useExptpl = result.expressTemplate;		//模板
+					Trade.printExpress(result.printData);	//打印的数据
+				}
+			});
+		});
+		$("#myuserexpressdiv a.exp_set").click(function(){
+			obz.ajaxJson(obz.ctx + "/express/getUserTplByKey", {expKey : $(this).attr("exp_key")}, function(resp){
+				if(resp.code == 200){
+					Trade.useExptpl = resp.data;
+					Trade.expTemplateSetting();
+				}
+			});
+			return false;
+		});
+		//删除已设置的快递模板
+		$("#myuserexpressdiv a.exp_del").click(function(){
+			var me = $(this);
+			obz.showMessage("确定删除<font color='red'>["+me.attr("exp_name")+"]</font>吗?", function(){
+				var expKey = me.attr("exp_key");
+				obz.ajaxJson(obz.ctx + "/express/delTemplate", {expKey : expKey}, function(resp){
+					if(resp.code != 200){
+						obz.error(resp.msg);
+						return false;
+					}
+					Trade.useExptpl = null;
+					me.parent().remove();
+				});
+				return false;
+			});
+			
+		});
+		$("#mymoreCond").click(function(){
+			var me = $(this);
+			var atype = me.html();
+			if("更多"==atype){$("#moreCondition").show(); me.html("收起");}else{$("#moreCondition").hide(); me.html("更多");}
+		});
+	    $(':checkbox[name=myuseexpress]').each(function(){
+	        $(this).click(function(){
+	            if($(this).attr('checked')){
+	                $(':checkbox[name=myuseexpress]').removeAttr('checked');
+	                $(this).attr('checked','checked');
+	                var me = $(this);
+	                var expkey = me.val();
+	              	$("#myuserexpressdiv label").each(function(){
+						var me = $(this);me.removeClass("expressname");
+					});
+	                me.next().addClass("expressname");
+	            }
+	        });
+	    });
+	    $("#mySendProductBtn").click(function(){
+			if(TBatch.getCheckedCount() <=0){
+				obz.info("请选择订单");
+				return false;
+			}
+			var url = obz.ctx + "/order/sendMoreGoodsList?ids="+TBatch.getChecked();
+			var dialog = BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_WIDE,
+				title: "商品批量发货",
+		        message: $('<div></div>').load(url),
+		        buttons: [ {
+	                label: '关闭',
+	                action: function(dialogItself){
+	                    dialogItself.close();
+	                }}, 
+	                {
+	                	label: '确认发货',
+	                	cssClass : "btn-primary",
+	                	action: function(self){
+	                		sendGoods();
+	                	}
+	                }]
+		    });
+		});
+	    
+	    var params = {};
+		params.orderStatus = $("#order_status_sel").val();
+		var table = new obz.TableView("pager", obz.ctx + "/order/list4task", params, function(resp){
+			$(".tradeLotGrid").empty();
+			if(resp && resp.list && resp.list.length>0){
+				$(".tradeLotGrid").html(template('order_table_tr_tpl', resp));
+				//注册显示详情事件
+				TBatch.checkCheckbox(function(){
+					$("#checkedLines").html("您选择了<label style='font-size:16px;color:#f00;font-weight:bold;margin:0 3px;'>"+TBatch.getCheckedCount()+"</label>单").css({'margin-left':'20px'});
+				});
+				TBatch.initCheckboxClick(function(){
+					$("#checkedLines").html("您选择了<label style='font-size:16px;color:#f00;font-weight:bold;margin:0 3px;'>"+TBatch.getCheckedCount()+"</label>单").css({'margin-left':'20px'});
+				}, function(){
+					$("#checkedLines").html("您选择了<label style='font-size:16px;color:#f00;font-weight:bold;margin:0 3px;'>"+TBatch.getCheckedCount()+"</label>单").css({'margin-left':'20px'});
+				});
+				TBatch.initOptEvent(TableOpt.init());
+			}else{
+				$(".tradeLotGrid").append($("#table_noresult_tr_tpl").html());
+			}
+		});
+		table.init();
+	    
+		function setParams(params){
+	    	params.startDate = $("#start_date").val();
+			params.endDate = $("#end_date").val();
+			params.nickNmae = $("#nick_name").val();
+			params.receiverName = $("#receiver_name").val();
+			params.receiverPhone = $("#receiver_phone").val();
+			params.orderStatus = $("#order_status_sel").val();
+		}
+	    $("#myqueryBtn").click(function(){
+	    	//获取查询条件
+	    	setParams(params);
+	    	table.init();
+	    });
+	    
+	  //=============================表格操作事件开始=============================================
+		var TableOpt = {
+			detail : function(param){
+				alert(param[1])
+			},
+			send : function(param){
+				var ids = param[1];
+				var url = obz.ctx + "/order/sendgoodsList?orderIds="+ids;
+				var dialog = BootstrapDialog.show({
+					size: BootstrapDialog.SIZE_NORMAL,
+					title: "订单发货",
+			        message: $('<div></div>').load(url),
+			    });
+			}, 
+			refund : function(param){
+				var ids = param[1];
+				var url = obz.ctx + "/order/refund?orderIds="+ids;
+				var dialog = BootstrapDialog.show({
+					size: BootstrapDialog.SIZE_NORMAL,
+					title: "订单退款",
+			        message: $('<div></div>').load(url)
+			    });
+			},
+			init : function(){
+				var optArray = new Array();
+				optArray.push(this.detail);
+				optArray.push(this.send);
+				optArray.push(this.refund);
+				return optArray;
+			}
+		}
+		
+		$("#order_status_sel").change(function(){
+			setParams(params);
+			table.init();
+			
+			if($(this).val() == "paid_unshipped_unconfirmed"){
+				$("#mySendProductBtn").show();
+			}else{
+				$("#mySendProductBtn").hide();
+			}
+		});
+	    
+	});
+	//=============================表格操作事件结束=============================================
+</script>

@@ -1,0 +1,76 @@
+#include ("/_includes/_layout.html")
+<style type="text/css">
+.imgseled{
+    border: solid 3px #e6fab6;
+    width: 300px;
+    height: 200px;
+}
+.imgnoseled{
+	width: 150px;
+    height: 100px;
+}
+</style>
+<div align="left">
+	<div id="myexpinfocontent" style="margin-left: 100px;">
+		<input type="radio" name="putInType" value="1"/>全部
+		<input type="radio" name="putInType" value="2"/>选择用户
+	</div>
+	<div style="margin-left: 80px; padding-top: 10px;" id="selectSize"></div>
+	<!-- <ul style="margin-left: 80px; padding-top: 10px;" id="_div_nametype">
+		<li><img src=""></img>test</li>
+		<li><img src=""></img>test</li>
+		<li><img src=""></img>test</li>
+		<li><img src=""></img>test</li>
+	</ul> -->
+	<div class="panel-footer" align="center" style="padding-top: 10px;">
+	    <button onclick="saveTask();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>确认</button>
+	</div>
+</div>
+<script type="text/javascript">
+var card = new Object();
+$(document).ready(function() {
+	$("input[name='putInType']").click(function(){
+		if($("input[name='putInType']:checked").val() == 2){
+			$("#selectSize").show();
+			var params={};
+			obz.addTouser(params, function (obj) {
+				$("#selectSize").html("已选择"+obj.size()+"人");
+				card.touser=obj.keys();
+			});
+		}else{
+			$("#selectSize").hide();
+		}	
+	});
+});
+function saveTask(){
+	var msg="";
+	var putInType=$("input[name='putInType']:checked").val();
+	card.msgtype="wxcard";
+	if(putInType == 2){
+		var cardId = new Object();
+		cardId.card_id="#(cardId}";
+		card.wxcard=cardId;
+		msg="确定向已选择的客户投放会员卡吗？";
+	}else{
+		var filter = new Object();	
+		filter.is_to_all="true";
+		card.filter=filter;
+		var wxcard = new Object();
+		wxcard.card_id="#(cardId}";
+		card.wxcard=wxcard;
+		msg="确定向全部客户投放会员卡吗？";
+	}
+	 obz.showMessage(msg, function(){
+		$(".gray-bg").mask("正在投放...");
+		obz.ajaxJson(obz.ctx+"/card/putin", {card : JSON.stringify(card),type:putInType}, function(json) {
+			$(".gray-bg").unmask();
+			if(json.code==200){
+				obz.msg("投放成功", function(){
+					location.href = "#(webctx)/card";
+				});
+			}
+		},"json");
+		return false;
+	}); 
+}
+</script>

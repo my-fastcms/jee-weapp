@@ -1,0 +1,55 @@
+
+<view class='weui-content'>
+  <view class="weui-navbar">
+    <view id="" class="weui-navbar__item proinfo-tab-tit  {{activeIndex == index ? 'weui-bar__item--on' : ''}}" bindtap="tabClick">一级</view>
+      <view id="2" class="weui-navbar__item proinfo-tab-tit  {{activeIndexTo == index ? 'weui-bar__item--on' : ''}}" bindtap="tabClickTo">二级</view>
+  </view>
+
+  <view class="weui-tab__bd proinfo-tab-con">
+    <block wx:if="{{teams.length>0}}">
+   
+      <scroll-view style="height:{{scollHeight}}px;" class='mt-20' scroll-y="true" bindscrolltolower="lowerview">
+
+        <view class="weui-panel" bindtap="toDetail" wx:for="{{teams}}" wx:key="agentId"  wx:for-item="team" data-id="{{team.agentId}}">
+          
+          <view class="weui-panel__bd class_flex">
+              <view class="">
+                <image class="myimg" src="{{team.wxHeadimg}}" alt="" />
+              </view>
+              <view class="weui-media-box__bd width_all class_margin">
+                <view class="weui-media-box__desc folat_left_raght  " >
+                  <text class=''>推广{{team.memberCount}}人</text>
+                </view>
+                <view class="weui-media-box__desc font_gray">
+                  用户名 {{team.wxNick}}
+                </view>
+                <view class="weui-media-box__desc createtime_padding_top">
+                  <text class='font_gray' >注册时间：{{team.created}}</text>
+                </view>
+              </view>
+            <!-- </view> -->
+          </view>
+          <view class='border_segmentation'></view>
+          <view class="weui-panel__hd padding_top ">
+            <view class="weui-cell ">
+              <view class="weui-cell__bd weui-cell_primary">
+                <view class='font_gray'>消费{{team.totalMoney}}元</view>
+              </view>
+              <view class="clss_textright act ">
+                <view class=''><text class=''>{{team.ordersCount}}个订单</text></view>
+              </view>
+            </view>
+          </view>
+
+        </view>
+      </scroll-view>
+    </block>
+    <block wx:else>
+      <view class="no-group">
+        <view class="text-center">
+          <view class="mt-20">----没有更多----</view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

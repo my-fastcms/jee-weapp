@@ -1,0 +1,102 @@
+<view class="container " >
+    
+    <!-- <image src="{{detail.img}}" mode='aspectFill' class="swiper-image" /> -->
+    <image src="{{detail.img}}" class="slide-image" style='width:100%'/>
+     <!-- <image src="../../style/images/sowing.png" class="slide-image"/> -->
+
+    <view class="my-cell" style='background-color:{{other_bgcolor}}'>
+          <view class="weui-cell__bd">
+           <view class="price">
+           <!-- <text class="gray_text"> </text> -->
+             <text class="price_blod" style='color:{{navbar_bgcolor}}' >当前价:¥ {{detail.baragainPrice}}</text>
+           </view>
+          </view>
+          <view class="weui-cell__ft gray_text" style="color:{{navbar_bgcolor}}" >剩余：{{detail.stock}}</view>
+    </view>
+
+    <view class="wy-media-box-nomg">
+      <view class="titlename" style="color: {{navbar_bgcolor}}">{{detail.name}}</view>
+    </view>
+
+    <!-- <view class='text'>
+        <view class='title'>{{detail.name}}</view>
+        <view class='stock'>当前库存：{{detail.stock}}
+            <text class='stockColor'>【库存为0时，所有砍价将停止】</text> 
+        </view>
+    </view> -->
+
+  
+   
+    <view class='progress'>
+       
+        <view class='bar'>
+            <view class='money' style='padding-left:{{width-19}}%;word-break:keep-all;color:{{navbar_bgcolor}}'>￥{{detail.baragainPrice}}</view>
+            <view class='parents' style='background-color:{{other_bgcolor}}'></view>
+            <view class='child' style='padding-left:{{width}}%;background-color:{{navbar_bgcolor}}'></view>
+        </view>
+        <view class='priceBar'>
+            <view>￥{{detail.price}}</view><view>￥{{detail.lowestMoney}}</view>
+        </view>
+        
+    </view>
+
+    <view class='bargain_user' wx:if="{{bargainRecDto}}">
+      <view class='dispcut'>
+        <image src="{{bargainRecDto.headImgurl}}" class="user_image"></image>
+        <view class='bargain_text'>恭喜您一刀砍掉<text style='color:{{navbar_bgcolor}}'>{{bargainRecDto.helpMoney}}</text>元</view>
+      </view>
+    </view>
+
+    <view class='tab'>
+        <view class="tabItem {{index==1?'active':''}}" data-index="1" bindtap='checkTap' style='background-color:{{other_bgcolor}};color:{{navbar_bgcolor}}'>砍价列表</view>
+        <view class="tabItem {{index==2?'active':''}}" data-index="2" bindtap='checkTapp' style='color:{{navbar_bgcolor}}'>进入店铺</view>
+    </view>
+
+    <view class='bargain_list' wx:if="{{index==1}}">
+      <block wx:for-items="{{bargainRecDtos}}" wx:key="id">
+        <view class='dispcutlist'>
+          <image src="{{item.headImgurl}}" class="list_image"></image>
+          <view class='bargain_text'>{{item.nickname}}帮砍<text style='color:{{navbar_bgcolor}}'>{{item.helpMoney}}</text>元</view>
+        </view>
+      </block>
+    </view>  
+
+    <!-- <view class='bargain_list' wx:if="{{index==2}}">
+        <view></view>
+    </view>
+     -->
+     <view style='width:100%;height:100rpx;'></view>
+
+  <view class="weui-tabbar">
+    <block wx:if="{{flags == 1}}">
+      <view class="yellow-color" style="width:50%;color:white;background-color:{{other_bgcolor}}" bindtap="toCallPerson" data-status="1" data-flag="0">
+          <text class="promotion-foot-menu-label" style='color:{{navbar_bgcolor}}'>找人砍价</text>
+      </view>
+      <view class="red-color" style="width:50%;color:white;background-color:{{navbar_bgcolor}}" bindtap="payBargainOrder" data-bargainuserid="{{detail.bargainUserId}}">
+        <text class="promotion-foot-menu-label" style='color:white' >当前价购买</text>
+      </view>
+    </block>
+    <block wx:elif="{{flags == 2}}" >
+      <view class="red-color" style="width:100%;color:white;background-color:{{navbar_bgcolor}}" bindtap="toCutBargainProduct" >
+        <text class="promotion-foot-menu-label" style='color:white' >我也要</text>
+      </view>
+    </block>
+     <block wx:elif="{{flags == 3}}" >
+      <view class="red-color" style="width:100%;color:white;background-color:{{navbar_bgcolor}}" >
+        <text class="promotion-foot-menu-label" style='color:white' >砍价已结束</text>
+      </view>
+    </block>
+    <block wx:else>
+    
+      <view class="red-color" style="width:100%;color:white;background-color:{{navbar_bgcolor}}" bindtap="" >
+          <form bindsubmit="formSubmit" report-submit="true" >
+          <button formType="submit" open-type="getUserInfo" bindgetuserinfo="toHelpBargainProduct" style='background-color:{{navbar_bgcolor}}'>
+        <text class="promotion-foot-menu-label" style='color:white' >帮砍一刀</text>
+          </button>
+          </form>
+      </view>
+    </block>
+
+  </view> 
+
+</view>

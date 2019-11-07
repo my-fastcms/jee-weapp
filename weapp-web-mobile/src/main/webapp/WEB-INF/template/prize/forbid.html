@@ -1,0 +1,14 @@
+#include ("/_includes/_layout.html")
+#@layout("订单结算", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="register_msgcont">
+	 <h1 class="enshrine_msgtitle">此功能已停止（软件服务已过期）</h1>
+	  <div class="enshrine_cont">
+     	 <p>还有<font>#(buyerUsers )</font>个人正在与您一起等待参与活动，去提醒老板吧！</p>
+     </div>
+     <a class="enshrine_but"  href="javascript:void(0);" onclick="OpenWW('#(_sellerUser.sid ??)','#(_sellerUser.sellerNick ??)');">告诉掌柜</a>
+</div>
+
+<input type="hidden" id="db_seller_nick" value="#(_sellerUser.encodSellerNick ??)" />
+
+#end

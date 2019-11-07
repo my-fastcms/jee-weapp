@@ -1,0 +1,203 @@
+#include ("/_includes/_layout.html")
+#define css()
+<style type="text/css">
+.wizard-big.wizard > .content{
+    min-height: 450px;
+}
+.t-step{ display: table; overflow: hidden; width: 100%; box-sizing: border-box; border: 1px solid #e7eaec; border-left: 0; border-radius: 3px;}
+.t-steps{ display: table-cell; padding: 6px; position: relative; padding-left: 65px; border-left: 1px solid #ddd;}
+.t-steps:before,.t-steps:after{position: absolute; z-index: 2;content: ''; display: block; top: 50%; margin-top: -13px; right:-20px; border:solid; border-width:13px 10px; border-color:transparent transparent transparent #ccc;}
+.t-steps:after{ border-color:transparent transparent transparent #fff; right: -19px; z-index: 3;}
+.t-steps i,.t-steps span{ position: absolute; left: 20px; display: inline-block; line-height: 30px; top: 50%; margin-top: -15px;}
+.t-steps i{ font-size: 30px; display:none;}
+.t-steps.complete i{ display: block; color: #1AB394;}
+.t-steps.complete span{ display: none;}
+.t-steps span{ width: 28px; height: 28px; line-height: 28px; border: 1px solid #999; color: #999; font-size: 18px; text-align: center; border-radius: 50%; box-sizing: border-box;}
+.t-steps.active{ background: #1AB394; color: #fff;}
+.t-steps.active i{ display:none;}
+.t-steps.active span{ border-color: #fff; color: #fff;}
+.t-steps.active:before,.t-steps.active:after{ border-color:transparent transparent transparent #1AB394;}
+.t-steps.disabled{ color: #999; background: #f9f9f9;}
+.t-steps.disabled:after{ border-color:transparent transparent transparent #f5f5f5;}
+.t-steps h2{ font-size: 16px;}
+</style>
+#end
+#@layout("提交审核", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	   <div class="container-fluid">
+	   	 <div class="row">
+			<div class="ibox col-sm-12">
+				<div class="ibox-content">
+					<div class="t-step">
+		                <div class="t-steps complete"> 
+		                    <span class="t-steps-n">1</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>选择模板</h2>
+		                </div>
+		                <div class="t-steps complete">
+		                    <span class="t-steps-n">2</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>设置体验者</h2>
+		                </div> 
+		                <div class="t-steps complete">
+		                    <span class="t-steps-n">3</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>预览新版</h2>
+		                </div>
+		                 <div class="t-steps active">
+		                    <span class="t-steps-n">4</span>
+		                    <i class="fa fa-check-circle"></i>
+		                    <h2>提交审核</h2>
+		                </div>
+		            </div>
+		            <div class="data-table" style="margin:20px;">
+				       <div>
+				         <span style="font-size:20px;">配置功能页面</span> 
+				         <span class="text-tips">至少填写一组，最多填写五组，填写正确的信息有利于用户快速搜索出你的小程序</span>
+				       </div>
+				       <div class="info_temp"> 
+					       <div style="margin-top:10px;" class="address">
+					         <span class="lab-title">功能页面</span>
+					         <select name="address">
+				                <option value="-1">请选择</option>
+				                #for(page: pageList??)
+								<option value="#(page)">#(page)</option>				                
+				                #end
+					         </select>       
+					   </div>
+				       <div style="margin-top:10px;">
+				         <span class="lab-title">页面标题</span>
+				         <input type="text" id="title" class="span3" name="title" value="">
+				       </div>
+				        <div style="margin-top:10px;">
+				         <span class="lab-title">所在服务类目</span>
+				         <select name="tclass">
+				                <option value="-1">请选择</option>
+				                #for(category: categories??)
+				                	<option value="#(category_index)" first_id="#(category.first_id)" second_id="#(category.second_id)" third_id="#(category.third_id)" first_class="#(category.first_class)" second_class="#(category.second_class)" third_class="#(category.third_class)">#(category.first_class)>>#(category.second_class) #if(category.third_class) #(category.third_class) #end</option>
+				                #end
+				         </select>       
+				         <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('功能页面和服务类目必须一一对应，且功能页面提供的内容必须符合该类目范围。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				       </div>
+				        <div style="margin-top:10px;margin-bottom: 10px;">
+				         <span class="lab-title">标签</span>
+				         <input type="text" id="tag" class="span3" name="tag" value="">
+				         <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('标签用空格分开，填写与页面功能相关的标签，更容易被搜索。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				         </div>
+			       		</div>
+			      	</div>
+			      	<div style="margin-left:20px;"> <a class="js_add_item" href="javascript:;">添加功能页面</a></div>
+		            <div class="panel-default">
+					  	<div class="panel-body" align="center">
+					  		<a class="btn btn-default btn-sm" href="#(webctx)/weapp/sets/step3">上一步</a>
+							<button id="pack_btn" type="button" class="btn btn-success btn-sm">提交审核</button>
+					  	</div>
+				  	</div>
+				</div>
+			</div>
+	    </div>
+	   </div>  
+</div>
+
+<script type="text/template" id="item_table_tr_tpl">
+<div class="info_temp"> 
+<hr>
+<div style="margin-top:10px;" class="address">
+  <span class="lab-title">功能页面</span>
+  <select name="address">
+     <option value="-1">请选择</option>
+     #for(page : pageList)
+		<option value="#(page)">#(page)</option>				                
+     #end
+  </select>&nbsp;&nbsp;<a class="js_del_item">删除</a>
+</div>
+<div style="margin-top:10px;">
+<span class="lab-title">页面标题</span>
+<input type="text" id="title" class="span3" name="title" value="">
+</div>
+<div style="margin-top:10px;">
+<span class="lab-title">所在服务类目</span>
+<select name="tclass">
+     <option value="-1">请选择</option>
+     #for(category:categories)
+     	<option value="#(category_index)" first_id="#(category.first_id)" second_id="#(category.second_id)" third_id="#(category.third_id)" first_class="#(category.first_class)" second_class="#(category.second_class)" third_class="#(category.third_class)">
+#(category.first_class)>>#(category.second_class) #if(category.third_class)>>#(category.third_class)#end</option>
+     #end
+</select>       
+<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('功能页面和服务类目必须一一对应，且功能页面提供的内容必须符合该类目范围。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+</div>
+<div style="margin-top:10px;margin-bottom: 10px;">
+<span class="lab-title">标签</span>
+<input type="text" id="tag" class="span3" name="tag" value="">
+<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('标签用空格分开，填写与页面功能相关的标签，更容易被搜索。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+</div>
+</div>
+</script>
+#end
+<script type="text/javascript">
+function unbindClick(){
+	$(".js_del_item").unbind("click");
+}
+$(".js_add_item").click(function(){
+	if($(".info_temp").length == 5){
+		obz.warn("最多能添加5组");
+		return;
+	}
+	$(".data-table").append($("#item_table_tr_tpl").html());
+	unbindClick();
+	$(".js_del_item").click(function(){
+		$(this).parent().parent().remove();
+		obz.msg("删除成功");
+	});
+});
+$("#pack_btn").click(function(){
+	var postData = new Array(); 
+	var hasError = false;
+	$(".info_temp").each(function(){
+		var tempObj={};
+  		tempObj.address=$(this).find("select[name=address]").val();
+  		tempObj.title=$(this).find("input[name=title]").val();
+  		tempObj.tag=$(this).find("input[name=tag]").val();
+  		if(tempObj.address=="-1"||tempObj.title==''||tempObj.tag==''){
+  			obz.warn("请填写所有表单信息");
+  			hasError = true;
+  			return false;
+  		}
+  		
+  		var cIndex=$(this).find("select[name=tclass]").val();
+  		if(cIndex == -1){
+  			obz.warn("请选择服务类目");
+  			hasError = true;
+  			return false;
+  		}
+  		
+  		var cObj = $(this).find("select[name=tclass]").find("option:selected");
+  		tempObj.first_class = cObj.attr("first_class");
+  		tempObj.second_class = cObj.attr("second_class");
+  		tempObj.third_class = cObj.attr("third_class");
+  		tempObj.first_id = cObj.attr("first_id");
+  		tempObj.second_id = cObj.attr("second_id");
+  		tempObj.third_id = cObj.attr("third_id");
+  		postData.push(tempObj);
+	});
+	
+	if(hasError == true) return false;
+	if(postData.length<=0){
+		obz.warn("请至少填写一组数据");
+		return false;
+	}
+	
+	obz.showMessage("1. 将提交到微信官方审核，审核一旦提交就无法撤回;<br>2. 随意提交，审核被驳回，浪费时间", function(){
+		$(".data-table").mask("正在提交...");
+		obz.ajaxJson("#(webctx)/weapp/sets/commitAudit", {item_list:JSON.stringify(postData)}, function(resp){
+			$(".data-table").unmask();
+			if(resp.code == 200){
+				obz.msg("提交成功",function(){
+					location.href = "#(webctx)/weapp/sets/weapp";
+				});
+			}
+		});
+	});
+});
+</script>

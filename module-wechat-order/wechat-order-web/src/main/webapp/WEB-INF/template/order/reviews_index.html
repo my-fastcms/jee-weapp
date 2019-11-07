@@ -1,0 +1,135 @@
+#include ("/_includes/_layout.html")
+#@layout("评论管理", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content  ibox-content">
+		<div class="panel-body">
+			<div style="float: left; margin-right: 20px;">
+			<table width="100%" border="0">
+				<tr>
+					<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+					<input type="text" name="q_pond_txt" id="q_pond_txt" placeholder="按内容查询" class="control-inline" />
+					&nbsp;&nbsp;&nbsp;
+						<select id="a_status_sel" class="control-inline">
+							<option value="">全部</option>
+							<option value="1" selected="selected">可见</option>
+							<option value="0">已隐藏</option>
+						</select>
+						&nbsp;&nbsp;&nbsp;
+						<button id="myqueryBtn" class="btn btn-success btn-sm">查询</button>
+					</td>
+				</tr>
+			</table>
+			</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+				<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+				<th>评价人</th>
+				<th>评价商品</th>
+				<th width="260px">评价内容</th>
+				<th>评价时间</th>
+				<th>状态</th>
+				<th>操作</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	</div>   
+</div>
+<script type="text/html" id="item_table_tr_tpl">
+{{each list as item i}}
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{{item.pr_id}}" style="margin-right: 4px; vertical-align: middle;"/><input type="hidden" value="{{item.pr_id}}"/></td>
+			<td>{{item.nickname | cutNickName}}</td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;"><img src="#(img_domain){{item.image}}" width="30" height="30">&nbsp;&nbsp;{{item.name | getHellipString}}</img></span>
+			<br><span style="font-size=12px;color:grey;">来自{{if item.order_type==1}} 佣金 {{else if item.order_type==2}} 拼团 {{/if}}订单{{item.order_sn}}</span>	
+			</td>
+			<td width="260px"><span>【{{if item.score == 1}}差评{{else if item.score == 2}}中评{{else}}好评{{/if}}】</span>&nbsp;{{item.content}}</td>
+			<td>{{item.pr_created}}</td>
+			<td><span class="customer_status">{{if item.active == 1}} 可见 {{else}} 不显示 {{/if}}</span></td>
+			<td>
+				&nbsp;<a id="del_{{item.pr_id}}" href="javascript:void(0)" style="{{if item.active == 1}}display:block;{{else}} display:none; {{/if}}">隐藏评论</a>
+				&nbsp;<a id="undel_{{item.pr_id}}" href="javascript:void(0)" style="{{if item.active == 0}}display:block;{{else}} display:none; {{/if}}">取消隐藏</a>
+			</td>
+		</tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="7" class="center">没有结果集</td></tr>
+</script>
+#end
+<script type="text/javascript">
+template.helper('getHellipString', function(str) {
+    return str.length>16 ? str.substring(0, 16) + "..." : str;
+});
+template.helper('cutNickName', function(str) {
+    return str.length>5 ? str.substring(0, 5) + "..." : str;
+});
+
+$(document).ready(function() {
+	var params = {};
+	params.active = $("#a_status_sel").val();
+	var table = new obz.TableView("pager", obz.ctx + "/reviews/list", params, function(resp){
+		$(".itemsLotGrid").empty();
+		if(resp && resp.list && resp.list.length>0){
+			$('.itemsLotGrid').html(template('item_table_tr_tpl', resp));
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+	table.init();
+	
+	var TableOpt = {
+		del : function(param){
+			obz.showMessage("确定隐藏商品评价吗?", function(){
+				var ids = param+"";
+				var id = ids.split("_")[1];
+	    		obz.ajaxJson(obz.ctx + "/reviews/del", {ids: id}, function(resp){
+	    			if(resp.code==200){
+	    				obz.msg("隐藏成功", function(){table.init();});
+	    			}else {
+						obz.error(resp.msg);
+	    			}
+	    		});
+	   		});
+			return false;
+		},	
+		undel : function(param){
+			obz.showMessage("确定取消隐藏吗？", function(){
+				var ids = param+"";
+				var id = ids.split("_")[1];
+	    		obz.ajaxJson(obz.ctx + "/reviews/undel", {ids: id}, function(resp){
+	    			if(resp.code==200){
+	    				obz.msg("已取消隐藏", function(){table.init();});
+	    			}else {
+						obz.error(resp.msg);
+	    			}
+	    		});
+	   		});
+			return false;
+		},	
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.del);
+			optArray.push(this.undel);
+			return optArray;
+		}
+	}
+	
+	$("#myqueryBtn").click(function(){
+		var params = {};
+		params.content = $("#q_pond_txt").val();
+		params.active = $("#a_status_sel").val();
+		table.setParams(params);
+		table.init();
+	});
+	
+});
+</script>

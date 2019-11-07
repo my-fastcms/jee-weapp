@@ -1,0 +1,67 @@
+<view class='weui-content'>
+  <view class="weui-navbar">
+    <block wx:for-items="{{tabs}}" wx:key="id">
+      <view id="{{index}}" class="weui-navbar__item proinfo-tab-tit {{activeIndex == index ? 'weui-bar__item--on' : ''}}" bindtap="tabClick">{{item}}
+      </view>
+    </block>
+  </view>
+
+  <!-- <view class="type-container">
+    <scroll-view class="type-navbar" scroll-x="true">
+        <view class="type-box" wx:for-items="{{tabs}}" wx:key="id">
+            <view id="{{index}}" class="type-navbar-item {{activeIndex == index ? 'type-item-on' : ''}}" bindtap="tabClick">{{item}}
+            </view>
+        </view>
+    </scroll-view>
+  </view> -->
+
+  <view class="weui-tab__bd proinfo-tab-con">
+    <block wx:if="{{orders.length>0}}">
+      <scroll-view style="height:{{scollHeight}}px;" class='mt-20' scroll-y="true" bindscrolltolower="lower">
+        <view class="weui-panel" bindtap="toDetail" wx:for="{{orders}}" wx:key="orderId" wx:for-index="idx" wx:for-item="order" data-id="{{order.orderId}}">
+          <view class="weui-panel__hd">
+            <view class="weui-cell padding_0">
+              <view class="weui-cell__bd weui-cell_primary">
+                <view>{{order.sn}}</view>
+                <!-- <view style="font-size:12px;color:grey;">{{order.created}}</view> -->
+              </view>
+              <view class="weui-cell__ft weui-cell__ft_in-access act">
+                <!-- <text class="status">{{order.status}}</text> -->
+                <text wx:if="{{order.status=='待支付'}}">去支付</text>
+                <text wx:if="{{order.status=='已发货'}}">签收</text>
+              </view>
+            </view>
+          </view>
+          <view class="weui-panel__bd">
+            <view class="weui-media-box weui-media-box_appmsg" wx:for="{{order.orderItems}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+              <view class="weui-media-box__hd">
+                <image class="weui-media-box__thumb" src="{{item.productImg}}" alt="" />
+              </view>
+              <view class="weui-media-box__bd">
+                <view class="weui-media-box__desc">{{item.productName}}</view>
+                <view class="weui-media-box__desc" wx:if="{{item.specificationValueNames}}">{{item.specificationValueNames}}</view>
+                <view class="weui-media-box__desc price">
+                  ¥{{item.price}}　×{{item.quantity}}
+                  <block wx:if="{{order.status=='已完成'}}">
+                    <text class="topl" data-id="{{order.orderId}}" data-productid="{{item.productId}}" catchtap="toReview">去评价</text>
+                  </block>
+                </view>
+                <block wx:if="{{order.orderType}}">
+                  <view class="bk-order">{{order.orderType}}</view>
+                </block>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+    <block wx:else>
+      <view class="no-group">
+        <view class="text-center">
+          <image src="/style/images/no-orders.png"></image>
+          <view class="mt-20">暂无订单</view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

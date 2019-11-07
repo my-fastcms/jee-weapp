@@ -1,0 +1,68 @@
+#include ("/_includes/_layout.html")
+#@layout("", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class=" content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="#(webctx)/weapptpl" class="J_menuTab active">模板市场</a>
+		       <a href="#(webctx)/weapptpl/my" class="J_menuTab">我的模板</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-content">
+		<small><a href="#(webctx)/weapptpl">《返回列表</a></small>
+		<div class="row"> 
+			<div class="col-sm-3">
+	            <div class="ibox ">
+	                <div class="">
+	                    <div class="tab-content">
+	                       <div id="contact-1" class="tab-pane active">
+	                           <div class="row m-b-lg">
+	                               <!-- <div class="col-lg-4 text-center">
+	                                   <h2>张有为</h2>
+	                                   <div class="m-b-sm">
+	                                       <img alt="image" class="img-circle" src="img/a2.jpg" style="width: 62px">
+	                                   </div>
+	                               </div> -->
+	                               <div class="col-lg-12">
+	                                   <h3>#(weappmodule.module_name)</h3>
+	                                   <p>#(weappmodule.module_memo)</p>
+	                                   <p></p>
+	                                   <br>
+	                                   <!-- <a class="btn btn-default btn-sm btn-block" href="javascript:void(0)">15天免费试用</a> -->
+	                                   <a class="btn btn-primary btn-sm btn-block" href="#(webctx)/pay/?tpl=#(weappmodule.id)">立即购买</a>
+	                               </div>
+	                           </div>
+	                       </div>
+	                  	</div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="col-sm-9">
+	            <div class="ibox">
+	                <div class="">
+	                    <span class="text-muted small pull-right">最后更新：<i class="fa fa-clock-o"></i> #(weappmodule.updated)</span>
+	                    <!-- <h2>客户管理</h2> -->
+	                    <p>1406个用户正在使用该模板</p>
+	                    <div class="clients-list">
+	                        <ul class="nav nav-tabs">
+	                            <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-user"></i>应用详情</a></li>
+	                            <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i>更新日志</a></li>
+	                        </ul>
+	                        <div class="tab-content">
+	                            <div id="tab-1" class="tab-pane active">
+	                                <div class="full-height-scroll" style="padding-top: 5px;">#(weappmodule.module_desc)</div>
+	                            </div>
+	                            <div id="tab-2" class="tab-pane">
+	                                <div class="full-height-scroll" style="padding-top: 5px;">#(weappmodule.module_log)</div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	      </div>  
+	</div>
+</div>
+#end

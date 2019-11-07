@@ -1,0 +1,23 @@
+<view class="container">
+  <view>
+    <view wx:for="{{taskList}}" wx:key="id" class="weui-panel__bd weui-cell" wx:for-item="item">
+      <view cass="task-box">
+        <view class="task-li"><text class="task-title">任务名称：　</text>{{item.taskName}}</view>
+        <view class="task-li"><text class="task-title">有效时间：　</text>{{item.startDate}} ~ {{item.endDate}}</view>
+        <view class="task-li"><text class="task-otitle">任务奖励：　</text>
+          <view class="task-obox">
+          <block wx:if="{{item.taskAwards.length>0}}">
+          <view wx:for="{{item.taskAwards}}" wx:key="id"  wx:for-item="oItem">
+            <view class="task-oli">{{oItem.name}}</view>
+          </view>
+          </block>
+          <block wx:else><view>无</view></block>
+          </view>
+        </view>
+        <view class="task-li"><text class="task-title">完成人数：　</text>{{item.finishCount}}</view>
+        <view class="task-li"><text class="task-title">已关注人数：　</text>{{item.followerCount}}</view>
+        <view class="task-li"><text class="task-title">任务状态：　</text><text class="task-status">{{item.taskStatus}}</text></view>
+      </view>
+    </view>
+  </view>
+</view>

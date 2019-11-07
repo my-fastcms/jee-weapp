@@ -1,0 +1,21 @@
+.task-li{
+  overflow: hidden;
+  font-size: 26rpx;
+  color:#666;
+  padding-top: 16rpx;
+  line-height: 1.8;
+}
+.task-title{
+  color: rgb(165, 165, 165);
+}
+.task-otitle{
+  color: rgb(165, 165, 165);
+  float: left;
+}
+.task-obox{
+  display: inherit
+}
+.task-status{
+  color: #fa3c64;
+}
+.weui-panel__bd { background: #fff; border:1px solid #eee; margin:20rpx; border-radius: 10rpx;}

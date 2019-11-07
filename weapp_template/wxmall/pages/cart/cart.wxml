@@ -1,0 +1,68 @@
+<block wx:if="{{carts.length>0}}">
+  <view class="carts-list">
+    <view wx:for="{{carts}}" class="carts-container" wx:key="id">
+      <view class="close_icon" bindtap="delete" data-object-id="{{item.id}}">×</view>
+      <view class="carts-item" data-index="{{index}}" bindtap="showGoods" data-object-id="{{item.goodId}}">
+        <icon type="{{item.selected ? 'success_circle' : 'circle'}}" color="orange" size="20" catchtap="bindCheckbox" data-index="{{index}}" />
+        <view>
+          <image class="carts-image" src="{{item.mainImg}}" mode="aspectFill" />
+        </view>
+        <view class="carts-text">
+          <!-- 商品标题 -->
+          <view>
+            <text class="carts-title">{{item.goodName}}</text>
+          </view>
+          <view class="spec_box">
+            <view class="spec_cell" wx:for="{{item.specificationValues}}" wx:key="id" wx:for-item="attrValueObj" wx:for-index="index">
+              <view wx:if="{{index<=3}}">{{attrValueObj.name}}</view>
+            </view>
+            <block wx:if="{{item.fullCutResultDtos && item.fullCutResultDtos.length>0}}">
+              <view class="spec_cell_red">满减</view>
+            </block>
+          </view>
+          <view class="carts-subtitle">
+            <view>
+              <text class="carts-price">￥{{item.goodPrice}}</text>
+            </view>
+            <!-- 数量加减 -->
+            <view class="stepper">
+              <text class="{{minusStatuses[index]}}" data-index="{{index}}" catchtap="bindMinus">-</text>
+              <input type="number" data-index="{{index}}" catchchange="bindManual" maxlength="5" style="color:red;" catchtap="bindManualTapped" value="{{item.quantity}}" />
+              <text class="normal" data-index="{{index}}" catchtap="bindPlus">+</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="carts-info">
+    <block wx:if="{{fullCutInfo !=''}}">
+      <image src='../../style/images/biaoqian02.png' mode='scaleToFill'></image>
+      <text class="price_info" decode="true">{{fullCutInfo}}</text>
+    </block>
+  </view>
+  
+  <view class='place'></view>
+
+  <view class="carts-footer">
+    <view class="select-and-amount" bindtap="bindSelectAll">
+      <icon type="{{selectedAllStatus ? 'success_circle' : 'circle'}}" color="orange" size="20" />
+      <text>全选</text>
+    </view>
+    <view class="select-and-amount">
+      <block wx:if="{{total != ''}}">
+        <text class="price_blod">￥{{total}}</text>
+      </block>
+      <block wx:if="{{oldTotal !=''}}">
+        <text class="price_del">￥{{oldTotal}}</text>
+      </block>
+      <!-- <block wx:if="{{fullCutInfo !=''}}">
+        <text class="price_blod">{{fullCutInfo}}</text>
+      </block> -->
+    </view>
+    <view class="button" bindtap="bindCheckout" style="color:white;background-color:{{navbar_bgcolor}}">立即结算</view>
+  </view>
+</block>
+<block wx:else>
+  <view class="cart-no-data">购物车是空的哦~</view>
+</block>

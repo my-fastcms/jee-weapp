@@ -1,0 +1,67 @@
+#define loop_child_menu(menuList, level)
+	#if(menuList?? && menuList.size()>0)
+		<ul class="nav #if(level==0)nav-second-level #else nav-third-level #end" level="#(level++)">
+			#for(child: menuList)
+				<li menu-type="#(child.menuType)">
+	       			<a #if(child.children?? && child.children.size()==0) class="J_menuItem" app_id="#(child.appId??)" href="#(webctx)#(child.url??)" #else href="javascript:void(0)" #end>#(child.text??)
+	       			#if(child.children?? && child.children.size()>0)<span class="fa arrow"></span>#end
+	       			</a>
+	       			#@loop_child_menu(child.children??, level)
+	       		</li>
+			#end
+		</ul>
+	#end
+#end
+
+#define loop_menu(menuList, level)
+	#for(menu : menuList)
+	<li id="#(menu.classId??)" menu-group="#(menu.menuGroup??)" menu-id="#(menu.id??)" menu-type="#(menu.menuType??)" style="display: none">
+      	<a #if(menu.children?? && menu.children.size()==0) class="J_menuItem" app_id="#(menu.appId??)" href="#(webctx)#(menu.url??)" #else href="javascript:void(0)" #end>
+      		<i class="#(menu.icon)"></i><span class="nav-label">#(menu.text??)</span> 
+      		#if(menu.children?? && menu.children.size()>0)<span class="fa arrow"></span>#end
+      	</a>
+      	#@loop_child_menu(menu.children??, level)
+    </li>
+    #end
+#end
+
+<!-- start: Header -->
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="nav-close"><i class="fa fa-times-circle"></i></div>
+    <div class="sidebar-collapse" style="overflow-y:auto;">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header exclude_menu">
+<!--                <div class="dropdown profile-element" style="margin-bottom: 5px;text-align: center;margin-top: 10px;">-->
+<!--                    <a href="http://www.dbumama.com" target="_blank"><img alt="image" src="#(webctx)/resources/images/logo.png" /></a>-->
+<!--                </div>-->
+<!--                <div class="logo-element" style="font-size: 3px;">WEAPP</div>-->
+                #if (session.weapp_in_session??)
+                <div class="dropdown profile-element">
+                    <span><img alt="#(session.weapp_in_session.nick_name)" class="img-circle" style="width: 50px;height: 50px; border-radius: 50%" src="#(session.weapp_in_session.head_img??)"></span>
+                    <a data-toggle="dropdown" class="dropdown-toggle right-sidebar-toggle" href="javascript:void(0)" aria-expanded="false">
+                        <span class="clear">
+                            <span class="block m-t-xs"><strong class="font-bold">#(session.weapp_in_session.nick_name)</strong></span>
+                            <span class="text-muted text-xs block">#if(session.weapp_in_session.service_type==2)(服务号)#elseif(session.weapp_in_session.service_type==1)(订阅号)#elseif(session.weapp_in_session.service_type==0)(小程序)#else未知类型 #end<b class="caret"></b>点击切换</span>
+                        </span>
+                    </a>
+                </div>
+                #end
+
+            </li>
+            
+            #if (session?? && session.weapp_in_session?? && session.weapp_in_session.service_type==0)
+            <li class="exclude_menu">
+                <a class="J_menuItem" href="#(webctx)/app/center"><i class="fa fa-columns"></i> <span class="nav-label">模板中心</span></a>
+            </li>
+            #else
+            <li class="exclude_menu">
+                <a class="J_menuItem" href="#(webctx)/app/center"><i class="fa fa-columns"></i> <span class="nav-label">应用中心</span></a>
+            </li>
+            #end
+            
+            #if (session?? && session.weapp_in_session??)
+            	#@loop_menu(menus, 0)
+            #end
+        </ul>
+    </div>
+</nav>

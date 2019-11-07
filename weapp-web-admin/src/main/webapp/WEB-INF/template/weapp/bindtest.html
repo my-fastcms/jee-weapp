@@ -1,0 +1,32 @@
+<div align="left">
+	<div id="bind_wxuser_div" class="form-horizontal">
+		<div class="form-group">
+            <label class="col-md-3 control-label">微信号</label>
+            <div class="col-md-6" id="error_wxuser">
+                <input type="text" id="wxuser" name="wxuser" class="form-control" value=""/>
+                <label class="control-label" for="wxuser"></label>
+            </div>
+        </div>
+	</div>
+	<div class="panel-footer" align="center" style="padding-top: 10px;">
+	    <button onclick="bindtest()" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>确认</button>
+	</div>
+</div>
+<script>
+function bindtest(){
+	if($("#wxuser").val() == ""){
+		obz.warn("请输入微信号");
+		return;
+	}
+	
+	$("#bind_wxuser_div").mask("处理中...");	
+	obz.ajaxJson("#(webctx)/weapp/sets/bindtest", {"wxuser":$("#wxuser").val()}, function(resp){
+		$("#bind_wxuser_div").unmask();
+		if(resp.code == 200){
+			obz.msg("邀请成功，请在微信接受邀请", function(){
+				location.reload();
+			});				
+		}
+	}); 
+}
+</script>

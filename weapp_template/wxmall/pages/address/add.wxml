@@ -1,0 +1,58 @@
+<view class="container">
+  <form bindsubmit="bindSave">
+    <view class="form-box">
+      <view class="row-wrap">
+        <view class="label">联系人</view>
+        <view class="label-right">
+          <input name="linkMan" class="input" type="text" maxlength="60" placeholder="姓名" value="{{addressData.receiverName}}" />
+        </view>
+      </view>
+      <view class="row-wrap">
+        <view class="label">手机号码</view>
+        <view class="label-right">
+          <input name="mobile" class="input" maxlength="11" type="number" placeholder="11位手机号码" value="{{addressData.phone}}" />
+        </view>
+      </view>
+      <view class="row-wrap">
+        <view class="label">选择地区</view>
+        <picker bindchange="bindPickerProvinceChange" range="{{provinces}}">
+          <view class="picker {{selProvince=='请选择省'?'hui':''}}">
+            {{selProvince}}
+          </view>
+        </picker>
+        <block wx:if="{{citys && citys.length>0}}">
+          <picker bindchange="bindPickerCityChange" range="{{citys}}">
+            <view class="picker {{selCity=='请选择市'?'hui':''}}">
+              {{selCity}}
+            </view>
+          </picker>
+        </block>
+        <block wx:if="{{districts && districts.length>0}}">
+          <picker bindchange="bindPickerChange" range="{{districts}}">
+            <view class="picker {{selDistrict=='请选择区'?'hui':''}}">
+              {{selDistrict}}
+            </view>
+          </picker>
+        </block>
+      </view>
+      <view class="row-wrap">
+        <view class="label">详细地址</view>
+        <view class="label-right">
+          <textarea name="address" maxlength="120" auto-height placeholder="街道门牌" value="{{addressData.address}}" />
+        </view>
+      </view>
+
+      <view class="row-wrap">
+        <radio-group class="radio-group" bindchange="radioChange">
+          <lable>
+            <radio value="1" name="isDefult" checked="{{addressData.isDefault}}" />设为默认地址(每次购买时会默认使用该地址) </lable>
+        </radio-group>
+      </view>
+
+      <view class="bottom-box">
+        <button type="primary" formType="submit" class='submit-b' style='background: {{navbar_bgcolor}}'>保存</button>
+        <button type="default" bindtap="bindCancel" class='reset-b'>取消</button>
+      </view>
+    </view>
+  </form>
+</view>

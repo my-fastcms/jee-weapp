@@ -1,0 +1,92 @@
+#include ("/_includes/_layout.html")
+#define css()
+#end
+#define script()
+#end
+#@layout("一物一码申请", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox-content">
+		<form id="__MarketcodeApplyForm__" class="form-horizontal">
+	                <input type="hidden" id="id" name="marketcodeApply.id" value="#(marketcodeApply.id ??)">
+	                <!-- <div class="form-group">
+	                    <label class="col-sm-2 control-label">微信申请码</label>
+	                    <div class="col-sm-6">
+						   <input type="input" name="isvApplicationId" class="form-control" value="#(marketcodeApply.isv_application_id ??)" placeholder=""/>
+	                    </div>
+	                </div> -->
+	                <div class="form-group">
+	                    <label class="col-sm-2 control-label">申请码数量</label>
+	                    <div class="col-sm-6">
+						   <input type="input" name="codeCount" class="form-control" value="#(marketcodeApply.code_count ??)" placeholder="10000的整数倍" onkeyup="this.value=this.value.replace(/\D/g,'')" #if(marketcodeApply??) readonly="readonly" #end/>
+	                    </div>
+	                </div>
+	                <!-- <div class="form-group">
+	                    <label class="col-sm-2 control-label">微信业务码</label>
+	                    <div class="col-sm-6">
+						   <input type="input" name="applicationId" class="form-control" value="#(marketcodeApply.application_id ??)" placeholder=""/>
+	                    </div>
+	                </div> -->
+	                
+	                #if(marketcodeApply??)
+	                <div class="form-group">
+	                <label class="col-sm-2 control-label">二维码生成结果</label>
+	                <div class="col-sm-6">
+	                #if(result?? && "FINISH"==result)
+	                	已完成，可下载
+	                #elseif(result?? && "INIT"==result)
+	                	初始化中，请耐心等待...
+	                #elseif(result?? && "PROCESSING"==result)
+	                	正在生成中，请耐心等待...
+	                #else
+	                	#(result??)
+	                #end
+	                </div>
+	                </div>
+	                #end
+	       
+	        <div class="form-group">
+	            <div class="" align="center">
+	            	#if(!marketcodeApply??)
+			        <button type="submit" class="btn btn-success btn-sm">提 交</button>
+					#end
+					
+					#if(marketcodeApply?? && result?? && "FINISH"==result)
+					<a href="#(webctx)/marketcode/marketcodeapply/download/?id=#(marketcodeApply.id??)" class="btn btn-info btn-sm">下载二维码</a>
+					#end
+					
+			        <a href="#(webctx)/marketcode/marketcodeapply" class="btn btn-default btn-sm">取   消</a>
+				</div>
+	        </div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+var icon = "<i class='fa fa-times-circle'></i> ";
+$("#__MarketcodeApplyForm__").validate({
+	ignore: "",
+    submitHandler:function() {
+    	$("#__MarketcodeApplyForm__").mask("正在保存...");
+    	var params = $("#__MarketcodeApplyForm__").serializeJSON();
+    	obz.ajaxJson(obz.ctx+"/marketcode/marketcodeapply/save", params, function(json) {
+    		$("#__MarketcodeApplyForm__").unmask();
+    		if(json.state == "ok" || json.code == 200){
+    			obz.msg('保存成功', function(){
+					location.href = "#(webctx)/marketcode/marketcodeapply";
+				});	
+			}
+		});
+    },
+    rules: {
+    	/* isvApplicationId: "required", */
+    	codeCount: "required",
+    	/* applicationId: "required", */
+    },
+    messages: {
+    	/* isvApplicationId: icon + "请输入微信申请码", */ 
+    	codeCount: icon + "请输入申请码数量", 
+    	/* applicationId: icon + "请输入微信业务码",  */
+    }
+});
+</script>
+#end

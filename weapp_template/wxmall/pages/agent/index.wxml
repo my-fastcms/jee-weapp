@@ -1,0 +1,174 @@
+<!--pages/agent/index.wxml-->
+<view class='weui-content'>
+
+  <view class="wy-center-top" style='background-color:{{navbar_bgcolor}}'>
+    <view class="weui-media-box weui-media-box_appmsg">
+      <view style='height:94px;overflow:hidden;'>
+        <view class="weui-media-box__hd">
+          <open-data class="weui-media-box__thumb headimg" type='userAvatarUrl' />
+        </view>
+        <view class="rankBox" wx:if="{{rankName}}">
+          <view style="display:flex;flex-direction:row;">
+            <image style="width:31px;height:21px;position: relative;left: 3px;z-index: 5;" src="../../style/images/rank.png" />
+            <view class="rank">
+              <view style="position:relative;left:5px;z-index:4;">{{util.sub(rankName)}}</view>
+            </view>
+          </view>  
+        </view>
+      </view>
+      <view class="weui-media-box__bd">
+        <view class="weui-media-box__title user-name">
+          <open-data type="userNickName" lang="zh_CN"></open-data>
+        </view>
+        <view class="user-name" style='font-size:12px;'>
+          <open-data type="userProvince" lang="zh_CN"></open-data>
+          <open-data type="userCity" lang="zh_CN"></open-data>
+        </view>
+
+      </view>
+    </view>
+  </view>
+
+  <view class='p-30'>
+    <view class="weui-panel__bd">
+     <view class="weui-flex">
+        <view class="weui-flex__item" bindtap='navigateToCanGetMission'>
+          <view class="center-ordersModule">
+            <view class="center-money">
+              <em>{{canGetMission}}</em>
+            </view>
+            <view class="name">可提现佣金</view>
+          </view>
+        </view>
+        <view class="weui-flex__item" bindtap='navigateToAgentCashRcd'>
+          <view class="center-ordersModule">
+            <view class="center-money">
+              <em>{{GetMission}}</em>
+            </view>
+            <view class="name">已提现佣金</view>
+          </view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="center-ordersModule">
+            <view class="center-money">
+              <em>{{noGetMission}}</em>
+            </view>
+            <view class="name">未结算佣金</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view style="display:flex; flex-direction:row;flex-wrap:wrap;justify-content:space-around;">
+
+    <view class="weui-panel__bd indexBox">
+      <form bindsubmit="formSubmit" report-submit="true">
+        <button formType="submit" open-type="getUserInfo" bindgetuserinfo="navigateToAgentCmsRcd">      
+          <view class="imgicon">
+            <image style="width:35px;height:35px" src="../../style/images/fxyj.png" />
+          </view>
+          <view class="center-ordersModule">
+            <view class="name">分销佣金</view>
+            <view class="center-money">
+              <em>{{totalMission}}</em>
+            </view>
+          </view>
+        </button>
+      </form>        
+    </view>
+
+    <view class="weui-panel__bd indexBox">
+      <form bindsubmit="formSubmit" report-submit="true">
+        <button formType="submit" open-type="getUserInfo" bindgetuserinfo="navigateToAgentOrder">    
+          <view class="imgicon">
+            <image style="width:35px;height:35px" src="../../style/images/fxdd.png" />
+          </view>
+          <view class="center-ordersModule">
+            <view class="name">分销订单</view>
+            <view class="center-money">
+              <em>{{ordersCount}}</em>
+            </view>
+          </view>
+        </button>
+      </form>
+    </view>
+
+    <view class="weui-panel__bd indexBox">
+      <form bindsubmit="formSubmit" report-submit="true">
+        <button open-type="getUserInfo" formType="submit" bindgetuserinfo="navigateToAgentCashRcd">
+          <view class="imgicon">
+            <view class='imgBox'>
+              <image style="width:23px;height:25px" src="../../style/images/txmx.png" />
+            </view>
+          </view>
+          <view class="center-ordersModule">
+            <view class="name">提现明细</view>
+            <view class="center-money">
+              <em>{{GetMission}}</em>
+            </view>
+          </view>
+        </button>
+      </form>
+    </view>
+
+    <view class="weui-panel__bd indexBox">
+      <form bindsubmit="formSubmit" report-submit="true">
+        <button formType="submit" open-type="getUserInfo" bindgetuserinfo="navigateToAgentTeam">
+        <view class="imgicon">
+          <view class='imgBox'>
+            <image style="width:30px;height:30px" src="../../style/images/myteem.png" />
+          </view>
+        </view>
+        <view class="center-ordersModule">
+          <view class="name">我的团队</view>
+          <view class="center-money">
+            <em>{{teamCount}}</em>
+          </view>
+        </view>
+        </button>
+      </form>
+    </view>
+
+    <view class="weui-panel__bd indexBox">
+      <form bindsubmit="formSubmit" report-submit="true">
+        <button formType="submit" open-type="getUserInfo" bindgetuserinfo="navigateToAgentPoster">
+          <view class="imgicon">
+            <view class='imgBox'>
+              <image style="width:27px;height:27px" src="../../style/images/mypostor.png" />
+            </view>
+          </view>
+          <view class="center-ordersModule">
+            <view class="name">推广二维码</view>
+          </view>
+        </button>
+      </form>
+    </view>
+
+    <view class="weui-panel__bd indexBox">
+      <view class="weui-flex__item" bindtap='navigateToAgentMission'>
+
+      </view>
+    </view>      
+
+    </view>
+
+    <!-- <view class="content-padded">
+        <button type="primary" open-type="share" class="weui-btn weui-btn_primary">推荐给好友</button>
+    </view>
+
+    <view class="content-padded">
+        <button type="primary" open-type="share" class="weui-btn weui-btn_primary">生成个人推广海报</button>
+    </view> -->
+
+  </view>
+</view>
+
+<wxs module="util">
+  var sub = function(val) {
+      if(val.length <= 2){
+        return val + "用户";
+      }
+      return val.substring(0, 4)
+  }
+  module.exports.sub = sub;
+</wxs>

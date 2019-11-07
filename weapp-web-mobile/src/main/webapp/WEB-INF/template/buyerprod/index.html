@@ -1,0 +1,162 @@
+#include ("/_includes/_layout.html")
+#@layout("我的收藏", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<style type="text/css">
+.goods-details .count input[type="tel"] {
+    width: 30px !important;
+    height: 20px;
+}
+.goods-details .count * {
+    display: block;
+    float: left;
+    height: 20px;
+    /* width: 30px;*/
+    line-height: 20px !important; 
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+}
+.goods-details .count a{
+    font-size: 20px;
+	background-color: #F2F2F2;
+	margin-top: 0px;
+}
+.weui-cells{
+margin-top : 0px !important;
+}
+
+.float-div{
+	float:left;
+	border:1px;
+	width:40%; 
+}
+</style>
+#end
+#define content()
+<div class="content" style="font-size: 14px;">
+	#if (items??)
+	<!-- 主体内容 -->
+	<div class="weui-tab-bd">
+		<div class="weui-media-title shopping-title">
+			<span>我的收藏</span>
+			<a class="edit" href="javascript:void(0);">删除</a>
+		</div>
+		<!-- 商品列表 -->
+		<div class="weui-cells  weui-cells_checkbox">
+			#for(item : items)
+			　　<div class="weui-cell weui-check__label goods-container goods_items_label" for="#(item.id)">
+			    	<label class="weui-cell__hd">
+			        	<input type="checkbox" class="weui-check checkclick" name="checkbox1" data-item-id="#(item.goodId)" id="#(item.id)" checked="checked">
+			        	<i class="weui-icon-checked"></i>
+			    	</label>
+			    	<div class="weui-cell__bd weui-cell-primary">
+				        <a href="#(webctx)/product/detail?id=#(item.goodId)"><img class="goods-img" src="#(img_domain)#(item.goodImg)"/></a>
+					    <div class="goods-info">
+				        	<div class="goods-name" style="font-size: 12px;color: gray;">#(item.goodName)</div>
+				        	<div class="goods-CP f-cb"  style="clear: both;">
+				        		<div class="price" style="font-size: 12px;">#(item.goodPrice)</div>
+				        	</div>
+				        </div>
+			    	</div>
+				</div>
+			#end
+			
+			<!-- 全选按钮 -->
+			<div class="weui-tabbar weui-cell goods-container" style="position: fixed;bottom: 40px;">
+				<label id="checkbox-all" class="weui-cells_checkbox weui-check__label" for="all">
+				    <div class="weui-cell__hd">
+				        <input id="all" type="checkbox" class="weui-check" name="select-all" checked="checked">
+				        <i class="weui-icon-checked"></i>
+				    </div>
+				</label>
+				<div class="select-all-btn" style="font-size: 14px;">全选</div>
+			</div>
+			<!-- /全选按钮 -->	
+		</div>
+		<!-- 商品列表 -->
+	</div>
+	<!-- /主体内容 -->
+	#else
+	<div class="content-padded weui-msg">
+	  <div class="weui-msg__icon-area"><i class="weui-icon_msg weui-icon-info"></i></div>
+	  <div class="weui-text-area">
+	    <!-- <h2 class="weui_msg_title">操作成功</h2> -->
+	    <p class="weui-msg-desc">主人暂时没有收藏，快去商城逛逛吧</p>
+	  </div>
+	  <div class="weui-opr-area">
+	    <p class="weui-btn-area">
+	      <a href="#(webctx)/index" class="weui-btn weui-btn_primary">确定</a>
+	    </p>
+	  </div>
+	</div>
+	#end
+<!--手机端script需要加载后方-->
+#include ("/_includes/menus.html")	
+#end
+
+<script type="text/javascript">
+function getChecked(){
+	var ids = "";
+	$("input[type=checkbox][name=checkbox1]:checked").each(function(){
+		ids +=$(this).attr("id") + "#";
+	});
+	return ids;
+}
+
+$(".edit").click(function(){
+	if($("input[type=checkbox][name=checkbox1]:checked").length<=0){
+		$.toast("请选择要删除的项", "text");
+	}else{
+		$.modal({
+			  title: "提示",
+			  text: "确定要删除吗?",
+			  buttons: [
+			    { text: "确定", 
+			    	onClick: function(){
+			    		var ids = getChecked();
+			    		$.post("#(webctx)/buyerProd/delete", {ids:ids}, function(resp){
+			    			if(resp.code != 200){
+			    				$.toast(resp.msg, "text");
+			    			}else{
+			    				//根据id移除行
+			    				var idsArr = ids.split("#");
+			    				for(var i=0;i<idsArr.length;i++){
+			    					var id = idsArr[i];
+			    					$("#"+id).parent().parent().remove();
+			    				}
+			    			}
+			    		});
+			    	}
+			    },
+			    {text : "取消" }
+			  ]
+		})
+	}
+});
+
+$(function(){
+    //给全选的复选框添加事件
+     $("#all").click(function(){
+         // this 全选的复选框
+        var userids=this.checked;
+        //获取单选的复选框 遍历输出复选框
+        $(".checkclick").each(function(){
+             this.checked=userids;
+        });
+     });
+        
+    //给单选的复选框绑定单击事件
+    $(".checkclick").click(function(){
+         //获取选中复选框长度
+        var length=$(".checkclick:checked").length;
+        //所有单选框的长度
+        var len=$(".checkclick").length;
+        if(length==len){
+           $("#all").get(0).checked=true;
+        }else{
+           $("#all").get(0).checked=false;
+       }
+   });
+});
+
+</script>

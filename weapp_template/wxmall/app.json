@@ -1,0 +1,95 @@
+{
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
+  "debug": true,
+  "pages": [
+    "pages/index/index",
+    "pages/categroy/categroy",
+    "pages/product/list/list",
+    "pages/product/detail/detail",
+    "pages/user/user",
+    "pages/user/auth",
+    "pages/order/order",
+    "pages/order/detail",
+    "pages/order/review",
+    "pages/cart/cart",
+    "pages/pay/jiesuan",
+    "pages/address/add",
+    "pages/address/select",
+    "pages/agent/apply",
+    "pages/agent/share",
+    "pages/agent/accept",
+    "pages/agent/mission",
+    "pages/agent/mslist",
+    "pages/agent/cashlist",
+    "pages/company/index",
+    "pages/group/index",
+    "pages/group/detail",
+    "pages/multigroup/index",
+    "pages/promotion/index",
+    "pages/fullcut/index",
+    "pages/task/index",
+    "pages/task/list",
+    "pages/scan/index",
+    "pages/address/shop",
+    "pages/address/city",
+    "pages/address/addloction",
+    "pages/agent/index",
+    "pages/agent/order",
+    "pages/agent/team",
+    "pages/agent/cmsnmessage",
+    "pages/agent/cmsndetail",
+    "pages/order/refundOrder",
+    "pages/agent/product",
+    "pages/address/location",
+    "pages/bargain/list",
+    "pages/bargain/myList",
+    "pages/bargain/detail",
+    "pages/bargain/bargainProductDetail",
+    "pages/seckill/index",
+    "pages/seckill/detail/detail"
+  ],
+  "window": {
+    "enablePullDownRefresh": true,
+    "navigationBarBackgroundColor": "#fa3c64",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "小商城",
+    "backgroundTextStyle": "light"
+  },
+  "networkTimeout": {
+    "request": 60000,
+    "connectSocket": 60000,
+    "uploadFile": 60000,
+    "downloadFile": 60000
+  },
+  "tabBar": {
+    "color": "#666",
+    "selectedColor": "#fa3c64",
+    "borderStyle": "white",
+    "backgroundColor": "#f7f7fa",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "style/images/footer01.png",
+        "selectedIconPath": "style/images/footer001.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "iconPath": "style/images/footer03.png",
+        "selectedIconPath": "style/images/footer003.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "iconPath": "style/images/footer04.png",
+        "selectedIconPath": "style/images/footer004.png",
+        "text": "个人"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

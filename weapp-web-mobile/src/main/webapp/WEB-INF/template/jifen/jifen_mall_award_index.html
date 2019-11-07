@@ -1,0 +1,170 @@
+#include ("/_includes/_layout.html")
+#@layout("我的奖品","wxmall,点步科技","Wxmall社区","wxmall") 
+#define css()
+<link rel="stylesheet" href="/resources/css/jquery-weui.css">
+<style>
+.weui-media-box_hd{
+	margin-right: .8em;
+    width: 75px;
+    height: 75px;
+    line-height: 75px;
+    text-align: center;
+}
+.weui-media-box_thumb{
+    width: 100%;
+    height:100%;
+    vertical-align: top;
+}
+.weui-media-box_title{
+	font-weight: 400;
+    font-size: 16px;
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.weui-media-box_desc{
+	color: #999;
+    font-size: 14px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    float: left;
+    padding-top: 3px;
+    line-height: 20px;
+}
+.price_desc{
+    text-align: right;
+    display: block;
+    width: 100%;
+}
+.weui-media-box_bd{
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    min-width: 0;
+}
+.weui-content{
+	min-height: 100%;
+}
+.menu{
+	text-align: left;
+	height: 45px;
+	color: #999;
+	line-height: 45px;
+	padding-left: 15px;
+	margin-bottom:10px;
+	background: white;
+}
+</style>
+#define content()
+<div class="weui-tab">
+	<div class="weui-navbar " style="position:fixed;  left:0; right:0; height:44px; background:#fff;">
+	    <a href="#(webctx)/jifen/detail" class="weui-navbar__item proinfo-tab-tit font-14">好友助力</a>
+   	    <a href="#(webctx)/jifen/detail/mall" class="weui-navbar__item proinfo-tab-tit font-14">积分商城</a>
+   	    <a href="#(webctx)/jifen/mall/awardIndex" class="weui-navbar__item proinfo-tab-tit font-14 weui-bar__item--on">兑换记录</a>
+    </div>
+    <div class="weui-tab__bd">
+		<div class="menu">兑换记录</div>
+		<div class="weui-panel weui-panel_access" style="margin-top:0px">
+			<div id="list"></div>
+			<div class="weui-loadmore">
+			    <i class="weui-loading"></i>
+			    <span class="weui-loadmore_tips">正在加载</span>
+			</div>
+		</div>
+	</div>
+</div>
+#define script()
+<script src="/resources/js/jquery-weui.min.js"></script>
+<script id="tmp" type="text/html">
+<div class="weui-cells" style="margin-top:0px">
+	  <div class="weui-cell">
+	    <div class="weui-media-box_hd">
+	    	<img class="weui-media-box_thumb" src="/resources/images/{image}.png">
+	    </div>
+	    <div class="weui-media-box_bd">
+	     <h4 class="weui-media-box_title">{title}</h4>
+	     <div class="weui-media-box_desc price_desc">
+		   <p class="weui-media-box_desc">兑换码：{award_token}</p>
+	       <p class="weui-media-box_desc">兑换时间：{created}</p>
+	     </div>
+	    </div>
+	  </div>
+</div>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+$(function(){
+	submit(params);
+	var loading = false;  //状态标记
+	//滚动加载
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		loading = true;
+		page ++;
+		params.page = page;
+		submit(params);
+	});
+	function submit(arr){
+		$('.weui-loadmore').show();
+		$.ajax({
+			type: "post",
+			url: "#(webctx)/jifen/mall/awardList?openid=#(openid??)",
+			data: arr,
+			async: true,
+			success: function(data){
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				if(data.data.length<=0){
+					$(document.body).destroyInfinite();
+	                $('.weui-loadmore').remove();
+				}else{
+					for( var i = 0 ; i < data.data.length ; i ++ ){
+						var awardData = data.data[i];
+						if(awardData.award_type == 1 || awardData.award_type == 2){
+							awardData.title = awardData.card_name;
+							awardData.image = "card";
+						}else if(awardData.award_type == 3 || awardData.award_type == 4){
+							if(!awardData.active){
+								awardData.title = awardData.product_name+"(已领取)";
+							}else{
+								awardData.title = awardData.product_name+"(待领取)";
+							}
+							awardData.image = "prize_item_jifenbao";
+						}else if(awardData.award_type == 5){
+							awardData.title = awardData.act_name;
+							awardData.image = "redpack";
+						}
+						
+						var html = formatTemplate(awardData, $("#tmp").html());
+						$("#list").append(html);
+					}
+					loading = false;
+					$('.weui-loadmore').hide();
+					if(data.data.length<10){
+						$(document.body).destroyInfinite();
+		                $('.weui-loadmore').remove();
+					}
+				}
+			},
+			error: function(){
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+});
+</script>
+#end
+#end
+#end

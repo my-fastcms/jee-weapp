@@ -1,0 +1,50 @@
+<style>
+.img-rounded{
+	width: 100%;
+	height: 100%;
+}
+.img-box{
+	float: left;
+	width:160px;
+	height:160px;
+	margin: 10px 20px;
+}
+.img-border{
+	border: 3px solid red;
+	overflow: hidden;
+}
+</style>
+<div style="min-height: 300px;" id="img_panel">
+<div id="item_image_pager" class="jqpager" style="margin-bottom: 1px;"></div>
+<br/>
+<div id="image-list"></div>
+</div>
+<!-- html 模板文件 -->
+<script type="text/template" id="media_image_table_tr_tpl">
+{{each list as item i}}
+<div class="img-box" data-id="{{item.mediaId}}" data-url="{{item.displayUrl}}" data-src="{{item.url}}">
+<img src="{{item.displayUrl}}" class="img-rounded"/>
+</div>
+{{/each}}
+</script>
+<script>
+$("#img_panel").mask("加载中...");
+var table = new obz.TableView("item_image_pager", "#(webctx)/media/listImage", {}, function(resp){
+	$("#img_panel").unmask();
+	$("#image-list").empty();
+	if(resp && resp.list && resp.list.length>0){
+		$('#image-list').html(template('media_image_table_tr_tpl', resp));
+	}else{
+		$("#image-list").append("没有数据");
+	}
+	$(".img-rounded").click(function(){
+		$(".img-rounded").each(function(){
+			if($(this).parent().hasClass("check-img")){
+				$(this).parent().removeClass("img-border check-img");
+			}
+		});
+		$(this).parent().addClass("img-border check-img");
+	});
+});
+table.init();
+</script>

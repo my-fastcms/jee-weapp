@@ -1,0 +1,205 @@
+#include ("/_includes/_layout.html")
+#@layout("支付配置", "wxmall,点步科技", "Wxmall社区","wxmall")
+<style>
+h3{
+	background-color: #f5f5f5;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px;
+}
+</style> 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox-content">
+	    <div class="row">
+			<div class="col-sm-9">
+				#if(error !=null)
+				<div class="alert alert-danger">
+					<button type="button" class="close" data-dismiss="alert">×</button>
+					<strong>错误!</strong> #(error).
+				</div>
+				#end
+				<div>
+					<div class="alert alert-warning">1.如公众号用到商城或者拼团功能请到<a href="https://pay.weixin.qq.com/index.php/core/info" target="_blank">支付商户平台</a>/产品中心/开发配置/支付授权目录配置如下url，小程序无需配置<br>
+					#(session.weapp_in_session.app_id??).dbumama.com/pay/<br>
+					#(session.weapp_in_session.app_id??).dbumama.com/order/detail/<br>
+					<br>
+					2.红包功能如果不代发，请配置自己的支付商户账号，并且务必上传支付证书
+					</div>
+						<div>
+						<form  action="" method="post" class="form-horizontal" enctype="multipart/form-data" style="padding-top: 10px;">
+						#if(defaultAuthUser??)
+						<h3>系统默认支付配置（只用于红包代发）</h3>
+						<div class="form-group" id="defalutId">
+				            <label class="col-md-2 control-label">支付商户号<span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-5" id="error_pay_mch_id">
+				                <input type="text" readonly="readonly" class="form-control" value="#(defaultAuthUser.pay_mch_id??)"/>
+				                <label class="control-label" for="pay_mch_id"></label>
+				                <span class="alert-success">此账号为系统默认支付账号，点击下方新增按钮可自行配置支付账号</span>
+				            </div>
+				            <div id="defaultBtn">
+								<button type="button" class="btn btn-success btn-sm">使用中</button>
+					  		</div>
+				        </div>
+				        #else
+				        <h3>系统默认支付配置（只用于红包代发）</h3>
+						<div class="form-group" id="defalutId">
+				        </div>
+				        #end
+				        </form>
+					</div>
+					<div class="panel-default" style="padding-top: 30px;">
+					  	<div class="panel-footer" align="center">
+							<button type="button" onclick="add()" class="btn btn-success btn-sm">新增支付配置</button>
+					  	</div>
+				  	</div>
+			  	</div>
+			</div>
+	   <div class="help col-sm-3" style="float: right; padding:0px">
+             <h5>帮助说明</h5>
+             <ul class="list-unstyled project-files">
+                 <li><a href="javascript:void(0)">假如您的微信商户登陆账户是123456789@123456789，那么此处的支付商户号请填写123456789</a></li>
+                 <li><a href="javascript:void(0)">支付密钥是指微信商户后台32位长度的密钥，而不是商户登陆账户密码</a></li>
+                 <li><a href="javascript:void(0)">从微信商户后台下载的cert.zip包，解压后，此处上传apiclient_cert.p12文件</a></li>
+             </ul>
+             <br/>
+             <h5><font color="blue">温馨提示</font></h5>
+             <ul class="list-unstyled project-files">
+             	<li><a href="javascript:void(0)" style="color:blue;">(红包代发无需配置)使用红包插件，必须进行支付配置，且上传支付证书，否则不能发送红包</a></li>
+             </ul>
+     	</div>	
+	   </div>   
+   	</div>
+</div>
+#end
+<script type="text/tepmlate" id="auth_tpl">
+{{each data as item i}}
+<form name="form_{{item.id}}" id="form_{{item.id}}" action="{{item.weburl}}/pay/config/update" method="post" class="form-horizontal" enctype="multipart/form-data" style="padding-top: 10px;">
+<input type="hidden" name="id" value="{{item.id}}"/>
+<h3>用户支付配置</h3>
+<div class="form-group">
+    <label class="col-md-2 control-label">支付商户号<span style="color: red;"><em>*</em></span></label>
+    <div class="col-md-5" id="error_pay_mch_{{item.id}}">
+        <input type="text" id="pay_mch_id_{{item.id}}" name="pay_mch_id" class="form-control" value="{{item.payMchId}}"/>
+        <label class="control-label" for="pay_mch_id_{{item.id}}"></label>
+    </div>
+	<div class="col-md-5">
+		{{if item.isUse != null && item.isUse}}
+			<button type="button" class="btn btn-success btn-sm">使用中</button>
+		{{else}}
+			<button type='button' onclick='startUse({{item.id}})' class='btn btn-dafault btn-sm'>点击启用</button>
+		{{/if}}
+		&nbsp;&nbsp;<button type="button" onclick="saveAuth({{item.id}})" class="btn btn-success btn-sm">保存</button>
+	</div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">支付密钥<span style="color: red;"><em>*</em></span></label>
+    <div class="col-md-5" id="error_pay_secret_key_{{item.id}}">
+        <input type="password" id="pay_secret_key_{{item.id}}" name="pay_secret_key" class="form-control" value="{{item.paySecretKey}}"/>
+        <label class="control-label" for="pay_secret_key_{{item.id}}"></label>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label">支付证书</label>
+    <div class="col-md-5" id="error_pay_cert_file_{{item.id}}">
+        <input type="file" id="pay_cert_file_{{item.id}}" name="pay_cert_file"/>
+        <label class="control-label" for="pay_cert_file_{{item.id}}"></label>
+        {{if item.certFile != null}}
+        <span style="color: blue">已上传</span>
+		{{else}}
+		<span style="color: red">从微信商户后台下载的cert.zip包，解压后，此处上传apiclient_cert.p12文件</span>
+        {{/if}}
+    </div>
+</div>
+</form>
+{{/each}} 
+</script>
+<script type="text/javascript">
+$(function(){
+	getAuths();
+})
+
+function saveAuth(id){
+	var error = {};
+	var pay_mch_id = $("#pay_mch_id_"+id).val();
+	var pay_secret_key = $("#pay_secret_key_"+id).val();
+	var pay_cert_file = $("#pay_cert_file_"+id).val();
+	
+	if(pay_mch_id == "" || pay_mch_id == null) {
+		obz.error("账号不能为空");
+		return;
+	}
+	if(pay_secret_key == "" || pay_secret_key == null) {
+		obz.error("密钥不能为空");
+		return;
+	} 
+	
+	$("form[name='form_"+id+"']").submit();
+}
+
+function getAuths(){
+	$.ajax({
+		type: "post",
+		url: "#(webctx)/pay/config/getAuths",
+		data: {"csrf_token": $("#CSRF_TOKEN_HIDDEN").val()},
+		async: true,
+		success: function(data){
+			if(data.code != 200){
+				return;
+			}
+			console.log(data.data);
+			var flag = true;
+			for( var i = 0 ; i < data.data.length ; i ++ ){
+				var auth = data.data[i];
+				if(flag && auth.isUse != null && auth.isUse){
+					$("#defaultBtn").empty();
+					$("#defaultBtn").append("<button type='button' onclick='startUse()' class='btn btn-dafault btn-sm'>点击启用</button>");
+					flag = false;
+				}
+				auth.weburl = "#(webctx)";
+			}	
+			$("#defalutId").after(template('auth_tpl', data));
+		},
+		error: function(){
+			alert("网络异常,请联系管理员!");
+		}
+	});
+}
+
+function add(){
+	
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "新增支付配置",
+        message: $('<div></div>').load('#(webctx)/pay/config/addPaySetting'),
+        buttons: [ {
+            label: '关闭',
+            action: function(self){
+                self.close();
+            }},{
+            label: '保存',
+            cssClass : "btn-primary",
+            action: function(self){
+            	saveAuth(0);
+            }}]
+    });
+}
+
+function startUse(id){
+	$.ajax({
+		type: "post",
+		url: "#(webctx)/pay/config/startUse",
+		data: {id:id, "csrf_token": $("#CSRF_TOKEN_HIDDEN").val()},
+		async: true,
+		success: function(data){
+			if(data.code != 200){
+				return;
+			}
+			location.reload(); 
+		},
+		error: function(){
+			alert("网络异常,请联系管理员!");
+		}
+	});
+}
+</script>

@@ -1,0 +1,100 @@
+#include ("/_includes/scripts.html")
+#include ("/_includes/css.html")
+<link href="#(webctx)/resources/css/pay.css" rel="stylesheet"/>
+<style type="text/css">
+.account-information {
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+.transfer-entry {
+    padding-top: 30px;
+}
+.spanF{
+	font-family: 微软雅黑;
+	font-size:25px;
+	font-weight:bold;
+}
+</style>
+<div class="wrapper wrapper-content">
+	<div class="row ibox-content">
+	<div class="purchase-block purchase-box">
+			<input type="hidden" value="#(porder.id??)" id="porder_id"/>
+            <!--product-main-->
+            <div class="product-main">
+            	<div class="purchase-info">
+	            	<span class="purchase-item item2">购买：</span>
+	            	<span class="text-red text-b">#(appName??)</span> 
+            	</div>
+                <div class="purchase-info">
+                    <span class="purchase-item item1" style="padding-top:20px;">购买时长：</span>
+                    <ul class="selectMonth purchase-time select-month-off">
+                    	#for(p:purchases)
+                    		#if(p.isDefault == 1) 
+                    		<li data-month="#(p.expiresIn)" class="active" data-price="#(p.payFee)" data-id="#(p.id)">
+                             	<a href="javascript:void(0);"><span>#(p.name)</span><br>#(p.desc)</a>
+                         	</li>
+                    		#end
+                    		#if(p.isDefault == 0)
+                    		<li data-month="#(p.expiresIn)" data-price="#(p.payFee)" data-id="#(p.id)">
+                             	<a href="javascript:void(0);"><span>#(p.name)</span><br>#(p.desc)</a>
+                         	</li>
+                    		#end
+                    	#end
+                     </ul>
+                </div>
+                <div class="purchase-info">
+                    <span class="purchase-item item2">应付金额：</span>
+                    <span class="text-red text-b" id="spnTotalFee">0</span> &nbsp;元
+                    <!-- <span class="text-bold">元</span> <span id="savingText">（已节省<span class="text-red" id="savingPrice">125</span>元<span id="savingAdvise">，建议购买24个月可以节省1177元</span>）</span> -->
+                </div>
+                <div class="purchase-info">
+                    <span class="purchase-item">有效期至：</span>
+                    <span class="text-bold" id="ExpirTime">2017年06月10日</span>
+            	</div>
+            	<div align="center">
+            		<img width="200px" height="200px;" src="#(webctx)/resources/img/weixinkefu.png" />
+            	</div>
+            	<div align="center" style=" margin-top:10px;">
+            		<span class="spanF">请扫码联系客服购买该插件</span>
+            	</div>
+        </div>
+    </div>
+	</div>
+</div>
+<script type="text/javascript">
+	console.log("#(purchases)");
+	var memberEndDate = $("#purchase_end_date").html();
+	var begtime_ms = new Date();
+	
+	$("#spnTotalFee").text(parseInt($("ul.selectMonth").find("li.active").attr("data-price") * parseInt($("ul.selectMonth").find("li.active").attr("data-month") / 30)));
+	$("#ExpirTime").text(begtime_ms.addDay_dbu($("ul.selectMonth").find("li.active").attr("data-month")).format_dbu("yyyy年MM月dd日"));
+	$("ul.selectMonth li").click(function(){
+		$("ul.selectMonth li").each(function(){
+			$(this).removeClass("active");
+		});
+		$(this).addClass("active");
+		$("#spnTotalFee").text(parseInt($(this).attr("data-price")*parseInt($(this).attr("data-month") / 30)));
+	    $("#ExpirTime").text(begtime_ms.addDay_dbu($(this).attr("data-month")).format_dbu("yyyy年MM月dd日"));
+	    return false;
+	});
+	$("ul.selectMonth li").each(function(){
+		if($(this).attr("data-id") == '#(purch.id??)'){
+			$("ul.selectMonth li").each(function(){
+				$(this).removeClass("active");
+			});
+			$(this).addClass("active");
+			$("#spnTotalFee").text($(this).attr("data-price")*$(this).attr("data-month") / 30);
+		    $("#ExpirTime").text(begtime_ms.addDay_dbu($(this).attr("data-month")).format_dbu("yyyy年MM月dd日"));
+		}
+	});
+	
+	if($("ul.selectMonth li").length == 1){
+		$("ul.selectMonth li").each(function(){
+			$(this).addClass("active");
+			$("#spnTotalFee").text($(this).attr("data-price")*$(this).attr("data-month") / 30);
+		    $("#ExpirTime").text(begtime_ms.addDay_dbu($(this).attr("data-month")).format_dbu("yyyy年MM月dd日"));
+		})
+	}
+
+</script>

@@ -1,0 +1,108 @@
+<div id="itemToolsbar" class="panel-body">
+	<div style="float: left; margin-right: 20px;">
+	<select id="p_category" class="control-inline" >
+		<option value="">请选择商品分类</option>
+	    #for (productCategory: productCategory)
+	       <option value="#(productCategory.id)">#(productCategory.name)</option>
+	    #end  
+    </select> &nbsp;&nbsp;
+    <select id="product_type" class="control-inline" >
+		<option value="">请选择商品类型</option>
+	       <option value="1">正常售卖商品</option>
+	       <option value="2">任务宝商品</option>
+	       <option value="3">积分宝商品</option>
+	       <option value="4">助力免单商品</option>
+	       <option value="5">签到商品</option>
+    </select> &nbsp;&nbsp;
+    </div>
+	<div id="item_pager" class="jqpager" style="margin-bottom: 1px;"></div>		
+</div>
+<table class="table table-striped table-bordered" id="mainProductTable" border="0">
+	<thead>
+		<tr>
+			<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+			<th><span style="vertical-align: middle;">&nbsp;&nbsp;商品</span></th>
+			<th>库存</th>
+			<th>创建时间</th>
+		</tr>
+	</thead>
+	<tbody class="productLotGrid"></tbody>
+</table>
+<!-- html 模板文件 -->
+<script type="text/template" id="product_table_tr_tpl">
+{{each list as item i}}
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{{item.itemId}}" style="margin-right: 4px; vertical-align: middle;"/></td>
+			<td><img width="40" height="40" src="{{item.image}}"><a class="new-window" href="javascript:void(0)" title="{{item.title}}">&nbsp;{{item.title}}</a></img></td>
+            <td>{{item.quantity}}</td>
+            <td><span>{{item.createdTime}}</span></td>
+		</tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package">
+			<td class="center" colspan="4">
+				没有商品，现在发布吧，
+				<a href="#(webctx)/product/add" style="text-decoration: underline;">去发布</a>
+			</td>
+		</tr>
+</script>
+
+<script type="text/javascript">
+var params = {};
+params.active = $("#a_status_sel").val();
+var table = new obz.TableView("item_pager", obz.ctx + "/authshop/prodList?authShopId=#(authShopId??)", params, function(resp){
+	$(".productLotGrid").empty();
+	if(resp && resp.list && resp.list.length>0){
+		$('.productLotGrid').html(template('product_table_tr_tpl', resp));
+
+		//初始化checkbox点击事件
+		TBatch.tableId = "mainProductTable";
+		TBatch.checkCheckbox();
+		TBatch.initCheckboxClick();
+	}else{
+		$(".productLotGrid").append($("#table_noresult_tr_tpl").html());
+	}
+});
+table.init();
+
+function importProduct(){
+	TBatch.tableId = "mainProductTable";
+	var count = TBatch.getCheckedCount();
+	var authShopId = #(authShopId??);
+	var categoryId = $("#p_category").val();
+	var productType = $("#product_type").val();
+	
+	if(count <=0){
+		obz.warn("请选择要导入的商品");
+		return;
+	}
+	
+	if(!authShopId){
+		obz.error("请选择授权店铺");
+		return;
+	}
+	
+	if(categoryId == null || categoryId == ""){
+		obz.warn("请选择商品分类");
+		return;
+	}
+	
+	if(productType == null || productType == ""){
+		obz.warn("请选择商品类型");
+		return;
+	}
+	
+	$("#mainProductTable").mask("正在导入商品，大概需要几分钟，请耐心等待...")
+	obz.ajaxJson("#(webctx)/authshop/prodImport", {productType:productType,authShopId : authShopId, categoryId : categoryId, ids : TBatch.getChecked()}, function(resp){
+		$("#mainProductTable").unmask();
+		if(resp.code == 200){
+			obz.msg('导入商品成功，即将跳转到商品列表...', function(){
+				setCookie("sec_m_id", 9);
+				location.href = "#(webctx)/product/index";
+			});
+		}
+	});
+	
+}
+</script>

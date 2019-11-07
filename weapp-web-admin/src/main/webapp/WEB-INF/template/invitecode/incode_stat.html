@@ -1,0 +1,82 @@
+#include ("/_includes/_layout.html")
+#@layout("我邀请的人", "wxmall,点步科技", "Wxmall社区","wxmall") #define content()
+<div class="wrapper wrapper-content">
+	<div class=" content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	       	   <a href="#(webctx)/invitecode/rule" class="J_menuTab">邀请码生成</a>
+	           <a href="#(webctx)/invitecode" class="J_menuTab active">我邀请的人</a>
+	           <a href="#(webctx)/invitecode/mission" class="J_menuTab">我的佣金</a>
+	           <a href="#(webctx)/invitecode/cashrcd" class="J_menuTab">提现明细</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="content  ibox-content">
+		<table class="table table-striped table-bordered bootstrap-datatable datatable">
+			<tr>
+				<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+				<input type="text" name="q_pond_txt" id="q_pond_txt" class="control-inline" placeholder="输入手机号"/>
+				<button id="myqueryBtn" class="btn btn-success btn-sm">查询</button>
+				</td>
+			</tr>
+		</table>
+		<div class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+				<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;手机号</span></th>
+				<th>邀请码</th>
+				<th>注册时间</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	</div>
+</div>
+<script type="text/html" id="item_table_tr_tpl">
+{{each list as item i}}
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{{item.id}}" style="margin-right: 4px; vertical-align: middle;"/></td>
+			<td>{{item.phone}}</td>
+			<td>{{item.shareInviteCode}}</td>
+			<td>{{item.created}}</td>
+		</tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="5" class="center">没有结果集</td></tr>
+</script>
+#end
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = {};
+	var table = new obz.TableView("pager", obz.ctx + "/invitecode/statlist", params, function(resp){
+		$(".itemsLotGrid").empty();
+		if(resp && resp.list && resp.list.length>0){
+			$('.itemsLotGrid').html(template('item_table_tr_tpl', resp));
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+	table.init();
+	
+	var TableOpt = {
+		init : function(){
+			var optArray = new Array();
+			return optArray;
+		}
+	}
+	
+	$("#myqueryBtn").click(function(){
+		params.phone = $("#q_pond_txt").val();
+		table.init();
+	});
+});
+</script>

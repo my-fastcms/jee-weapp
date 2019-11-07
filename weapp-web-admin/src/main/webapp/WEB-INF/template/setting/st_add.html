@@ -1,0 +1,32 @@
+<div class="wrapper wrapper-content">
+	<form name="form_0" id="form_0" action="#(webctx)/setting/update" method="post"class="form-horizontal" enctype="multipart/form-data" style="padding-top: 10px;">
+		<input type="hidden" id="sel_app_id" name="id" value="" />
+		<input name="csrf_token" type="hidden" value="#(CSRF_TOKEN)"/>
+		<div class="form-group">
+			<label class="col-md-2 control-label">支付商户号<span
+				style="color: red;"><em>*</em></span></label>
+			<div class="col-md-5" id="error_pay_mch_id">
+				<input type="text" id="pay_mch_id_0" name="pay_mch_id"
+					class="form-control" value="" /> <label class="control-label"
+					for="pay_mch_id"></label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-2 control-label">支付密钥<span
+				style="color: red;"><em>*</em></span></label>
+			<div class="col-md-5" id="error_pay_secret_key">
+				<input type="password" id="pay_secret_key_0" name="pay_secret_key"
+					class="form-control" value="" /> <label class="control-label"
+					for="pay_secret_key"></label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-md-2 control-label">支付证书</label>
+			<div class="col-md-5" id="error_pay_cert_file">
+				<input type="file" id="pay_cert_file_0" name="pay_cert_file" /> <label
+					class="control-label" for="pay_cert_file"></label> <span
+					style="color: red">从微信商户后台下载的cert.zip包，解压后，此处上传apiclient_cert.p12文件</span>
+			</div>
+		</div>
+	</form>
+</div>

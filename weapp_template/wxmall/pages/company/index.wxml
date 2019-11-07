@@ -1,0 +1,22 @@
+<view class="weui-content">
+  <view class="section tc">
+    <video src="{{company.comp_video}}" class="companyvedio"></video>
+  </view>
+
+  <view class="weui_tab">
+
+    <view class="weui-tab__bd proinfo-tab-con">
+      <import src="../../wxParse/wxParse.wxml"/> 
+      <view class="wxParse">
+          <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-tabbar">
+    <view class="red-color" style="width:100%" bindtap="navigateToIndex">
+      <text class="promotion-foot-menu-label">去逛逛</text>
+    </view>
+  </view>
+
+</view>

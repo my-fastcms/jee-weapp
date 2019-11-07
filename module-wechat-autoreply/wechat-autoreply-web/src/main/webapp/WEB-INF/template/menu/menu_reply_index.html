@@ -1,0 +1,564 @@
+#include ("/_includes/_layout_wechat.html")
+#define css()
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<style>
+.radio-inline {
+    vertical-align: middle
+}
+</style>
+#end
+#@layout("菜单回复", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content row ibox-content col-sm-10">
+	<div class="content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content">
+		           <a href="#(webctx)/menu/reply" class="J_menuTab active">菜单回复</a>
+		           <a href="#(webctx)/keywords/reply" class="J_menuTab">关键字回复</a>
+		           <a href="#(webctx)/follow/reply" class="J_menuTab">关注后回复</a>
+		           <!-- <a href="#(webctx)/order/reply" class="J_menuTab">订单回复</a>
+		           <a href="#(webctx)/product/reply" class="J_menuTab">商品回复</a>
+		           <a href="#(webctx)/points/reply" class="J_menuTab">积分回复</a> -->
+		       </div>
+		   	</nav>
+		</div>
+  <div class="menu_setting_area js_editBox"> 
+   <div class="menu_preview_area"> 
+    <div class="mobile_menu_preview"> 
+     <div class="mobile_hd tc">
+     	#if(session.weapp_in_session??) 
+     		#(session.weapp_in_session.nick_name) 
+     	#end</div> 
+     <div class="mobile_bd">
+      <ul class="pre_menu_list grid_line" id="menuList"></ul> 
+     </div> 
+    </div>
+    <div class="alert alert-danger" style="padding-top: 10px;display: none;" id="menu_click_alert"></div>
+   </div> 
+   
+    <!-- 菜单编辑区域 -->
+    <div class="menu_form_area"> 
+    <div id="js_rightBox" class="portable_editor to_left" style="display: block;">
+		#if(session.weapp_in_session??) 
+	    <div id="js_none" class="menu_initial_tips tips_global">
+	     	<h2>请点击左侧手机底部菜单进行设置</h2>
+	    </div>
+	    #end
+	    
+     <div class="editor_inner" style="display: none;"> 
+     	<div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       		<h4>回复规则设置</h4> 
+      	</div> 
+      	<div class="menu_form_bd"> 
+      	<div class="menu_content_container"> 
+        	<div class="menu_content" style="overflow:hidden;">
+                <label class="radio-inline" for="rdo4">
+					<input id="rdo4" name="reply_rule_config" value="4" type="radio" checked="checked" style="vertical-align: middle;margin-top:2px; margin-bottom:1px" onchange="selectRule(this)">
+					<span class="label-text" style="vertical-align: middle">关闭回复</span>
+				</label>
+                <label class="radio-inline" for="rdo1">
+					<input id="rdo1" name="reply_rule_config" value="1" type="radio" style="vertical-align: middle;margin-top:2px; margin-bottom:1px" onchange="selectRule(this)">
+					<span class="label-text">无限制</span>
+					<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('用户每点击一次菜单都会自动回复，会对用户有一定的打扰。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				</label>
+				<label class="radio-inline" for="rdo2">
+					<input id="rdo2" name="reply_rule_config" value="2" type="radio" style="vertical-align: middle;margin-top:2px; margin-bottom:1px" onchange="selectRule(this)">
+					<span class="label-text" style="vertical-align: middle">只回复一次</span>
+					<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('用户第一次点击菜单会进行回复，以后重复点击菜单，不进行回复。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				</label>
+				<label class="radio-inline" for="rdo3">
+					<input id="rdo3" name="reply_rule_config" value="3" type="radio" style="vertical-align: middle;margin-top:2px; margin-bottom:1px" onchange="selectRule(this)">
+					<span class="label-text" style="vertical-align: middle">按时间间隔回复</span>
+					<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('用户点击菜单后，比如在10分钟内重复点击菜单不进行自动回复。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				</label>
+				<span id="reply_rule_span" style="display: none;"><input id="reply_expires_in" name="reply_expires_in" type="text" style="vertical-align: middle;margin-top:2px; margin-bottom:1px;width: 60px;" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">&nbsp;分钟</span>
+				<input type="hidden" id="rule_config_id"/>
+        	</div>
+       	</div> 
+      </div> 
+     
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info1">回复内容设置</h4> 
+      </div> 
+      <div class="menu_form_bd" id="view"> 
+      	<div id="menu-config-list" class="menu_content_container"> 
+        	<div class="menu_content_container" style="padding-bottom: 10px;"> 
+		        <div class="menu_content url jsMain"> 
+		         <a href="javascript:void(0)" class="type_text" onclick="textClick(this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp; 
+				 <a href="javascript:void(0)" class="type_zan_item" onclick="openProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;
+				 <a href="javascript:void(0)" class="type_wechat_media" onclick="openWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+		         <a href="javascript:void(0)" onclick="delRow(this)" style="text-decoration: underline;color: red;" class="del_config">删除行</a>
+		        </div>
+		        <div class="menu_content select_content" style="overflow:hidden;"></div>
+	       	</div>
+       	</div>
+       	<div class="msg_sender_msg mini_tips warn"> 
+	       	<a id="add_reply_config" href="javascript:void(0)" class="btn btn-primary btn-xs" title="每新增一行，增加一条回复消息">新增一条回复</a>
+	    </div>
+      </div> 
+     </div> 
+    </div>
+   </div> 
+  </div>
+  	<div class="panel-footer" align="center">
+   	 	<button id="saveMenu" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+	</div>
+	
+	<div class="help">
+       	<div>
+             <h5>功能描述</h5>
+             <ul class="list-unstyled project-files">
+                 <li><a href="javascript:void(0)">用户点击一次菜单，可以自动回复多条消息</a></li>
+                 <li><a href="javascript:void(0)">一条回复消息，可以包含最多8个商品或8个微信素材，可混搭</a></li>
+                 <li><a href="javascript:void(0)">可以设置每次点击菜单进行回复，也可以设置只回复一次，或按时间间隔进行回复</a></li>
+             </ul>
+             <br/>
+             <h5><font color="blue">温馨提示</font></h5>
+             <ul class="list-unstyled project-files">
+             	 <li><a href="javascript:void(0)">每个菜单独立配置</a></li>
+                 <li><a href="javascript:void(0)">每点击一次菜单会自动回复一条或多条信息，可能对用户造成打扰，请灵活配置</a></li>
+                 <li><a href="javascript:void(0)">配置的自动回复会在店铺绑定的公众号消息上面叠加回复</a></li>
+                 <li><a href="javascript:void(0)">菜单自动回复功能是基于有赞公众号插件开发，跟有赞消息独立分开，即不会影响有赞里面配置好的消息回复功能</a></li>
+             </ul>
+         </div>
+     </div>
+</div>
+<!-- html 模板文件开始 -->
+<script type="text/template" id="menu_item_tpl">
+	<li class="jsMenu pre_menu_item grid_item jslevel1" type="{{type}}" menu-url="{{url}}" key="{{key}}" id="menu_{{index}}"> 
+       	<a href="javascript:void(0);" class="pre_menu_link"><span class="js_l1Title">{{name}}</span></a>
+		<div class="sub_pre_menu_box js_l2TitleBox"><ul class="sub_pre_menu_list"></ul></div>
+    </li>
+</script>
+<script type="text/template" id="sub_menu_item_tpl">
+	<li id="subMenu_menu_{{parentId}}_{{index}}" type="{{type}}" menu-url="{{url}}" key="{{key}}" class="jslevel2">
+         <a href="javascript:void(0);" class="jsSubView"><span class="sub_pre_menu_inner js_sub_pre_menu_inner"><span class="js_l2Title">{{name}}</span></span></a>
+    </li>
+</script>
+<script type="text/template" id="text_tpl">
+<textarea class="form-control" aria-required="true" style="resize: vertical;"></textarea>
+<a onclick="WxmMsg.insertNick(this)" href="javascript:void(0)">插入微信昵称</a>
+</script>
+<script type="text/template" id="product_sel_tpl">
+<div class="newsmsg_item" data-type="{{msgOrgType}}" data-url="{{msgUrl}}" data-title="{{msgTitle}}" data-image="{{msgPic}}" style="float:left;padding-left:3px;"><a href="{{msgUrl}}" target="_blank" title="{{msgTitle}}"><img style="width:60px;height:60px;" src="{{msgPic}}" alt="{{msgTitle}}"/><br><font color="red">(有赞商品)</font></a><br><a href="javascript:void(0)" onclick="delNewsRow(this)"><font color="red">移除</font></a></div>
+</script>
+<script type="text/template" id="wechat_media_sel_tpl">
+<div class="newsmsg_item" data-type="{{msgOrgType}}" data-url="{{msgUrl}}" data-title="{{msgTitle}}" data-image="{{msgPic}}" style="padding-left:3px;"><a href="{{msgUrl}}" target="_blank" title="{{msgTitle}}"><font color="red">(微信素材)</font>{{msgTitle}}</a>&nbsp;<a href="javascript:void(0)" onclick="delNewsRow(this)"><font color="red">移除</font></a></div>
+</script>
+<script type="text/template" id="reply_type_tpl">
+<div class="menu_content_container" style="padding-bottom: 10px;"> 
+   <div class="menu_content url jsMain"> 
+     <a href="javascript:void(0)" class="type_text" onclick="textClick(this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp; 
+	<a href="javascript:void(0)" class="type_zan_item" onclick="openProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="type_wechat_media" onclick="openWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="del_config" onclick="delRow(this)" style="text-decoration: underline;color: red;">删除行</a>
+   </div>
+	<div id="sel_div_{{id}}" data-type="{{msgType}}" class="menu_content select_content" style="overflow:hidden;"></div>
+</div>
+</script>
+<!-- html 模板文件结束 -->
+#define script()
+<script type="text/javascript">
+function selectRule(obj){
+	if($(obj).val() == 3){
+		$("#reply_rule_span").show();
+	}else{
+		$("#reply_rule_span").hide();
+	}
+}
+
+//删除已选择的素材
+function delNewsRow(obj){
+	$(obj).parent().remove();
+}
+
+//选择有赞商品对话框
+function parseToNewsEntity(obj, tpl, type){
+	$(obj).parent().parent().find("div.select_content").find("textarea").remove();
+	var count = $(obj).parent().parent().find("div.select_content").find("div.newsmsg_item").length;
+	log("count:" + count);
+	var newCount = TBatch.getCheckedCount();
+	if( newCount + count >8){
+		obz.info("微信规定一条图文消息不能超过8个素材");
+		return false;
+	}
+	
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "5");
+	//$(obj).parent().parent().find("div.select_content").find("span").empty();
+	var idsArr = TBatch.getChecked().split("-");
+	for(var i=0;i<idsArr.length;i++){
+		var id = idsArr[i];
+		if(id != null && id !=""){
+			var tr = $("#tr_id_"+id);
+			var entity = new Object();
+			entity.msgTitle = tr.attr("data-title");
+			entity.msgUrl = tr.attr("data-url");
+			entity.id = tr.attr("data-id");
+			entity.msgPic = tr.attr("data-image");
+			entity.msgOrgType = type;//数据来源，是商品，还是微信素材，还是其他
+			$(obj).parent().parent().find("div.select_content").append(template(tpl, entity));
+		}
+	}
+	return true;
+}
+
+//选择文本事件
+function textClick(obj){
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "0");
+	$(obj).parent().parent().find("div.select_content").empty().append($("#text_tpl").html());
+}
+
+function openProductDialog(obj){
+	var url = "#(webctx)/product/youzan";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择商品",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = TBatch.getCheckedCount();
+            		if(count <=0) {
+            			obz.warn("请选择商品")
+            			return;
+            		}
+            		if(parseToNewsEntity(obj, "product_sel_tpl", 1))
+            			self.close();
+            	}
+            }]
+    });
+	return false;
+}
+
+function openWechatMediaDialog(obj){
+	var url = "#(webctx)/media/wechat";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择微信图文素材",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = TBatch.getCheckedCount();
+            		if(count <=0) {
+            			obz.warn("请选择微信图文素材")
+            			return;
+            		}
+            		if(parseToNewsEntity(obj, "wechat_media_sel_tpl", 2))
+            			self.close();
+            	}
+            }]
+    });
+	return false;
+}
+
+function delRow(obj){
+	$(obj).parent().parent().remove();
+}
+
+function showMsg(msg){
+	$("#menu_click_alert").html(msg);
+	$("#menu_click_alert").show();
+	setTimeout(function(){
+		hideMsg();
+	}, 5000);
+}
+function hideMsg(){
+	$("#menu_click_alert").empty();
+	$("#menu_click_alert").hide();	
+}
+
+function setRuleConfig(ruleCfg){
+	if(ruleCfg){
+		$(":radio[name='reply_rule_config'][value='" + ruleCfg.ruleType + "']").prop("checked", "checked");
+		$("#rule_config_id").val(ruleCfg.id);
+		if(ruleCfg.ruleType == 3 && ruleCfg.expiresIn){
+			$("#reply_rule_span").show();
+			$("#reply_expires_in").val(ruleCfg.expiresIn);
+		}else{
+			$("#reply_rule_span").hide();
+			$("#reply_expires_in").val("");
+		}
+	}else{
+		$(":radio[name='reply_rule_config'][value='1']").prop("checked", "checked");
+		$("#reply_rule_span").hide();
+		$("#rule_config_id").val("");$("#reply_expires_in").val("");
+	}
+}
+
+$(document).ready(function(){
+	
+	$("#add_reply_config").click(function(){
+		$("#menu-config-list").append($("#reply_type_tpl").html());
+	});
+	
+	//清除菜单数据
+	function clearMenus(){
+		$("#menuList li.jsMenu").remove();
+	}
+	
+	//加载菜单数据
+	function getMenus(){
+		$(".menu_preview_area").mask("正在读取菜单数据...");
+		obz.ajaxJson(obz.ctx+"/wechat/menu/list", {}, function(resp){
+			$(".menu_preview_area").unmask();
+			
+			if(resp.state == "ok"){
+				clearMenus();
+				var data = resp.menus;
+				if(!data){
+					obz.info("没有获取到公众号菜单数据，请检查公众号配置");
+					return;
+				}
+				
+				var menus = data.attrs.menu.button;
+				if(menus.length<=0){
+					obz.info("没有获取到公众号菜单数据，请检查公众号配置");
+					return;
+				}
+				
+				var classIndex = menus.length;
+				for(var i=0;i<menus.length;i++){
+					var menu = menus[i];
+					menu.index = i + "";
+					//直接显示菜单
+					var itemHtml = template("menu_item_tpl", menu);
+					$("#menuList").append(itemHtml);
+					$("#menu_"+i).addClass("size1of"+classIndex+"");
+					if(menu.sub_button.length>0){
+						//有子菜单
+						for(var k=0;k<menu.sub_button.length;k++){
+							var submenu = menu.sub_button [k];
+							submenu.index = k + "";
+							submenu.parentId = "menu_"+i;
+							var subItemHtml = template("sub_menu_item_tpl", submenu);
+							$("#menu_"+i).find("ul").append(subItemHtml);
+						}
+					}
+				}
+				unBindLiClick();
+				bindLiClick();
+			}
+		});
+	}
+	
+	//绑定菜单点击事件
+	function bindLiClick() {
+		//菜单点击
+		$("#menuList li").click(function(){
+			if($(this).attr("type") == "miniprogram"){
+				//小程序菜单不支持消息回复
+				showMsg("小程序菜单不支持消息回复");
+				return false;
+			}
+			if($(this).hasClass("jslevel1") && $(this).find("ul li").length > 0){
+				//判断一级菜单下面是否已经存在子菜单
+				//存在子菜单的情况，显示子菜单
+				//$(this).find("ul li").toggle();
+				showMsg("一级菜单下面有子菜单的情况下，<br>不支持消息回复设置");
+			}else {
+				clearLicss();
+				$(this).addClass("current selected");
+				//一级菜单没有子菜单的情况当二级菜单处理，点击的是二级菜单
+				$(".global_info").html($(this).find("span.js_l2Title").text() || $(this).find("span.js_l1Title").text());
+				$(".editor_inner,.menu_content_container").show();
+				//加载菜单配置数据
+				
+				var type = $(this).attr("type") || ""; 
+				var menuKey = "";
+				if("view" == type){
+					menuKey = $(this).attr("menu-url");
+				}
+				if("click" == type){
+					menuKey = $(this).attr("key");
+				}
+				log("=====menuKey:" + menuKey);
+				
+				$(".menu_form_area").mask("正在加载菜单配置...");
+				obz.ajaxJson("#(webctx)/menu/reply/list", {menuKey: menuKey}, function(resp){
+					$(".menu_form_area").unmask();
+					if(resp.state == "ok"){
+						var ruleCfg = resp.replyRule;
+						setRuleConfig(ruleCfg);
+						var data = resp.data;
+						if(!data) return;
+						
+						$("#menu-config-list").find("div.menu_content_container").remove();
+						log("==========length:" + data.length);
+						for(var i=0;i<data.length;i++){
+							log("=======================i:" + i);
+							var menuRpCfgDto = data[i];
+							var menuRpCfg = menuRpCfgDto.menuReplyConfig;
+							$("#menu-config-list").append(template("reply_type_tpl", menuRpCfg));
+							if(menuRpCfg.msgType==0){
+								//纯文本消息
+								$("#sel_div_"+menuRpCfg.id).append($("#text_tpl").html());
+								$("#sel_div_"+menuRpCfg.id).find("textarea").val(menuRpCfg.msgTextContent);
+							}else if(menuRpCfg.msgType==5){
+								//图文消息
+								var replyNews = menuRpCfgDto.replyNews;
+								for(var k=0;k<replyNews.length;k++){
+									var replyNew = replyNews[k];
+									if(replyNew.msgOrgType == 1){
+										//商品
+										$("#sel_div_"+menuRpCfg.id).append(template("product_sel_tpl", replyNew));
+									}else if(replyNew.msgOrgType == 2){
+										//微信素材
+										$("#sel_div_"+menuRpCfg.id).append(template("wechat_media_sel_tpl", replyNew));
+									}
+								}
+							}
+						}
+					}
+				})
+			}
+			return false;
+		});
+	}
+	
+	function unBindLiClick (){
+		$("#menuList li").unbind("click");
+	}
+	
+	//清除li元素 css
+	function clearLicss(){
+		$("#js_none").hide();
+		hideMsg();
+		$("#menuList li").each(function(){
+			if($(this).hasClass("current selected")){
+				$(this).removeClass("current selected");				
+			}
+		});
+	}
+	
+	getMenus();
+	
+	$("#saveMenu").click(function(){
+		var hasError = true;
+		//获取当前选中的菜单
+		var currMenu = $("#menuList li.current");
+		var type = currMenu.attr("type") || ""; 
+		if(type == ""){
+			obz.warn("请选择菜单");
+			return;
+		}
+		var menuKey = "";
+		if("view" == type){
+			menuKey = currMenu.attr("menu-url");
+		}
+		if("click" == type){
+			menuKey = currMenu.attr("key");
+		}
+		if(menuKey == ""){
+			obz.warn("请选择菜单");
+			return;
+		}
+		log("=====menuKey:" + menuKey);
+		//获取设置的回复内容数据
+		var menuConfigArray = new Array();		//消息行配置
+		
+		if(console) console.log($("div.select_content").length);
+		$("div.select_content").each(function(){
+			log($(this).attr("data-type"));
+			var menuConfigObj = new Object();
+			menuConfigObj.menu_key = menuKey;
+			var msgType = $(this).attr("data-type");
+			if(!msgType) return true;
+			
+			if(msgType == "0"){//纯文本消息
+				var textValue = $(this).find("textarea").val();
+				log("textValue:" + textValue);
+				if(textValue == "" || textValue == null){
+					obz.warn("纯文本消息不能为空");
+					hasError = false;
+					return false;
+				}
+				menuConfigObj.msg_type = msgType;
+				menuConfigObj.msg_text_content = textValue;
+			}else if(msgType == "5"){//图文消息
+				menuConfigObj.msg_type = msgType;
+				var menuReplyNewsArr = new Array();		//图文消息行配置，一天消息可以包含最多8条图文消息
+				//获取菜单设置的图文消息数据
+				$(this).find("div.newsmsg_item").each(function(){
+					log("===title:" + $(this).attr("data-title"));
+					log("===url:" + $(this).attr("data-url"));
+					log("===image:" + $(this).attr("data-image"));
+					var menuReplyNewsObj = new Object();
+					menuReplyNewsObj.msg_title = $(this).attr("data-title");
+					menuReplyNewsObj.msg_desc = $(this).attr("data-title");
+					menuReplyNewsObj.msg_pic = $(this).attr("data-image");
+					menuReplyNewsObj.msg_url = $(this).attr("data-url");
+					menuReplyNewsObj.msg_org_type = $(this).attr("data-type");
+					menuReplyNewsArr.push(menuReplyNewsObj);
+				});
+		
+				if(menuReplyNewsArr.length<=0){
+					obz.error("图文消息最少要有一条记录");
+					hasError = false;
+					return false;
+				}
+				menuConfigObj.replyNews = menuReplyNewsArr;
+			}
+			
+			menuConfigArray.push(menuConfigObj);
+		});
+		
+		if(menuConfigArray.length <=0) {
+			obz.warn("请设置菜单回复内容");
+			hasError = false;
+			return false;
+		}
+		
+		if(!hasError){
+			return;
+		}
+		
+		//获取回复规则
+
+		var ruleConfigType = $(':radio[name="reply_rule_config"]:checked').val();
+		log("rule:" + ruleConfigType);
+		if(ruleConfigType == 3){
+			var expiresIn = $("#reply_expires_in").val();
+			if(expiresIn == null || expiresIn == ""){
+				obz.warn("回复规则配置中，按时间间隔回复，请填写时间间隔值");
+				return;
+			}
+		}
+		
+		//rule config
+		var ruleConfigObj = new Object();
+		ruleConfigObj.cfgType = ruleConfigType;
+		ruleConfigObj.id = $("#rule_config_id").val();
+		ruleConfigObj.expiresIn = $("#reply_expires_in").val();
+
+		
+		//提交到后台
+		var params = {};
+		params.menuConfig = JSON.stringify(menuConfigArray);
+		params.menuKey = menuKey;
+		params.replyRuleConfig = JSON.stringify(ruleConfigObj);
+		
+		$(".menu_form_area").mask("正在保存菜单配置...");
+		obz.ajaxJson("#(webctx)/menu/reply/save", params, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				obz.msg("保存成功");
+			}
+		});
+	});
+});
+</script>
+#end
+#end

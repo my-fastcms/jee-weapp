@@ -1,0 +1,45 @@
+#include ("/_includes/_layout.html")
+#@layout("我的佣金", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" >
+	       	   <a href="#(webctx)/invitecode/" class="J_menuTab">邀请码生成</a>
+	           <a href="#(webctx)/invitecode/stat" class="J_menuTab">我邀请的人</a>
+	           <a href="#(webctx)/invitecode/mission" class="J_menuTab active">我的佣金</a>
+	           <a href="#(webctx)/invitecode/cashrcd" class="J_menuTab">提现明细</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-content">
+		<div class="alert alert-success">
+			<i class="fa fa-info-circle"></i><strong>提示:</strong>
+			<p>通过邀请码邀请用户注册并购买平台小程序模板后，可以获得一定的佣金</p>
+			<p>每天只能提现一次，提现审核3个工作日左右到账，如果没到账，请联系客服</p>
+		</div>
+	
+		<div class="form-horizontal">
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">我的累计佣金：</label>
+	            <div class="col-md-2">
+                     <input type="text" class="form-control" #if(totalMission !=null) value="#(totalMission)" #else value="0" #end readonly="readonly"/>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">我的可提现佣金：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('结算后可提现佣金。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div class="col-md-2">
+                        <input type="text" class="form-control" value="#(mission)" readonly="readonly"/>
+	            </div>
+	        </div>
+	        
+	        <div class="form-group">
+	            <div class="col-md-5">
+	            	<div class="panel-footer" align="left">
+                      <a type="button" href="#(webctx)/invitecode/cash" class="btn btn-success">申请提现</a>
+                    </div>  
+	        </div>
+		</div>
+		
+	</div>
+</div>
+#end

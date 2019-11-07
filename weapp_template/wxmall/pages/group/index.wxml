@@ -1,0 +1,47 @@
+<!--pages/group/index.wxml-->
+<import src="/pages/template/grouplist.wxml"/>
+
+<scroll-view scroll-x="true" class="scroll-view-x">
+  <view class="scroll-view-item">
+  	<view class="{{currentTab==0 ? 'on' : ''}}" bindtap="swichNav" data-current="0">全部</view>
+  </view>
+  <view class="scroll-view-item">
+  	<view class="{{currentTab==1 ? 'on' : ''}}" bindtap="swichNav" data-current="1">待成团</view>
+  </view>
+  <view class="scroll-view-item">
+  	<view class="{{currentTab==2 ? 'on' : ''}}" bindtap="swichNav" data-current="2">已成团</view>
+  </view>
+  <view class="scroll-view-item">
+  	<view class="{{currentTab==3 ? 'on' : ''}}" bindtap="swichNav" data-current="3">拼团失败</view>
+  </view>
+</scroll-view>
+
+<swiper current="{{currentTab}}" class="swiper-box" duration="300" bindchange="bindChange" style="height: {{windowHeight-36}}px;">
+
+	<swiper-item>
+		<scroll-view scroll-y="true" class="scroll-view-y" scroll-with-animation="true" scroll-top="{{scrollTop}}" lower-threshold="50" bindscrolltolower="scrolltolower" style="height: {{windowHeight-36}}px;">
+			<template is="groupList" data="{{groupList:groupList,loading:loading}}"/>
+		</scroll-view>
+	</swiper-item>
+
+	<swiper-item>
+		<scroll-view scroll-y="true" class="scroll-view-y" scroll-with-animation="true" scroll-top="{{scrollTop}}" lower-threshold="50" bindscrolltolower="scrolltolower" style="height: {{windowHeight-36}}px;">
+			<template is="groupList" data="{{groupList:groupList,loading:loading}}"/>
+		</scroll-view>
+	</swiper-item>
+
+	<swiper-item>
+		<scroll-view scroll-y="true" class="scroll-view-y" scroll-with-animation="true" scroll-top="{{scrollTop}}" lower-threshold="50" bindscrolltolower="scrolltolower" style="height: {{windowHeight-36}}px;">
+			<template is="groupList" data="{{groupList:groupList,loading:loading}}"/>
+		</scroll-view>
+	</swiper-item>
+
+	<swiper-item>
+		<scroll-view scroll-y="true" class="scroll-view-y" scroll-with-animation="true" scroll-top="{{scrollTop}}" lower-threshold="50" bindscrolltolower="scrolltolower" style="height: {{windowHeight-36}}px;">
+			<template is="groupList" data="{{groupList:groupList,loading:loading}}"/>
+		</scroll-view>
+	</swiper-item>
+	
+</swiper>
+
+

@@ -1,0 +1,111 @@
+#include ("/_includes/_layout.html")
+#@layout("企业付款记录", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content ibox-content">
+		<div class="panel-body">
+
+			<div style="float: left; margin-right: 20px;">
+				<div style="float: left; margin-right: 20px;" >
+					<table>
+						<tr>
+							<td><input type="text" name="payee_name" id="payee_name" placeholder="收款人姓名" class="control-inline borderbox" /></td>
+							<td>
+								<select id="status" style="margin:0 10px" class="control-inline">
+									<option value="" selected="selected">全部</option>
+									<option value="1">付款成功</option>
+									<option value="0">付款失败</option>
+								</select>
+							</td>
+							<td> <input type="text" id="start_date" name="start_date" readonly style="width:120px;  padding-left:15px;height: 30px"
+											onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd'})"
+											class="Wdate check-value" value=""  />
+							</td>
+							<td>
+							    &nbsp; 至 &nbsp;<input type="text" id="end_date" name="end_date" readonly style="width:120px;  padding-left:15px;height: 30px"
+											onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd'})"
+											class="Wdate check-value" value="" />	
+							</td>
+							<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button id="myqueryBtn" type="button" class="btn btn-success btn-sm">查询</button></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+			  	<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+			  	<th>收款人微信信息</th>
+				<th>收款人姓名</th>
+				<th>付款金额</th>
+				<th>付款备注</th>
+				<th>付款时间</th>
+				<th>状态</th>
+				<th>失败原因</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	</div>   
+</div>
+<script type="text/html" id="item_table_tr_tpl">
+{{each list as item i}}
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{{item.id}}" style="margin-right: 4px; vertical-align: middle;"/></td>
+			<td>{{if item.headimg != null}}<img src="{{item.headimg}}" width="30" height="30">&nbsp;&nbsp;{{item.nick}}</img>{{/if}}<br>{{item.openid}}</td>
+			<td><span>{{item.payeeName}}</span></td>
+			<td><span>{{item.payment_money}}</span></td>
+			<td><span>{{item.explain}}</span></td>
+			<td><span>{{item.created}}</span></td>
+			<td>{{item.status}}</td>
+			<td>{{item.failReason}}</td>
+		</tr>
+{{/each}}  
+</script>  
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="10" class="center">没有结果集</td></tr>
+</script>
+#end
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = {};
+	params.status = $("#status").val();
+	var table = new obz.TableView("pager", obz.ctx + "/companypay/recordList", params, function(resp){
+		$(".itemsLotGrid").empty();
+		if(resp && resp.list && resp.list.length>0){
+			$('.itemsLotGrid').html(template('item_table_tr_tpl', resp));
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+			
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+	table.init();
+	$("#myqueryBtn").click(function (){
+		var params = {};
+		
+		var start_date = $("#start_date").val();
+		var end_date = $("#end_date").val();
+		
+		params.end_date= end_date;
+		params.start_date= start_date;
+		params.payee_name = $("#payee_name").val();
+		params.status = $("#status").val();
+		table.setParams(params);
+		table.init();
+	})
+	
+	var TableOpt = {
+		init : function(){
+			var optArray = new Array();
+			return optArray;
+		}
+	}
+});
+
+</script>

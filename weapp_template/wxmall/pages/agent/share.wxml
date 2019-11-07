@@ -1,0 +1,39 @@
+<!--pages/agent/share.wxml-->
+<view class="container">
+  <view class="wy-center-top">
+    <view class="weui-media-box weui-media-box_appmsg">
+      <view class="weui-media-box__hd">
+      <block wx:if="{{userInfo !=null }}"><image class="weui-media-box__thumb radius" src="{{userInfo.avatarUrl}}" alt=""/></block>
+      </view>
+      <view class="weui-media-box__bd">
+        <view class="weui-media-box__title user-name">{{userInfo.nickName}}</view>
+      </view>
+    </view>
+  </view>
+    <form bindsubmit="saveForm">
+      <view class="weui-cells weui-cells_form" style="font-size: 14px;">
+	<view class="weui-cell">
+		<view class="weui-cell__hd"><label class="weui-label" for="name">姓名</label></view>
+		<view class="weui-cell__bd">
+			<input name="name" value="{{agent.agentName}}" class="weui-input" placeholder="真实姓名" type="text"/>
+		</view>
+	</view>
+	<view class="weui-cell">
+		<view class="weui-cell__hd"><label class="weui-label" for="mobile">手机号</label></view>
+		<view class="weui-cell__bd">
+			<input name="mobile" value="{{agent.agentPhone}}" class="weui-input" placeholder="手机号码" type="number"/>
+		</view>
+	</view>
+	<view class="weui-cell">
+		<view class="weui-cell__hd"><label class="weui-label" for="address">详细地址</label></view>
+		<view class="weui-cell__bd">
+			<input name="address" value="{{agent.agentAddr}}" class="weui-input" placeholder="详细地址" type="text"/>
+		</view>
+	</view>	
+</view>
+  <view class="content-padded">
+	    <button type="primary" open-type="share" class="weui-btn weui-btn_primary">推荐给好友</button>
+      <!-- <button type="primary" bindtap='test' class="weui-btn weui-btn_primary">测试邀请</button> -->
+	</view>
+  </form> 
+</view>

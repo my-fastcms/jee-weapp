@@ -1,0 +1,116 @@
+#include ("/_includes/_layout.html")
+#define css()
+<style type="text/css">
+.wizard-big.wizard > .content{
+    min-height: 450px;
+}
+.t-step{ display: table; overflow: hidden; width: 100%; box-sizing: border-box; border: 1px solid #e7eaec; border-left: 0; border-radius: 3px;}
+.t-steps{ display: table-cell; padding: 6px; position: relative; padding-left: 65px; border-left: 1px solid #ddd;}
+.t-steps:before,.t-steps:after{position: absolute; z-index: 2;content: ''; display: block; top: 50%; margin-top: -13px; right:-20px; border:solid; border-width:13px 10px; border-color:transparent transparent transparent #ccc;}
+.t-steps:after{ border-color:transparent transparent transparent #fff; right: -19px; z-index: 3;}
+.t-steps i,.t-steps span{ position: absolute; left: 20px; display: inline-block; line-height: 30px; top: 50%; margin-top: -15px;}
+.t-steps i{ font-size: 30px; display:none;}
+.t-steps.complete i{ display: block; color: #1AB394;}
+.t-steps.complete span{ display: none;}
+.t-steps span{ width: 28px; height: 28px; line-height: 28px; border: 1px solid #999; color: #999; font-size: 18px; text-align: center; border-radius: 50%; box-sizing: border-box;}
+.t-steps.active{ background: #1AB394; color: #fff;}
+.t-steps.active i{ display:none;}
+.t-steps.active span{ border-color: #fff; color: #fff;}
+.t-steps.active:before,.t-steps.active:after{ border-color:transparent transparent transparent #1AB394;}
+.t-steps.disabled{ color: #999; background: #f9f9f9;}
+.t-steps.disabled:after{ border-color:transparent transparent transparent #f5f5f5;}
+.t-steps h2{ font-size: 16px;}
+</style>
+#end
+#@layout("", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+		<div class="row content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content" style="margin-left: 0px;">
+			       <a href="#(webctx)/setting/xiaocx" class="J_menuTab active">小程序</a>
+		       </div>
+		   	</nav>
+		</div>
+		<div class="ibox float-e-margins col-sm-10">
+			<div class="ibox-title row">
+				<h5><small><a href="#(webctx)/setting/xiaocx">《返回小程序列表 / #(authUser.nick_name)</a></small></h5>
+			</div>
+			<div class="row ibox-content">
+				<div class="t-step">
+	                <div class="t-steps active"> 
+	                    <span class="t-steps-n">1</span>
+	                    <i class="fa fa-check-circle"></i>
+	                    <h2>选择模板</h2>
+	                </div>
+	                <div class="t-steps disabled">
+	                    <span class="t-steps-n">2</span>
+	                    <i class="fa fa-check-circle"></i>
+	                    <h2>设置体验者</h2>
+	                </div> 
+	                <div class="t-steps disabled">
+	                    <span class="t-steps-n">3</span>
+	                    <i class="fa fa-check-circle"></i>
+	                    <h2>预览新版</h2>
+	                </div>
+	                 <div class="t-steps disabled">
+	                    <span class="t-steps-n">4</span>
+	                    <i class="fa fa-check-circle"></i>
+	                    <h2>提交审核</h2>
+	                </div>
+	            </div>
+	            
+	            <form action="" method="post" class="form-horizontal col-sm-6" style="padding-top: 20px;">
+					<div>
+						<input type="hidden" id="sel_app_id" name="id" value="#(authUser.id}"/>
+						<div class="form-group">
+				            <label class="col-md-3 control-label">小程序appid</label>
+				            <div class="col-md-9" id="error_app_id">
+				                <input type="text" id="app_id" name="app_id" class="form-control" value="#(authUser.app_id}" readonly="readonly"/>
+				                <label class="control-label" for="app_id"></label>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label class="col-md-3 control-label">小程序</label>
+				            <div class="col-md-9" id="error_pay_mch_id">
+				                <input type="text" id="nick_name" name="nick_name" class="form-control" value="#(authUser.nick_name}" readonly="readonly"/>
+				                <label class="control-label" for="nick_name"></label>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label class="col-md-3 control-label">小程序Logo</label>
+				            <div class="col-md-9">
+				                <img style="width: 60px;height: 60px;" src="#(authUser.head_img}"/>
+				            </div>
+				        </div>	
+				        <div class="form-group">
+				            <label class="col-md-3 control-label">小程序模板<span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-9" id="error_pay_secret_key">
+				                <select id="template_sel" name="template__sel" class="form-control">
+				                	<option value="0">小程序商城</option>
+				                </select>
+				                <label class="control-label" for="template_sel"></label>
+				            </div>
+				        </div>
+					</div>
+					<div class="panel-default">
+					  	<div class="panel-body" align="center">
+							<button id="pack_btn" type="button" class="btn btn-success btn-sm">下一步</button>
+					  	</div>
+				  	</div>
+			  	</form>
+			</div>
+		</div>
+	    <div class="col-sm-2">
+	        <div class="wrapper-content">
+	            <h4>帮助说明</h4>
+	            <ol>
+	                <li>打包小程序，并提交到微信审核</li>
+	                <li>选择不同的模板，会有对应的小程序功能</li>
+	            </ol>
+	        </div>
+     	</div>	
+</div>
+</div>
+#end

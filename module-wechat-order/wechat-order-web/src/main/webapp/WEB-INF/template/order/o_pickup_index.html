@@ -1,0 +1,180 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/js/jquery/themes/ui-lightness/jquery-ui-1.10.3.custom.css"/>
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/fbuilder.css"></link>
+#end
+#@layout("自提商品订单", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content">
+	           <a href="#(webctx)/order" class="J_menuTab">普通订单</a>
+		       <a href="#(webctx)/order/agent" class="J_menuTab">佣金订单</a>
+		       <a href="#(webctx)/order/tuan" class="J_menuTab">拼团订单</a>
+		       <a href="#(webctx)/order/pickup" class="J_menuTab active">自提商品订单</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-content">
+		<div>
+			<table width="100%" border="0" cellspacing="1" cellpadding="0" class="table table-striped table-bordered bootstrap-datatable datatable">
+				<tr>
+					<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+						<input type="text" id="start_date" name="start_date" style="width: 120px; cursor: pointer;"
+						onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+						class="Wdate" value="" />
+						&nbsp;&nbsp;至&nbsp;&nbsp; 
+						<input type="text" id="end_date" name="end_date" style="width: 120px; cursor: pointer;"
+						onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',mixDate:'#F{$dp.$D(\'start_date\');}'})"
+						class="Wdate" value="" />
+						
+						<a class="label label-default" href="javascript:dateTagBf(-7);">一周前</a>
+		                <a class="label label-default" href="javascript:dateTagBf(-30);">一个月前</a>
+		                <a class="label label-default" href="javascript:dateTagBf(-90);">三个月前</a>
+						
+						&nbsp;&nbsp;&nbsp; 
+						<select id="order_status_sel" class="control-inline">
+							<option value="unpaid_unshipped_unconfirmed">等待买家付款</option>
+							<option value="paid_unshipped_unconfirmed" selected="selected">买家已付款</option>
+							<option value="paid_shipped_unconfirmed">卖家已发货</option>
+							<option value="waitRefund">等待卖家退款</option>
+							<option value="refunded">卖家已退款</option>
+							<option value="paid_shipped_completed">交易已成功</option>
+							<option value="">全部订单</option>
+						</select>
+						<br/>
+						&nbsp;&nbsp;&nbsp;
+						订单号&nbsp;&nbsp;<input id="order_sn" type="text"/>
+						买家昵称&nbsp;&nbsp;<input id="nick_name" type="text" style="width: 150px;height: 30px;"/>&nbsp;&nbsp;&nbsp;
+						<button id="myqueryBtn" class="btn btn-success btn-sm">查询</button>
+					</td>
+				</tr>
+			</table>
+		
+			<table id="mainTable" border="0" class="table table-striped table-bordered bootstrap-datatable datatable"> 
+				<thead>
+					<tr>
+						<th>商品</th>
+						<th>金额（元）</th>
+						<th>买家</th>
+						<th>下单门店</th>
+						<th>下单时间</th>
+						<th>订单状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody class="tradeLotGrid"></tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- html 模板文件 -->
+<!-- 模板区域开始 -->
+<script type="text/template" id="order_table_tr_tpl">
+{{each list as item i}}
+<tr class="package">
+	<td><table>{{include 'order_item_table_tr_tpl' item}} <!--引入子模板--></table></td>
+	<td>{{item.totalPrice}} {{if item.postFee != null && item.postFee !=0}}<br><span>邮费：{{item.postFee}}</span>{{/if}}</td>
+	<td>{{item.buyerNick}}{{if item.buyerMemoSimple != null && item.buyerMemoSimple != ""}}<br><span style="color:red">{{item.buyerMemoSimple}}</span><i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('{{item.buyerMemo}}。', this, {tips: [1, '#3595CC'],time: 0});"></i>{{/if}}</td>
+	<td>{{item.shopName}}<br>{{item.shopAddr}}<br>{{item.receiverPhone}}</td>
+	<td>{{item.orderCreated}}</td>
+	<td>{{item.orderStatus}}{{if item.expName != null}}<br><span>{{item.expName}}</span>{{/if}} {{if item.billNumber != null}}<br><span>运单号:{{item.billNumber}}</span>{{/if}}</td>
+	<td><a id="detail#{{item.orderId}}" href="javascript:void(0)" style="text-decoration: underline;display:none;">详情</a>
+	<a id="a#{{item.orderId}}" href="javascript:void(0)" style="text-decoration: underline;{{if item.paymentStatusInt == 2 && item.shipStatusInt==0}} display:block; {{else}} display:none; {{/if}}">发货</a>
+    <a id="t#{{item.orderId}}" href="javascript:void(0)" style="text-decoration: underline;{{if item.paymentStatusInt == 5 || item.paymentStatusInt == 2}} display:block; {{else}} display:none; {{/if}}">退款</a></td>
+</tr>
+{{/each}}
+</script>
+<script type="text/template" id="order_item_table_tr_tpl">
+{{each orderItems as oItem}}
+<tr><td><img src="{{oItem.productImg}}" style="margin: 2px" width="30" height="30" number="1">&nbsp;&nbsp;{{oItem.specificationValueNames}}&nbsp;&nbsp;{{oItem.price}} X {{oItem.quantity}}<br/>{{oItem.productName}}</td></tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="9" class="center">没有结果集</td></tr>
+</script>
+<!-- 模板区域结束 -->
+#end
+<script type="text/javascript" src="#(webctx)/resources/js/jquery/ui/jquery-ui-1.10.3.min.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/trade/trade.context.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/trade/trade.core.js"></script>
+<script type="text/javascript">
+//查询条件
+	$(document).ready(function() {
+    	var params = {};
+		params.orderStatus = $("#order_status_sel").val();
+		var table = new obz.TableView("pager", obz.ctx + "/order/list4pickup", params, function(resp){
+			$(".tradeLotGrid").empty();
+			if(resp && resp.list && resp.list.length>0){
+				$(".tradeLotGrid").html(template('order_table_tr_tpl', resp));
+				TBatch.initOptEvent(TableOpt.init());
+			}else{
+				$(".tradeLotGrid").append($("#table_noresult_tr_tpl").html());
+			}
+		});
+		table.init();
+	    
+	    $("#myqueryBtn").click(function(){
+	    	//获取查询条件
+	    	setParams(params);
+	    	table.init();
+	    });
+	    
+	  //=============================表格操作事件开始=============================================
+		var TableOpt = {
+			detail : function(param){
+				alert(param[1])
+			},
+			send : function(param){
+				var ids = param[1];
+				sendGood(ids)
+			}, 
+			refund : function(param){
+				var ids = param[1];
+				var url = obz.ctx + "/order/refund?orderIds="+ids;
+				var dialog = BootstrapDialog.show({
+					size: BootstrapDialog.SIZE_NORMAL,
+					title: "订单退款",
+			        message: $('<div></div>').load(url)
+			    });
+			},
+			init : function(){
+				var optArray = new Array();
+				optArray.push(this.detail);
+				optArray.push(this.send);
+				optArray.push(this.refund);
+				return optArray;
+			}
+		}
+		
+		$("#order_status_sel").change(function(){
+			setParams(params);
+			table.init();
+		});
+	  
+		function sendGood(id){
+			obz.showMessage("已确认客户到店提货吗？一经保存不可更改", function(){
+				obz.ajaxJson("#(webctx)/order/sendPickupGood", {id:id}, function(resp){
+					if(resp.code == "200"){
+						obz.msg("发货成功");
+				    	setParams(params);
+				    	table.init();
+					}
+				});
+			});
+		};
+
+		function setParams(params){
+			params.startDate = $("#start_date").val();
+			params.endDate = $("#end_date").val();
+			params.nickNmae = $("#nick_name").val();
+			params.orderStatus = $("#order_status_sel").val();
+			params.orderSn = $("#order_sn").val();
+		}
+	    
+	});
+
+	//=============================表格操作事件结束=============================================
+</script>

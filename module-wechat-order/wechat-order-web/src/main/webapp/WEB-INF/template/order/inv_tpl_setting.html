@@ -1,0 +1,224 @@
+<!-- <link rel="stylesheet" type="text/css" href="#(webctx)/resources/js/jquery/table/jquery.resizableColumns.css"></link> -->
+<style type="text/css">
+.expressDataItem {
+	position: absolute;
+	border: 1px solid #CC0000;
+	height: 20px;
+	background-color: #fff;
+	border-bottom: 1px solid #CC0000;
+	cursor: move;
+}
+#form-container-div span {
+    cursor: move;
+    padding: 1px;
+    font-family: 宋体;
+    font-size: 14px;
+    color: #22B14C;
+    filter: alpha(Opacity=80); /*IE*/
+    opacity: 0.8; /*属于css3，firefox、webkit、opera*/
+    background-color: #F0F0F0;
+}
+.unseled {
+    border: dashed 1px #FF0000;
+}
+.seled {
+    border: solid 1px #FF0000;
+}
+.biankuangline{
+    border-style: solid !important;
+}
+.delX {
+    width: 16px;
+    height: 16px;
+    text-decoration: none;
+    background-image: url('#(webctx)/resources/css/images/delete_16.png');
+    position: absolute;
+    top: 1px;
+    right: 10px;
+}
+h3{
+	font-size: 16px;
+}
+</style>
+
+<div align="left" style="padding-bottom: 2px;">
+	<input id="chkBox_SelAll" type="checkbox"><label for="chkBox_SelAll">全选</label>
+	&nbsp;字体:<select id="sel_FontNameList" disabled="disabled">
+		           <option value="宋体">宋体</option>
+		           <option value="楷体">楷体</option>
+		           <option value="黑体">黑体</option>
+		           <option value="仿体">仿体</option>
+		           <option value="微软雅黑">微软雅黑</option>
+		           <option value="隶书">隶书</option>
+		           <option value="幼圆">幼圆</option>
+		           <option value="Arial">Arial</option>
+		       </select>
+		       大小:<select id="sel_FontSizeList" disabled="disabled">
+		           <option value="12px">12</option>
+		           <option value="13px">13</option>
+		           <option value="14px">14</option>
+		           <option value="15px">15</option>
+		           <option value="16px">16</option>
+		           <option value="19px">19</option>
+		           <option value="22px">22</option>
+		           <option value="24px">24</option>
+		           <option value="26px">26</option>
+		           <option value="29px">29</option>
+		           <option value="32px">32</option>
+		           <option value="35px">35</option>
+		           <option value="37px">37</option>
+		           <option value="48px">48</option>
+		           <option value="56px">56</option>
+		           <option value="72px">72</option>
+		           <option value="96px">96</option>
+		       </select>&nbsp;
+	<!--
+	&nbsp;<input id="chk_PrintBorderLine_Lab" type="checkbox" disabled="disabled"><label for="chk_PrintBorderLine_Lab">边框线</label>&nbsp; 
+	 -->
+	&nbsp;<input id="chk_PrintBorderCuti_Lab" type="checkbox" disabled="disabled"><label for="chk_PrintBorderCuti_Lab">加粗</label>&nbsp;
+	|
+	&nbsp;<span>纸张(毫米)</span>：宽&nbsp;<input type="text" id="text_pagewidth" value="230" maxlength="5" style="width: 40px;text-align: right;"/>
+	高&nbsp;<input type="text" id="text_pagelength" value="127" maxlength="5" style="width: 40px;text-align: right;"/>&nbsp;
+	&nbsp;<span>偏移量</span>：X&nbsp;<input type="text" id="text_offsetx" value="" maxlength="5" style="width: 40px;text-align: right;"/>&nbsp;
+	Y&nbsp;<input type="text" id="text_offsety" value="" maxlength="5" style="width: 40px;text-align: right;"/>&nbsp;
+	<hr>	       
+</div>
+<div id="builder-container">
+    <div id="builder-body">
+        <div id="builder-content">
+            <table>
+                <tr>
+                    <td width="175" valign="top">
+                        <fieldset id="builder-palette">
+                            <div id="builder-palette-top"><font color="blue">帮助</font><i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('拖拽左侧打印项到右侧打印设计区域。', this, {tips: [1, '#3595CC'],time: 0});"></i></div>
+                            <div id="builder-palette-body">
+                            #for(x: elementCategoryMap)
+                                <h3 style="cursor: pointer;">#(x.key)</h3>
+                                <ul>
+                                #for(element: x.value)
+                                    <li>
+                                        <div class="form-palette-element" elementtext="#(element.text)" elementtype="#(element.type)" elementsrc="#(element.imgSrc)" elementkey="#(element.key)">
+                                            <label>#(element.label)</label>
+                                        </div>
+                                    </li>
+                                #end
+                                </ul>
+                            #end
+                            </div>
+                        </fieldset>
+                    </td>
+                    <td valign="top">
+                        <fieldset id="form-canvas">
+                            <div id="form-container-div" class="form-container-div" style="position: relative;border:1px dotted #F00;">
+                            </div>
+                        </fieldset>
+                    </td>
+                </tr>
+            </table>
+            <div class="form-clear"></div>
+        </div>
+    </div>
+</div>
+<div class="panel-footer" align="center" style="padding-top: 10px;">
+	<button title="打印预览" onclick="Trade.printInvoice()" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>打印预览</button>
+	<button onclick="InvBuilder.saveDesignHtml()" class="btn btn-sm btn-success" title="保存设置好的模板">保存</button>
+</div>
+<div id="div_std_dataItemtpl" style="display: none;"><span style="position: absolute; width: 150px; height: auto;">文本标签 </span></div>
+<div id="div_img_dataItemtpl" style="display: none;"><div style="position: absolute; width: 100px; height: 100px;"></div></div>
+<div id="div_invoice_table_tpl" style="display: none;">
+<table id="orderlist_table" style="position: absolute;" border="0"><tr><td>序号</td><td>宝贝名称</td><td>规格</td><td>单价</td><td>数量</td><td>金额</td></tr><tr class="tr_tpl" style="display: none;"><td>{index}</td><td>{title}</td><td>{sku_properties_name}</td><td>{price}</td><td>{num}</td><td>{payment}</td></tr><tr><td>1</td><td>宝贝对应的名称(简称)</td><td>规格</td><td>198</td><td>1</td><td>198</td></tr><tr><td>2</td><td>宝贝对应的名称(简称)</td><td>规格</td><td>198</td><td>1</td><td>198</td></tr><tr><td colspan="4">合计:</td><td>4</td><td>252</td></tr></table>
+</div>
+<!-- <script type="text/javascript" src="#(webctx)/resources/js/jquery/table/jquery.resizableColumns.js"></script> -->
+<script type="text/javascript" src="#(webctx)/resources/js/trade/trade.invbuilder.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		//左边栏目默认第一个h3展开
+		$("#builder-palette-body h3").each(function(i){
+			if(i!=0){
+				var me = $(this);
+				me.next().hide();
+			}
+		});
+		$("#builder-palette-body h3").click(function(){
+			var me = $(this);
+			me.next().show();
+			$("#builder-palette-body h3").each(function(){
+				var other = $(this);
+				if(me.html()!=other.html()){
+					other.next().hide();
+				}
+			});
+		});
+		
+		Trade.showInvTemplate();
+		
+		//画布容器div注册鼠标按下事件
+		$('#form-container-div').mousedown(function (event) {
+            var obj = event.srcElement ? event.srcElement : event.target; //firefox下要用tartget
+            if (obj.id == 'form-container-div'){
+            	InvBuilder.clear();
+            	$("#sel_FontNameList,#sel_FontSizeList,#chk_PrintBorderLine_Lab,#chk_PrintBorderCuti_Lab").attr("disabled", true);
+            }
+        });
+		
+		//纸张宽高
+		$("#text_pagewidth").blur(function(){
+			$("#form-container-div").css("width", $(this).val()+"mm");
+		});
+		$("#text_pagelength").blur(function(){
+			$("#form-container-div").css("height", $(this).val()+"mm");
+		});
+		
+		//全选
+		$("#chkBox_SelAll").click(function(){
+			var me = $(this);
+			if(me.attr("checked") == 'checked'){
+				$('#form-container-div>*').removeClass('unseled').addClass('seled');
+				$("#sel_FontNameList,#sel_FontSizeList,#chk_PrintBorderLine_Lab,#chk_PrintBorderCuti_Lab").attr("disabled", false);
+			}else{
+				$("#sel_FontNameList,#sel_FontSizeList,#chk_PrintBorderLine_Lab,#chk_PrintBorderCuti_Lab").attr("disabled", true);
+				InvBuilder.clear();
+			}
+		});
+		//字体
+		$("#sel_FontNameList").change(function(){
+			var me = $(this);
+			$(".seled").each(function(){
+				$(this).css("font-family", me.val());
+			});
+		});
+		//字体大小
+		$("#sel_FontSizeList").change(function(){
+			var me = $(this);
+			$(".seled").each(function(){
+				$(this).css("font-size", me.val());
+			});
+		});
+		//边框线
+		/*$("#chk_PrintBorderLine_Lab").click(function(){
+			var me = $(this);
+			if(me.attr("checked") == 'checked'){
+				$(".seled").each(function(){
+					$(this).addClass("biankuangline");
+				});
+			}else{
+				$(".seled").each(function(){
+					$(this).removeClass("biankuangline");
+				});
+			}
+		});*/
+		//加粗
+		$("#chk_PrintBorderCuti_Lab").click(function(){
+			var me = $(this);
+			if(me.attr("checked") == "checked"){
+				$(".seled").each(function(){
+					$(this).css("font-weight", "bold");
+				});
+			}else{
+				$(".seled").each(function(){
+					$(this).css("font-weight", "normal");
+				});
+			}
+		});
+	});
+</script>

@@ -1,0 +1,24 @@
+<!--pages/agent/share.wxml-->
+<view class="container">
+  <view class="wy-center-top">
+    <view class="weui-media-box weui-media-box_appmsg">
+      <view class="weui-media-box__hd">
+      <block wx:if="{{userInfo !=null }}"><image class="weui-media-box__thumb radius" src="{{userInfo.headimgurl}}" alt=""/></block>
+      </view>
+      <view class="weui-media-box__bd">
+        <view class="weui-media-box__title user-name">{{userInfo.nickname}} <text style='color:red'>(推荐人)</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-msg__icon-area"></view>
+  <view class="weui-msg__text-area">
+    <view class="weui-msg__title">邀请说明:</view>
+    <view class="weui-msg__desc">一旦接受推荐人邀请后，在本小程序中购物成交的订单，推荐人都可以获取一定的佣金</view>
+  </view>
+
+  <view class="content-padded">
+	  <button type="primary" bindtap='accept' class="weui-btn weui-btn_primary">接受邀请</button>
+    <button type="default" bindtap='navigateToHome' class="weui-btn weui-btn_primary">暂不接受，先逛逛...</button>
+	</view>
+</view>

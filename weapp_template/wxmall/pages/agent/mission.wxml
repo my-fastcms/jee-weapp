@@ -1,0 +1,27 @@
+<view class="container">
+    <view class="weui-msg">
+      <view class="weui-msg__icon-area"></view>
+      <view class="weui-msg__text-area">
+        <view class="weui-msg__number">{{totalCommission}}</view>
+        <view class="weui-msg__title">可提现佣金</view>
+        <view class="weui-msg__title">佣金每天结算一次</view>
+        <view class="weui-cell">
+          <view class="weui-cell__hd">
+            <label class="weui-label" for="mobile">提现金额</label>
+          </view>
+          <view class="weui-cell__bd">
+            <input name="mobile" value="{{money}}" bindblur="cashMoney" class="weui-input" placeholder="请输入提现金额" type="digit"/>
+          </view>
+          <view class="weui-cell__bd">
+            <label class="weui-label" for="mobile">单位/元</label>
+          </view>
+        </view>
+        <view class="weui-msg__desc">满一元可以提现，每月可提现{{cashCount}}次，每次最多只能提500元，提现金额将存入您的微信零钱，请注意查收...</view>
+      </view>
+      <view class="weui-msg__opr-area">
+        <view class="content-padded">
+          <button type="primary" class="weui-btn weui-btn_primary" bindtap='getCash' style='background: {{navbar_bgcolor}}'>立即提现</button>
+        </view>
+      </view>
+    </view>
+</view>

@@ -1,0 +1,13 @@
+<!--主体-->
+<view style="height:{{scollHeight}}px;">
+  <scroll-view style="height:{{scollHeight}}px;"  scroll-y="true"  bindscrolltolower="lower">
+    <view class="item" wx:for="{{cashRcds}}" wx:key="created" wx:for-index="idx"  wx:for-item="item">
+      <view class="weui-media-box weui-media-box_appmsg">
+        <view class="weui-media-box__bd">
+          <view class="weui-media-box__desc">{{item.title}}<text class="price">￥{{item.cash}}</text></view>
+          <view>提现时间:{{item.created}}</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

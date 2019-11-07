@@ -1,0 +1,262 @@
+ #include ("/_includes/_layout.html")
+#@layout("好友助力","wxmall,点步科技","Wxmall社区","wxmall") 
+#define css()
+<style>
+.weui-content{
+	min-height: 100%
+}
+.product-item{
+	overflow: hidden;
+	padding:10px 20px;
+	margin-top: 10px;
+}
+.menu{
+	background: #fdfdfd;
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: table;
+    position: fixed;
+    z-index: 500;
+    height:70px;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #efefef;
+    box-shadow: 0px 0px 1px #efefef;
+} 
+.menu div{
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	color: #999;
+}
+.weui-footer{
+	padding-bottom: 80px
+}
+.weui-panel_item{
+	background: #fff;
+	margin: 10px; 
+	border-radius:5px;
+	overflow: hidden;
+}
+.ass-msg{
+	color:deepskyblue; 
+	font-size: 14px;
+	text-align: center;
+	padding: 0px 5px;
+}
+.ass-msg span{
+	display:block;
+	padding:10px 0px 20px;
+	border-bottom: 1px dashed #999;
+}
+.draw-msg{
+	font-size: 12px;
+	text-align: center;
+	padding: 30px 5px 10px;
+	color: #999;
+}
+.weui-btn_warn{
+	background: rgb(255,65,100);
+    padding: 5px 0px;
+}
+.draw-btn{
+	font-size:14px; color:#fff;  
+	background: rgb(220,220,220);
+	border-right: 1px solid #efefef; 
+	padding: 6px;
+}
+.assisfree-btn{
+	box-shadow: 0px 2px 7px #ff728c;
+}
+.skillbar{
+	margin:0px 10px 10px;
+	position:relative;
+	display:block;
+	overflow:hidden;
+	height:10px;
+	background-color:#efefef;
+	border-radius:10px 
+	}
+.skillbar .filled{
+	z-index:8;
+	position:absolute;
+	top:0;
+	left:0;
+	background-color:#b2ecff;
+	height:100%;
+	border-radius:5px 0 0 5px
+}
+.user-item-ul li{
+	float: left;
+}
+.col-sm-2{
+	width: 14.28%;
+	text-align: center;
+	margin: 10px 0px;
+}
+.layui-layer .layui-layer-title{
+	background-color:transparent;
+	border-bottom:none;
+	position: absolute;
+    top: -70px;
+    color: #fff;
+    padding: 0px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    font-family: "微软雅黑";
+}
+.layui-layer-content {
+    height: auto !important;
+}
+.layui-layer-nobg{
+	margin-top: 40px
+}
+.layui-layer-shade{
+	opacity:0.7 !important;
+}
+.hide{
+	display: none;
+}
+.red-color{
+	background-color: #e21323;
+}
+</style>
+#end
+#define content()
+<div class="weui-panel_access" style="margin-top:0px">
+	<div class="weui-panel_item">
+		<div class="product-item">
+		 <div style="padding-top: 10px">
+		  <div style="width:95px; height:95px; margin-right: 10px; float: left;">
+		  #if(assisfreeProduct.product_id??)
+			  <img style="width:100%; height:100%" src="#(img_domain)#(assisfreeProduct.image??)"/>
+		 #else
+		 	  <img style="width:100%; height:100%" src="#(assisfreeProduct.image??)"/>
+		 #end	  
+		  </div>
+		  <div style="color: #000;font-size: 14px; max-height: 45px;overflow: hidden;"> #(assisfreeProduct.product_name ?? "null")</div>
+		  <div style="color: #999;font-size: 12px; margin-top: 10px;text-decoration:line-through"> 原价：￥#(assisfreeProduct.price ?? "99999.99999")</div>
+		  <div style="color: red;font-size: 12px;overflow:hidden;line-height: 30px;">
+			  <div style="float: left;">￥<span style="font-size: 14px;">#(assisfreeProduct.price ?? "99999.99999")</span></div>
+		  </div>
+		 </div>
+		</div>
+		<div class="ass-msg"><span>好友助力免费抢好货</span></div>
+		<div style="padding: 30px 80px;">
+		#if(assisfreeProduct.need_user_count?? && followerCount??)
+			#if(assisfreeProduct.need_user_count - followerCount > 0)
+				<a class="weui-btn weui-btn_warn assisfree-btn">立即助力</a>
+			#else
+				<a class="weui-btn weui-btn_warn purchase">助力完成</a>
+			#end
+		#end
+		</div>
+	</div>
+	
+	<div class="weui-panel_item">
+		<div class="draw-msg"><span>还差 #if(assisfreeProduct.need_user_count?? && followerCount??)#(assisfreeProduct.need_user_count - followerCount)#else N/A #end 位新好友助力即可领取</span></div>
+		<div class="skillbar html">
+		  <div class="filled"></div>
+		</div>
+		<div style="margin: 20px 10px 50px; overflow: hidden;">
+			<ul class="user-item-ul">
+				#for(followerUser : followerUsers)
+				<li class="col-sm-2" style="width: 32px;height: 32px"><img style="width: 100%;height: 100%; border-radius:50%" src="#(followerUser.headimgurl)"/></li>
+				#end
+				#if(assisfreeProduct.need_user_count?? && followerCount??)
+					#for(i = followerCount; i < assisfreeProduct.need_user_count ; i++)
+					<li class="col-sm-2"><img src="#(wxbctx)/resources/images/add.png"/></li>
+					#end
+				#end
+				
+			</ul>
+		</div>
+	</div>
+	<div class="weui-panel_item"></div>
+</div>
+<div id="poster-box" class="hide layui-layer-wrap">
+	<img class="d" style="width: 100%;" src="#(poster??)"/>
+</div>
+<div class="menu">
+#if(assisfreeProduct.need_user_count?? && followerCount??)
+	#if(assisfreeProduct.need_user_count - followerCount != 0)
+	<div style="padding: 0px 18px"><a class="weui-btn weui-btn_disabled weui-btn_default draw-btn">还差 #(assisfreeProduct.need_user_count - followerCount) 位新好友助力即可领取</a></div>
+	#else 
+	<div style="padding: 0px 18px"><a class="weui-btn weui-btn_disabled red-color draw-btn purchase">立即领取</a></div>
+	#end
+#else
+	<div style="padding: 0px 18px"><a class="weui-btn weui-btn_disabled weui-btn_default draw-btn">还差  N/A 位新好友助力即可领取</a></div>
+#end
+</div>
+#end
+#define script()
+<script src="#(webctx)/resources/js/an-skill-bar.js"></script>
+<script type="text/javascript">
+$(document).ready(function () {
+	//进度条值初始化
+	#if(assisfreeProduct.need_user_count?? && followerCount??)
+		var dataWidth = 0;
+		if(#(followerCount) == 0) {
+			dataWidth = 0;
+		}else{
+			dataWidth = ((#(followerCount) / #(assisfreeProduct.need_user_count)) * 100) +"%" ;
+		}
+		$(".filled").attr("data-width",dataWidth)
+	#end
+	
+	#if(user??)
+		wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
+			//自定义“分享给朋友”及“分享到QQ”按钮的分享内容（1.4.0） #(session._buyerUser.open_id)
+			wx.updateAppMessageShareData({ 
+		        title: '#(user.nickname)邀请你参加活动', 
+		        desc: '好朋友,请来助我免费领取品牌商品', 
+		        link: 'http://#(appId??).dbumama.com/assisfree/user?id=#(id??)&assisfreeId=#(assisfreeId??)&openid=#(openid??)', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+		        imgUrl: '#(user.headimgurl)', // 分享图标
+		        success: function () {
+		        	// 设置成功
+		        }
+			})
+			//自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容（1.4.0）
+			wx.updateTimelineShareData({ 
+		        title: '#(user.nickname)邀请你参加活动', // 分享标题
+		        link: 'http://#(appId??).dbumama.com/assisfree/user?id=#(id??)&assisfreeId=#(assisfreeId??)&openid=#(openid??)', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+		        imgUrl: '#(user.headimgurl)', // 分享图标
+		        success: function () {
+		          // 设置成功
+		        }
+			});
+		});
+	#end
+		
+	$(".skillbar").skillbar();
+	$(".assisfree-btn").click(function (){
+		layer.open({
+			  type: 1,
+			  title: "长按保存图片，发送给朋友",
+			  closeBtn: 0,
+			  area: ['250px', 'auto'],
+			  skin: 'layui-layer-nobg', //没有背景色
+			  shadeClose: true,
+			  content: 	$('#poster-box')
+			});
+	});
+	
+	$(".purchase").click(function(){
+		#if(assisfreeProduct.out_id?? && assisfreeProduct.product_url??)
+			location.href = "#(assisfreeProduct.product_url)";
+			return;
+		#end	
+		//立即购买
+		var itemsArray = new Array();
+		var entity = new Object();
+		var pId = '#(id??)';
+		entity.productId = pId;
+		entity.pcount = 1;
+		entity.speci = "";				
+		itemsArray.push(entity);
+		location.href = "#(webctx)/pay/taskBalance?items="+JSON.stringify(itemsArray)+"&pId="+pId;
+	});
+});
+</script>
+#end

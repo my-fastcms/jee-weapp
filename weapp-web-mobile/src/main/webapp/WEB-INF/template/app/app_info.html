@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>开通功能</title>
+#include ("/_includes/header.html")
+<style>
+.content{
+	color: #909090;
+}
+input.weui-input{
+	color: #0D0D0D;
+}
+.weui_cell::before{
+	border-top: 1px solid #D9D9D9;
+}
+.weui-label{
+	width: 4em;
+}
+.lab{
+	font-size: 12px;
+}
+.lab span{
+	color: #0D0D0D;
+}
+.weui_btn.weui_btn_plain_default{
+	margin-top: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 20px;
+	border: 0;
+	color: #fff;
+	background-color: #3985FF;
+}
+.weui-select{
+ width: 30%;
+}
+</style>
+</head>
+<body>
+#if(authUser??)
+<input type="hidden" id="authUserid" name="authUserid" value="#(authUser.id??)">
+<div class="weui-cells weui-cells_form" style="font-size: 14px;">
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">公众号</label></div>
+		<div class="weui-cell__bd">
+			<input name="nick_name" value="#(authUser.nick_name??)" class="weui-input" type="text" readonly="readonly"/>
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">到期时间</label></div>
+		<div class="weui-cell__bd">
+			<input id="end_date" name="end_date" value="" class="weui-input" type="text" readonly="readonly"/>
+		</div>
+	</div>
+	
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">开通功能</label></div>
+		<div class="weui-cell__bd">
+			<select id="appselect">
+				#for(app : apps)
+					<option id="#(app.id??)" value="#(app.id??)">#(app.app_name??)</option>
+				#end
+			</select>
+		</div>
+	</div>
+	
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">开通时长</label></div>
+		<div class="weui-cell__bd">
+			<select id="day_select">
+				<option id="1" value="30">一个月</option>
+				<option id="2" value="360">一年</option>
+			</select>
+		</div>
+	</div>
+	
+	<div class="content-padded">
+	    <a id="authUser_btn" href="javascript:void(0);" class="weui-btn weui-btn_primary">确认</a>
+	</div>
+</div>
+#else
+<div class="content weui-msg">
+  <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+  <div class="weui-msg__text-area">
+    <h2 class="weui-msg__title">错误</h2>
+    <p class="weui-msg__desc">公众号不存在</p>
+  </div>
+</div>
+#end
+</body>
+#include ("/_includes/scripts.html")
+<!--手机端script需要加载后方-->
+<script type="text/javascript">
+function getDate(appid){
+	$.post("#(webctx)/app/end", {authUserid:$("#authUserid").val(), appid:appid}, function(resp){
+		if(resp.state == "ok"){
+			$("#end_date").val(resp.end_date);
+		}else{
+			$("#end_date").val("");
+		}
+	})
+}
+
+$("#appselect").change(function(){
+	getDate($(this).val());
+})
+
+getDate($("#appselect").val());
+
+$("#authUser_btn").click(function(){
+	$.confirm("确认开通应用吗?", function(){
+		$.showLoading("正在处理...");		
+		$.post("#(webctx)/app/open", {authUserid:$("#authUserid").val(), appid:$("#appselect").val(), appday: $("#day_select").val()}, function(resp){
+			$.hideLoading();
+			if(resp.state!="ok"){
+				$.alert(resp.message);
+			}else{
+				$.toast("开通成功", function(){});
+			}
+		});	
+	})
+	
+}); 
+</script> 
+</html>

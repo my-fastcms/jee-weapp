@@ -1,0 +1,58 @@
+#include ("/_includes/_layout.html")
+#@layout("支付配置", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="app-content">
+		<div class="ibox-content">
+		    <div class="row">
+				<div class="col-sm-12">
+					#if(error !=null)
+					<div class="alert alert-danger">
+						<button type="button" class="close" data-dismiss="alert">×</button>
+						<strong>错误!</strong> #(error).
+					</div>
+					#end
+					<div>
+						<form name="configPayForm" id="configPayForm" action="#(webctx)/setting/update" method="post" class="form-horizontal" enctype="multipart/form-data" style="padding-top: 10px;">
+							<div>
+								<input type="hidden" id="id" name="id" value="#(defaultAuthUser.id??)"/>
+								<div class="form-group">
+						            <label class="col-md-2 control-label">支付商户号<span style="color: red;"><em>*</em></span></label>
+						            <div class="col-md-5" id="error_pay_mch_id">
+						                <input type="text" id="pay_mch_id" name="pay_mch_id" class="form-control" value="#(defaultAuthUser.pay_mch_id??)"/>
+						                <label class="control-label" for="pay_mch_id"></label>
+						            </div>
+						        </div>
+						        <div class="form-group">
+						            <label class="col-md-2 control-label">支付密钥<span style="color: red;"><em>*</em></span></label>
+						            <div class="col-md-5" id="error_pay_secret_key">
+						                <input type="password" id="pay_secret_key" name="pay_secret_key" class="form-control" value="#(defaultAuthUser.pay_secret_key??)"/>
+						                <label class="control-label" for="pay_secret_key"></label>
+						            </div>
+						        </div>
+						        <div class="form-group">
+						            <label class="col-md-2 control-label">支付证书</label>
+						            <div class="col-md-5" id="error_pay_cert_file">
+						                <input type="file" id="pay_cert_file" name="pay_cert_file"/>
+						                <label class="control-label" for="pay_cert_file"></label>
+						                <span style="color: red">从微信商户后台下载的cert.zip包，解压后，此处上传apiclient_cert.p12文件</span>
+						            </div>
+						        </div>
+							</div>
+							
+							<div class="panel-default">
+							  	<div class="panel-footer" align="center">
+									<button type="submit" class="btn btn-success btn-sm">保存</button>
+							  	</div>
+						  	</div>
+					  	</form>
+				  	</div>
+				</div>	
+		   </div>   
+	  </div>
+  </div>
+</div>
+#end
+<script type="text/javascript">
+Template.init("#menu-payconfig");
+</script>

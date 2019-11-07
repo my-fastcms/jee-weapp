@@ -1,0 +1,138 @@
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/jquery.filer.css"/>
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/jquery.filer-dragdropbox-theme.css"/>
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/product.css"/>
+<script src="#(webctx)/resources/js/jquery.filer.min.js"></script>
+<script type="text/javascript">
+var group_id = "#(groupId??)";
+var uploadUrl = "#(webctx)/upload/";
+if(group_id != null && group_id != ""){
+	uploadUrl += "?groupId=" + group_id;
+}
+$(document).ready(function() {
+	filer_default_opts = {
+            changeInput2: '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon">\
+            <i class="icon-jfi-cloud-up-o"></i></div>\
+            <a class="jFiler-input-choose-btn blue-light">选择图片</a></div></div>',
+            limit: null,
+            extensions: ['jpg', 'jpeg', 'png', 'gif'],
+            templates: {
+                box: '<ul class="js-picture-list app-image-list clearfix"></ul>',
+                item: '<li class="sort">\
+                                        <div class="jFiler-item-info hide">\
+                                            <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                            <span class="jFiler-item-others">{{fi-size2}}</span>\
+                                        </div>\
+                                        {{fi-image}}\
+                                        {{fi-progressBar}}\
+                                        <a class="js-delete-picture close-modal small">×</a>\
+                        </li>',
+                itemAppend:'<li class="sort">\
+				                        <div class="jFiler-item-info hide">\
+				                        <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+				                        <span class="jFiler-item-others">{{fi-size2}}</span>\
+				                    </div>\
+				                    {{fi-image}}\
+				                    <a class="js-delete-picture close-modal small">×</a>\
+                    </li>',
+            progressBar: '<div class="bar"></div>',
+                itemAppendToEnd: false,
+                removeConfirmation: false,
+                _selectors: {
+                    list: '.js-picture-list',
+                    item: '.sort',
+                    remove: '.js-delete-picture'
+                }
+            },
+            uploadFile: {
+                url: uploadUrl,
+                data: null,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                beforeSend: function(){},
+                success: function(resp, el){
+                	if(resp.code == 200){
+                		$("#saveImagess").removeAttr("disabled");
+                		var parent = el.find(".jFiler-jProgressBar").parent();
+	                	$(".jFiler-jProgressBar").fadeOut("slow", function(){
+	                        $("<div class = \"jFiler-item-others text-success\"><i class = \"icon-jfi-check-circle\"></i>上传成功</div>").hide().appendTo(parent).fadeIn("slow");    
+	                    });
+                	}else {
+                		obz.error(resp.msg == null ? "系统错误" : resp.msg);
+                	}
+                },
+                error: function(el){
+                	var parent = el.find(".jFiler-jProgressBar").parent();  
+                    el.find(".jFiler-jProgressBar").fadeOut("slow", function(){  
+                        $("<div class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> 上传失败</div>").hide().appendTo(parent).fadeIn("slow");      
+                    });  
+                },
+                statusCode: {},
+                onProgress: function(){
+                	$(".jFiler-jProgressBar").parent().mask("上传中...");
+                },
+                onComplete: function(){
+                	$(".jFiler-jProgressBar").parent().unmask();
+                }
+            },
+            onRemove: function(itemEl, file, id, listEl, boxEl, newInputEl, inputEl){
+                var file = file.name;
+            },
+        };
+ 
+ $('#fileInput-7').filer({
+        changeInput: filer_default_opts.changeInput2,
+        showThumbs: true,
+        theme: "dragdropbox",
+        templates: filer_default_opts.templates,
+        uploadFile: filer_default_opts.uploadFile,
+        onRemove: filer_default_opts.onRemove,
+        captions: {
+            button: "Choose Files",
+            feedback: "Choose files To Upload",
+            feedback2: "files were chosen",
+            drop: "Drop file here to Upload",
+            removeConfirmation: "确定删除这个文件吗?",
+					
+            errors: {
+               filesLimit: "一次最多上传{{fi-limit}}张图片.",
+               filesType: "只能上传图片文件",
+               filesSize: "{{fi-name}} 文件太大! 文件不能超过 {{fi-maxSize}} MB.",
+               filesSizeAll: "Files you've choosed are too large!Please upload files up to {{fi-maxSize}} MB."
+            }
+        },
+        limit: 5,
+        maxSize: 5,
+        extensions: ['jpg', 'jpeg', 'png', 'gif']
+    });
+ 
+ $("#saveImagess").click(function() {
+	 obz.doUploadImage();
+	 if(uploadImageDialog != null) uploadImageDialog.close();
+	 if(table) table.init();
+ });
+});
+</script>
+<style type="text/css">
+.form-group .title {
+    font-size: 14px;
+    line-height: 28px;
+    margin-right: 20px;
+}
+a {
+    color: #07d;
+    text-decoration: none;
+}
+</style>
+<div class="panel-body">
+<div class="modal-body" style="padding-left: 5px;">    
+      <div class="form-group" id="uploadImg">
+     <input type="file" name="files[]"  id="fileInput-7" multiple="multiple"/>    
+</div>
+<div class="alert alert-warning">图片同时会上传到微信公众平台图片素材库.</div>
+</div>
+</div>
+<div class="panel-footer">
+	<div  style="display: block;" align="center">
+		<button id="saveImagess" type="button" class="btn btn-sm btn-success" disabled="disabled"><i class="fa fa-dot-circle-o"></i>确      定</button>
+	</div>
+</div>

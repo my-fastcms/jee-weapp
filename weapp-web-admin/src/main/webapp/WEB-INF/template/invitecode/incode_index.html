@@ -1,0 +1,110 @@
+#include ("/_includes/_layout.html")
+#@layout("点步微助手--邀请码", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	       	   <a href="#(webctx)/invitecode/" class="J_menuTab active">邀请码生成</a>
+	           <a href="#(webctx)/invitecode/stat" class="J_menuTab">我邀请的人</a>
+	           <a href="#(webctx)/invitecode/mission" class="J_menuTab">我的佣金</a>
+	           <a href="#(webctx)/invitecode/cashrcd" class="J_menuTab">提现明细</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-content">
+		<div class="alert alert-success">
+			<i class="fa fa-info-circle"></i><strong>提示:</strong>
+			<p>邀请码生成后不可更改。</p>
+			<p>使用邀请码邀请好友成功注册平台，并且购买平台小程序模板，则可以获取一定比率的佣金</p>
+			<p>同时被邀请者购买平台小程序模板也能享受邀请码折扣</p>
+		</div>
+		
+		<!-- <div class="row">
+	    	#if (seller !=null)
+	    	<div class="col-sm-2">
+	            <blockquote class="text-warning" style="font-size:14px">
+	            	#if(seller.header_img !=null)<img alt="image" class="img-circle" src="#(img_domain)#(seller.header_img)" width="100px" height="100px"/>#end
+	                #if(seller.nick !=null)<h4 class="text-danger">#(seller.nick)</h4>#end
+	                <h4 class="text-danger">#(seller.phone)</h4>
+	            </blockquote>
+	        </div>
+	        #end
+	    	<div class="col-sm-2">
+	            <h2>我的佣金</h2>
+	            <p><b>累计佣金：</b>#(totalMission)</p>
+	            <p><b>可提现佣金：</b><span class="label label-warning">&yen;#(mission)</span></p>
+	            <br>
+	            <p><a class="btn btn-success btn-outline" href="#(webctx)/invitecode/cash">我要提现</a></p>
+	        </div>
+	        #if (seller !=null && seller.my_invite_code !=null)
+	        <div class="col-sm-3">
+	            <h2>我的推广</h2>
+	            <p>邀请码:<b>#(seller.my_invite_code)</b></p>
+	            <p><input type="text" id="my_invite_code_url" name="my_invite_code_url" class="form-control" value="" readonly="readonly" style="width: 400px;"/></p>
+	            <p><img src="#(webctx)/qrcode/genadminio/?url=#(webctx)/register?incode=#(seller.my_invite_code)" alt="推广二维码" width="100%" style="max-width:200px;"></p>
+	        </div>
+	        #end
+	        <div class="col-sm-5">
+	        	<h2>快速导航</h2>
+	            <a class="btn btn-block btn-outline btn-primary" href="#(webctx)/weapp/sets/step1">创建微商城小程序</a>
+	            <a class="btn btn-block btn-outline btn-primary" href="#(webctx)/weapp/sets/step1">创建微名片小程序</a>
+	            <a class="btn btn-block btn-outline btn-primary" href="#(webctx)/weapp/sets/step1">创建企业展示小程序</a>
+	        </div>
+    	</div> -->
+	
+		#if(seller && seller.my_invite_code)
+		<div class="form-horizontal">
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">我的专属邀请码：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('使用邀请码邀请用户注册可赚取佣金。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div class="col-md-5">
+	            	<div class="input-group m-b">
+                        <input type="text" id="my_invite_code" name="my_invite_code" class="form-control" value="#(seller.my_invite_code)" readonly="readonly"/>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">我的专属分享链接：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('复制链接给好友注册，则有机会赚取佣金。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div class="col-md-9">
+	            	<div class="input-group">
+                        <input type="text" id="my_invite_code_url" name="my_invite_code_url" class="form-control" value="" readonly="readonly" style="width: 450px;"/>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">我的专属二维码：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('分享二维码邀请好友注册。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div class="col-md-9">
+	            	<div class="input-group">
+                        <img src="#(webctx)/qrcode/genadminio/?url=#(webctx)/register?incode=#(seller.my_invite_code)" width="200px" height="200px"/>
+                    </div>
+	            </div>
+	        </div>
+		</div>
+		#else
+		<div class="panel-default">
+		  	<div class="panel-body" align="center">
+				<button type="button" id="genIncodeBtn" class="btn btn-success btn-sm">生成专属邀请码</button>
+		  	</div>
+	  	</div>
+	  	#end
+	</div>
+</div>
+#end
+<script type="text/javascript">
+$().ready(function() {
+	$("#genIncodeBtn").click(function(){
+		obz.showMessage("邀请码生成后，不可更改，确定生成吗？", function(){
+			obz.ajaxJson("#(webctx)/invitecode/gen", {}, function(resp){
+				if(resp.code == 200){
+					obz.msg("生成成功", function(){
+						location.reload();
+					});
+				}
+			});
+		});
+	});
+	if($("#my_invite_code_url").length >0)
+		$("#my_invite_code_url").val(document.domain + "/admin/register?incode=#(seller.my_invite_code)");
+});
+
+</script>

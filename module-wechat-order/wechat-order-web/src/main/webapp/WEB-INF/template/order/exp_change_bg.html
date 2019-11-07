@@ -1,0 +1,53 @@
+<title>更换背景图</title>
+#define css()
+<style type="text/css">
+.imgseled{
+    border: solid 3px #e6fab6;
+    width: 300px;
+    height: 200px;
+}
+.imgnoseled{
+	width: 150px;
+    height: 100px;
+}
+</style>
+#end
+<div id="_exp_all_imgs" style="padding-top: 10px;">
+#for (img:expImgs)
+	<span style="padding-left: 10px;padding-top: 5px;cursor: pointer;" id="span_#(img_index)">
+		<img width="200px" height="120px" src="#(img.expImg)">
+	</span>
+#end
+</div>
+
+<div class="panel-footer" align="center" style="padding-top: 10px;">
+    <button title="保存选择的背景图" onclick="setExpBgImg()" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>确定</button>
+</div>
+
+<script type="text/javascript">
+$("#_exp_all_imgs").find("span").click(function(){
+	var me = $(this);
+	me.children().addClass("imgseled").removeClass("imgnoseled");
+	//$("#_myselexpbgimg").val(me.children().attr("src"));
+	$("#_exp_all_imgs").find("span").each(function(){
+		var otherid = $(this).attr("id");
+		if($.trim(me.attr("id"))!=$.trim(otherid)){
+			$(this).children().removeClass("imgseled").addClass("imgnoseled");
+		}
+	});
+});
+
+function setExpBgImg(){
+	var imgsrc = "";
+	$("#_exp_all_imgs").find("span").each(function(){
+		if($(this).children().hasClass("imgseled")){
+			imgsrc = $(this).children().attr("src");
+			return;
+		}
+	});
+	if(imgsrc!=""){
+		Trade.useExptpl.exp_bgimg = imgsrc;
+		$("#myexpbgimg").attr("src", imgsrc);
+	}
+}
+</script>

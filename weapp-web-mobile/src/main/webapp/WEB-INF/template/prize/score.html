@@ -1,0 +1,110 @@
+#include ("/_includes/_layout.html")
+#@layout("", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/qiandao.css">
+<link href="#(webctx)/resources/css/activity-style.css" rel="stylesheet" type="text/css">
+<link href="#(webctx)/resources/css/animate.min.css" rel="stylesheet">
+
+#end
+#define script()
+#end
+#define content()
+ <div class="content native-scroll content-blockt">
+      <div class="weui-cells">
+	  	<div class="weui-cell weui-cell_access">
+	    <div class="weui-cell__hd"><img src="#(session._buyerUser.headimgurl)" alt="#(session._buyerUser.nickname)" style="width:40px;margin-right:5px;display:block"></div>
+	    <div class="weui-cell__bd">
+	      <p>#(session._buyerUser.nickname)</p>
+	      <p style="font-size: 12px;">还有<font color="red"><span id="user_left_count">#(session._buyerUser.score)</span></font>个积分</p>
+	    </div>
+	    <div id="chongzhi" class="weui-cell__ft">我要积分</div>
+	 	</div>
+ 	  </div>
+ 	  
+ 	  <div id="box">
+		<input type="hidden" id="curtimes1" value="3">
+		<input type="hidden" id="curtimes3" value="3">
+		<div id="roll">
+		    <div class="cover" id="begin"> 
+		        <img id="prizebg" style="visibility:hidden;" src="#(webctx )/resources/images/activity-scratch-card-bannerbg.png">
+		       <div id="scratchpadf" style="position: absolute; width: 320px; height: 208px; top: 0px; left: 0px; text-align: center; line-height: 40px;">
+		           <img src="#(webctx )/resources/images/jfm.png">
+		      </div>
+		    </div> 
+		    
+	     </div>
+	     <div id="guakadiv">
+	         <input type="button" id="exchange" href="javascript:javascript:(0);" onclick="exchangeScore();return false;" class="pxbtn exchange_gift" data-id="633" value="我要兑换">
+	     </div>
+	</div>
+	
+	<div class="boxcontent boxwhite">
+		<div class="box">
+			<div class="title-brown">活动说明：</div>
+			<div class="Detail">
+				<div >
+				     <p>可兑换奖品：<span style="color: #f60">#(prize.prize_name??)</span></p>
+	  				 <p>剩余数量：<span style="color: #f60">#(prize.publish_count??)</span></p>
+	  				 <p>结束时间：<span style="color: #f60">#(prize.end_date??)</span></p>
+	  				 <p>每人限兑<span id="publish_count" style="color: #f60">#(prize.publish_count ??)</span>次，您已兑<span id="had_out_count" style="color: #f60">#(prize.had_out_count ??)</span>次</p>
+	  			</div>
+	  			
+			</div>
+			
+		</div>
+	</div>
+	
+	 <input type="hidden" id="db_prize_id" value="#(prize.id ??)"/>
+</div>
+  
+#end
+<script type="text/javascript">
+function exchangeScore(){
+	
+	var params = {};
+	params.prizeId = $("#db_prize_id").val();
+	 mask();        
+	$.post("#(webctx)/prize/exchangeScore", params, function(_json) {
+		unmask();
+		if(_json.code != 200){
+			$.alert(_json.msg);
+			return;
+		}
+		
+		
+		var json = _json.data;
+		if(json != null){
+			 
+			$.alert("兑换成功！" , function(){
+		  		
+			$("#user_left_count").html(json.score);
+			
+			location.reload();
+			 
+			});
+			
+		}else{ 
+			showMsg("兑换失败！", function(){
+				location.reload();
+			});
+		}
+	},"json");
+} 
+
+
+
+$(document).ready(function(){
+	
+	
+  //充值
+	$("#chongzhi").click(function(){
+		showChongzhi();
+		return false;
+	});
+   /*  wx.ready(function(res){
+		
+	}); */
+});
+</script>
+<script type="text/javascript" src="#(webctx)/resources/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="#(webctx)/resources/js/jquery-weui.js"></script>

@@ -1,0 +1,87 @@
+/**
+ * Copyright (c) 广州点步信息科技有限公司 2016-2017, wjun_java@163.com.
+ *
+ * Licensed under the GNU Lesser General Public License (LGPL) ,Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.gnu.org/licenses/lgpl-3.0.txt
+ *	    http://www.dbumama.com
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package #(controllerPackage);
+
+import java.util.Date;
+import com.jfinal.kit.Ret;
+import io.jboot.web.controller.annotation.RequestMapping;
+import #(modelPackage).#(tableMeta.modelName);
+import #(modulePackage).service.api.#(tableMeta.modelName)Service;
+import com.dbumama.market.web.core.controller.BaseAppAdminController;
+import com.jfinal.aop.Before;
+import com.jfinal.ext.interceptor.POST;
+import io.jboot.components.rpc.annotation.RPCInject;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import io.jboot.web.validate.EmptyValidate;
+import io.jboot.web.validate.Form;
+
+@RequestMapping(value = "#(moduleName)/#(toLowerCase(tableMeta.modelName))", viewPath="#(toLowerCase(tableMeta.modelName))")
+@RequiresPermissions(value={"/#(moduleName)/#(toLowerCase(tableMeta.modelName))"}, logical = Logical.OR)
+public class #(tableMeta.modelName)Controller extends BaseAppAdminController {
+
+    @RPCInject
+    private #(tableMeta.modelName)Service #(firstCharToLowerCase(tableMeta.modelName))Service;
+
+    public void index() {
+        render("#(toLowerCase(tableMeta.modelName))_index.html");
+    }
+    
+    public void list(){
+    	renderSuccess(#(firstCharToLowerCase(tableMeta.modelName))Service.paginate(getPageNo(), getPageSize()));
+    }
+
+    public void edit(Long id) {
+        #(tableMeta.modelName) entry = #(firstCharToLowerCase(tableMeta.modelName))Service.findById(id);
+        setAttr("#(lowerCaseModelName)", entry);
+        render("#(toLowerCase(tableMeta.modelName))_edit.html");
+    }
+   
+    @Before(POST.class)
+    @EmptyValidate({ 
+    	#for(cm : tableMeta.columnMetas)
+    	#if(cm.remarks??)
+    	@Form(name = "#(cm.attrName??)", message = "请输入#(cm.remarks??)")#if(for.last==false),#end
+    	#end 
+    	#end
+	})
+    public void save(#for(cm : tableMeta.columnMetas)#if(cm.attrName?? && cm.attrName !="appId")#(formartType(cm.javaType??)) #(cm.attrName??)#if(for.last==false), #end#end#end) {
+        #(tableMeta.modelName) entry = #(firstCharToLowerCase(tableMeta.modelName))Service.findById(id);
+        if(entry == null){
+        	entry = new #(tableMeta.modelName)();
+        	entry.setCreated(new Date());
+        	entry.setAppId(getAuthUserId());
+        	entry.setActive(true);
+        }
+        #for(cm : tableMeta.columnMetas)
+        #if(cm.attrName != "created" && cm.attrName !="appId" && cm.attrName !="active")
+        #if(cm.attrName=="updated")
+        entry.setUpdated(new Date());
+        #else
+        entry.set#(firstCharToUpperCase(cm.attrName??))(#(cm.attrName??));
+        #end
+        #end
+        #end
+        #(firstCharToLowerCase(tableMeta.modelName))Service.saveOrUpdate(entry);
+        renderJson(Ret.ok().set("id", entry.getId()));
+    }
+
+	@Before(POST.class)
+    public void del(Long id) {
+        renderSuccess();
+    }
+}

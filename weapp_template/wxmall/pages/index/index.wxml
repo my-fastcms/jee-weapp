@@ -1,0 +1,364 @@
+<!-- <view class="type-container">
+  <scroll-view class="type-navbar" scroll-x="true">
+    <view class="type-box">
+      <view id="0" class="type-navbar-item {{activeCategoryId == 0 ? 'type-item-on' : ''}}" bindtap="tabClick">全部
+      </view>
+    </view>
+    <view class="type-box" wx:for-items="{{categories}}" wx:key="id">
+      <view id="{{item.id}}" class="type-navbar-item {{activeCategoryId == item.id ? 'type-item-on' : ''}}" bindtap="tabClick">{{item.name}}
+      </view> 
+    </view>
+  </scroll-view>
+</view> -->
+<view class='contain'>
+  <swiper indicator-dots="true" autoplay="true" interval="4000" duration="500" class="swiper_box" hidden='{{isHidden}}'>   
+      <!-- block 只是用来配合wx:if wx:for等的使用的，表明前面的控制范围 -->
+      <block wx:if="{{imageList.length > 0}}">
+        <block wx:for="{{imageList}}" wx:key="image">  
+          <swiper-item>
+            <image src="{{item.src}}" bindtap='lunboJump' data-url='{{item.url}}' mode='aspectFill' data-id="{{shop.id}}" width="750rpx" height="380rpx" />
+          </swiper-item>
+        </block>
+      </block>
+      <!-- <block wx:else>
+         <swiper-item>
+        <image src="../../style/images/sowing.png" mode='aspectFill' bindtap='lunboClick' width="750rpx" height="380rpx"/>
+         </swiper-item>
+      </block> -->
+    <!-- <swiper-item>仅可放置在<swiper>组件中，宽高自动设置为100% -->
+  </swiper>
+  <!--图标分类-->
+  <!-- <view class="weui-flex wy-iconlist-box" style="font-size:12px;">
+    <view class="weui-flex__item">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link1.png" />
+        </view>新鲜蔬菜</view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link2.png" />
+        </view>农庄</view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link3.png" />
+        </view>蔬菜</view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link4.png" />
+        </view>禽蛋粮油</view>
+    </view>
+  </view>
+  <view class="weui-flex wy-iconlist-box" style="font-size:12px;" hidden='{{isHidden}}'>
+    <view class="weui-flex__item" bindtap='getPromtions' data-type="1">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link1.png" />
+        </view>限时打折</view>
+    </view>
+    <view class="weui-flex__item" bindtap='getPromtions' data-type="2">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link2.png" />
+        </view>满减送</view>
+    </view>
+    <view class="weui-flex__item" bindtap='getPromtions' data-type="4">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link4.png" />
+        </view>下单返现</view>
+    </view>
+    <view class="weui-flex__item" bindtap='getPromtions' data-type="3">
+      <view class="wy-links-iconlist">
+        <view class="img">
+          <image class="categclass" src="../../style/images/icon-link3.png" />
+        </view>多人拼团</view>
+    </view>
+  </view> -->
+  <!--新闻，向上滚动-->
+  <!-- <view class="swiper-news-box">
+    <swiper class="swiper-news"  vertical="true" autoplay="true" interval="3000" duration="300">
+      <swiper-item class="swiper-item">
+          <view class="swiper-text" bindtap='newsclick'>祝贺{{authUser.nick_name}}正式上线</view>
+      </swiper-item>
+    </swiper>
+</view> -->
+  <!--精选推荐-->
+  <!-- <block wx:if="{{commondCount>0}}">
+    <view class="title-box-left">
+      <view style="display:flex;">
+        <text style="flex:1;">精选推荐</text>
+        <text style="text-align:right;font-size:12px;">1/{{commondCount}}</text>
+      </view>
+    </view>
+    <scroll-view class="scroll_x_container" scroll-x="true">
+      <view class="scroll_box" wx:for="{{commondProducts}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+        <image src="{{item.mainPic}}" class="scroll_image"></image>
+      </view>
+    </scroll-view>
+  </block> -->
+
+  <!-- <block wx:if="{{newCount>=3}}">
+    <view class="title-box-left" hidden='{{isHidden}}'>
+      <view style="display:flex;">
+        <text style="flex:1;">满减送</text>
+        <text style="text-align:right;font-size:12px;">1/{{newCount}}</text>
+      </view>
+    </view>
+    <scroll-view class="scroll_x_container" scroll-x="true" hidden='{{isHidden}}'>
+      <view class="scroll_box" wx:for="{{newProducts}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+        <image src="{{item.mainPic}}" class="scroll_image"></image>
+      </view>
+    </scroll-view>
+  </block> -->
+
+  <!-- <block wx:if="{{newCount>=3}}">
+    <view class="title-box-left" hidden='{{isHidden}}'>
+      <view style="display:flex;">
+        <text style="flex:1;">多人拼团</text>
+        <text style="text-align:right;font-size:12px;">1/{{newCount}}</text>
+      </view>
+    </view>
+    <scroll-view class="scroll_x_container" scroll-x="true" hidden='{{isHidden}}'>
+      <view class="scroll_box" wx:for="{{newProducts}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+        <image src="{{item.mainPic}}" class="scroll_image"></image>
+      </view>
+    </scroll-view>
+  </block> -->
+
+  <!-- <block wx:if="{{newCount>=3}}">
+    <view class="title-box-left" hidden='{{isHidden}}'>
+      <view style="display:flex;">
+        <text style="flex:1;">限时打折</text>
+        <text style="text-align:right;font-size:12px;">1/{{newCount}}</text>
+      </view>
+    </view>
+    <scroll-view class="scroll_x_container" scroll-x="true" hidden='{{isHidden}}'>
+      <view class="scroll_box" wx:for="{{newProducts}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+        <image src="{{item.mainPic}}" class="scroll_image"></image>
+      </view>
+    </scroll-view>
+  </block> -->
+
+  <!-- <block wx:if="{{newCount>=3}}">  
+    <view class="title-box-left" hidden='{{isHidden}}'>
+      <view style="display:flex;">
+          <text style="flex:1;">新品上线</text>
+          <text style="text-align:right;font-size:12px;">1/{{newCount}}</text>
+        </view>
+    </view>
+    <scroll-view class="scroll_x_container" scroll-x="true" hidden='{{isHidden}}'>
+      <view class="scroll_box" wx:for="{{newProducts}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+        <image src="{{item.mainPic}}" class="scroll_image"></image>
+      </view>
+    </scroll-view>
+</block> -->
+
+  <!-- <view class="title-box-center">
+  <view>
+  <text style="color:red;font-weight:bold;">-</text> 猜你喜欢 <text style="color:red;font-weight:bold;">-</text>
+  </view>
+</view> -->
+<view hidden="{{seckill ? false : true}}">
+  <view class='pd40'>
+  <view class='flex-x-between flex-y-center'>
+    <view>
+    <text class='title-c' style='color:{{navbar_bgcolor}}'>限时秒杀</text>
+    <text class='stitle-c'>限量秒杀，就是倍儿爽</text>
+    </view>
+    <navigator class='multigroup-more' style='color:{{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};'  url="../seckill/index">更多 >></navigator>
+  </view>
+  </view>
+  <scroll-view scroll-x class='list-group-index'>
+    <view class="goods-container">
+      <view class="goods-box" wx:for-items="{{seckill}}" wx:key="{{index}}" bindtap="toSeckill" data-id="{{item.id}}">
+        <view class="img-box">
+          <image src="{{item.img}}" mode='aspectFill' class="image" />
+        </view>
+        <view class="goods-title">{{item.name}}</view>
+        <view class='flex-x-between flex-y-center'>
+          <view>
+            <view class="seckill-price" style='color:{{navbar_bgcolor}}'><text class='size-price'>¥</text>{{item.seckillPrice}}
+            </view> 
+            <view><text class='p-cost'>原价买:{{item.price}}</text></view>
+          </view>
+          <!-- <view class='group'><text class='c-group' style='color: {{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};'>人团</text></view> -->
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<view hidden="{{multigroup ? false : true}}">
+  <view class='pd40'>
+  <view class='flex-x-between flex-y-center'>
+    <view>
+    <text class='title-c' style='color:{{navbar_bgcolor}}'>人气拼团</text>
+    <text class='stitle-c'>人气好货，拼团专享</text>
+    </view>
+    <navigator class='multigroup-more' style='color:{{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};'  url="../multigroup/index">更多 >></navigator>
+  </view>
+  </view>
+  <scroll-view scroll-x class='list-group-index'>
+    <view class="goods-container">
+      <view class="goods-box" wx:for-items="{{multigroup}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+        <view class="img-box">
+          <image src="{{item.image}}" mode='aspectFill' class="image" />
+        </view>
+        <view class="goods-title">{{item.name}}</view>
+        <view class='flex-x-between flex-y-center'>
+          <view>
+            <view class="goods-price" style='color:{{navbar_bgcolor}}'><text class='size-price'>¥</text>{{item.collage_price}}
+            </view> 
+            <view><text class='p-cost'>单价买:{{item.prime_cost}}</text></view>
+          </view>
+          <view class='group'><text class='c-group' style='color: {{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};'>{{item.offer_num}}人团</text></view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+
+<view hidden="{{bargains ? false : true}}">
+  <view class='pd40'>
+  <view class='flex-x-between flex-y-center'>
+    <view>
+    <text class='title-c' style='color:{{navbar_bgcolor}}'>人气砍价</text>
+    <text class='stitle-c'>人气砍价，砍价专享</text>
+    </view>
+    <navigator class='multigroup-more' style='color:{{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};'  url="../bargain/list">更多 >></navigator>
+  </view>
+  </view>
+  <scroll-view scroll-x class='list-group-index'>
+    <view class="goods-container">
+      <view class="goods-box" wx:for-items="{{bargains}}" wx:key="{{index}}" bindtap="toBargainList" data-id="{{item.id}}">
+        <view class="img-box">
+          <image src="{{item.img}}" mode='aspectFill' class="image" />
+        </view>
+        <view class="goods-title">{{item.name}}</view>
+        <view class='flex-x-between flex-y-center' >
+          <view style='line-height:40rpx;'>
+            <view class="goods-price" style='color:{{navbar_bgcolor}}'><text class='size-price'>¥</text>{{item.baragainPrice}}
+            </view>  
+            <view ><text class='p-cost'>原价:{{item.price}}</text></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view> 
+
+<view hidden="{{agentProduct ? false : true}}">
+  <view class='pd40'>
+    <view class='flex-x-between flex-y-center'>
+      <view>
+      <text class='title-c' style='color:{{navbar_bgcolor}}'>分销商品</text>
+      <text class='stitle-c'>推广商品，赚取佣金</text>
+      </view>
+      <navigator class='multigroup-more' style='color:{{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};' url="../agent/product">更多 >></navigator>
+    </view>
+  </view>
+  <view class="goods-container">
+    <view class="goods-box" wx:for-items="{{agentProduct}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+      <view class="img-box">
+        <image src="{{item.image}}" mode='aspectFill' class="image" />
+      </view>
+      <view class="goods-title">{{item.name}}</view>
+      <view class="goods-price" style='color:{{navbar_bgcolor}};'>
+        <text class='size-price'>¥</text>{{item.price}}</view>
+    </view>
+  </view>
+</view>
+
+<view hidden="{{fullcut ? false : true}}">
+  <view class='pd40'>
+    <view class='flex-x-between flex-y-center'>
+      <view>
+      <text class='title-c' style='color:{{navbar_bgcolor}};'>满减送</text>
+      <text class='stitle-c'>满减优惠送不停</text>
+      </view>
+      <navigator class='multigroup-more' style='color:{{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};' url="../fullcut/index">更多 >></navigator>
+    </view>
+  </view>
+  <view class="goods-container">
+    <view class="goods-box" wx:for-items="{{fullcut}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+      <view class="img-box">
+        <image src="{{item.image}}" mode='aspectFill' class="image" />
+        <image src='../../style/images/i_manjian01.png' mode='aspectFill' class='image01'></image>
+      </view>
+      <view class="goods-title">{{item.name}}</view>
+      <view class="goods-price" style='color:{{navbar_bgcolor}};'>
+        <text class='size-price'>¥</text>{{item.price}}</view>
+    </view>
+  </view>
+  </view>
+  <!-- <view class='pd40'>
+    <text class='title-c'>满减送</text>
+    <text class='stitle-c'>满减优惠送不停</text>
+  </view>
+  <view class="goods-container ggood">
+    <view class="goods-box">
+      <view class="img-box">
+        <image src="http://image.dbumama.com/upload/image/20180527/1527413549612.jpg" mode='aspectFill' class="image" />
+      </view>
+      <view class="img-box">
+        <image src="http://image.dbumama.com/upload/image/20180522/1526958183478.jpg" mode='aspectFill' class="image" />
+      </view>
+      <view class="img-box">
+        <image src="http://image.dbumama.com/upload/image/20180524/1527128451729.png" mode='aspectFill' class="image" />
+      </view>
+    </view>
+  </view>
+  <view>
+    <navigator class='btn-more' url="../product/list/list">查看更多</navigator>
+  </view> -->
+<view hidden="{{promotion ? false : true}}">
+  <view class='pd40'>
+    <view class='flex-x-between flex-y-center'>
+      <view>
+      <text class='title-c' style='color:{{navbar_bgcolor}};'>限时折扣</text>
+      <text class='stitle-c'>超值折扣，限时送</text>
+      </view>
+      <navigator class='multigroup-more' style='color:{{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};' url="../promotion/index">更多 >></navigator>
+    </view>
+  </view>
+  <view class="goods-container">
+    <view class="goods-box" wx:for-items="{{promotion}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+      <view class="img-box">
+        <image src="{{item.image}}" mode='aspectFill' class="image" />
+        <image src='../../style/images/i_zhekou01.png' mode='aspectFill' class='image01'></image>
+      </view>
+      <view class="goods-title">{{item.name}}</view>
+      <view class="goods-price" style='color:{{navbar_bgcolor}};'>
+        <text class='size-price'>¥</text>{{item.promotion_value}}
+        <text class="p-cost">原价:{{item.promotion_price}}</text>
+        </view>
+    </view>
+  </view>
+</view>
+
+<view class='pd40'>
+    <view class='flex-x-between flex-y-center'>
+      <view>
+      <text class='title-c' style='color:{{navbar_bgcolor}};'>商品</text>
+      </view>
+      <navigator class='multigroup-more' style='color:{{navbar_bgcolor}}; border: 1px solid {{navbar_bgcolor}};' url="../product/list/list">更多 >></navigator>
+    </view>
+  </view>
+  <view class="goods-container">
+    <view class="goods-box" wx:for-items="{{products}}" wx:key="{{index}}" bindtap="toDetails" data-id="{{item.id}}">
+      <view class="img-box">
+        <image src="{{item.mainPic}}" mode='aspectFill' class="image" />
+      </view>
+      <view class="goods-title">{{item.name}}</view>
+      <view class="goods-price" style='color:{{navbar_bgcolor}};'>
+        <text class='size-price'>¥</text>{{item.price}}</view>
+    </view>
+  </view>
+  <!-- <view class="loading complete" hidden='{{!endFlag}}'>没有数据了</view> -->
+</view>

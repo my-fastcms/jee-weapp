@@ -1,0 +1,1150 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<style>
+#subPreMenuList .js-jslevel2,.js-module{
+	border: 1px solid red;
+}
+</style>
+#end
+#define script()
+<script type="text/javascript" src="#(webctx)/resources/js/Sortable.min.js"></script>
+#end
+#@layout("自定义菜单", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+ <div class="ibox-content">
+  <div class="menu_setting_area js_editBox"> 
+   <div class="menu_preview_area"> 
+    <div class="mobile_menu_preview"> 
+     <div class="mobile_hd tc">#if (session.weapp_in_session??) #(session.weapp_in_session.nick_name)  #else 没有公众号 #end</div> 
+     <div class="mobile_bd"> 
+      <ul class="pre_menu_list grid_line ui-sortable ui-sortable-disabled" id="menuList"> 
+       <li class="js_addMenuBox pre_menu_item module size1of1"> <!-- no_extra -->
+	       <a href="javascript:void(0);" class="pre_menu_link js_addL1Btn" title="最多添加3个一级菜单"> 
+	       <i class="icon14_menu_add"></i>添加菜单 
+	       </a>
+       </li> 
+      </ul> 
+     </div> 
+    </div> 
+    <!-- <div class="sort_btn_wrp"> 
+     <a id="orderBt" class="btn btn_default" href="javascript:void(0);" style="display: inline-block;">菜单排序</a> 
+     <span id="orderDis" class="dn btn btn_disabled" style="display: none;">菜单排序</span> 
+     <a id="finishBt" href="javascript:void(0);" class="dn btn btn_default" style="display: none;">完成</a> 
+    </div> --> 
+    <div class="panel-footer" >
+   	 	<!-- <button id="delMenu" class="btn btn-sm btn-danger" style="position: absolute;">删除所有菜单</button> -->
+   	 	<a id="delMenu"  class="btn btn-default btn-xs" style="position: absolute;" title="删除所有菜单,无需提交">删除所有菜单</a>
+   	 	<div style="text-align: center;">
+   	 	<button id="saveMenu" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+   	 	</div>
+	</div>
+   </div> 
+   
+    <!-- 菜单编辑区域 -->
+    <div class="menu_form_area"> 
+     
+    <div id="js_rightBox" class="portable_editor to_left" style="display: block;">
+    	<div class="alert alert-success" style="padding-top: 10px;">
+			<strong>提示:</strong>
+			<p>创建自定义菜单后，由于微信客户端缓存，需要24小时微信客户端才会展现出来。测试时可以尝试取消关注公众账号后再次关注，则可以看到创建后的效果。</p>
+			<p>可以直接拖拽菜单排序</p>
+		</div>
+	    <div id="js_none" class="menu_initial_tips tips_global">
+	     	点击左侧菜单进行编辑操作
+	    </div>
+     <div class="editor_inner" style="display: none;"> 
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info"> 菜单名称 </h4> 
+       <div class="global_extra"> 
+        <a href="javascript:void(0);" id="jsDelBt" style="color: red;">删除菜单</a> 
+       </div> 
+      </div> 
+      <div class="menu_form_bd" id="view"> 
+       <div id="js_innerNone" style="display:none;" class="msg_sender_tips tips_global">
+        	<font color="blue">已添加子菜单，仅可设置菜单名称。</font>
+       </div> 
+       
+       <div class="frm_control_group js_setNameBox" style="display: none; margin-top:20px;"> 
+        <label for="" class="frm_label"> <strong class="title js_menuTitle">菜单名称</strong> </label> 
+        <div class="frm_controls"> 
+         <span class="frm_input_box with_counter counter_in append"> 
+         	<input id="menu_size" type="text" class="frm_input js_menu_name" /> 
+         </span> 
+         <p class="frm_msg fail js_titleEorTips dn" style="display: none;">字数超过上限</p> 
+         <p class="frm_msg fail js_titlenoTips dn" style="display: none;">请输入菜单名称</p> 
+         <p class="frm_tips js_titleNolTips">字数不超过<span id="menu_size_text"></span>个</p> 
+        </div> 
+       </div>
+       
+       <div class="js_setConent" style="display: none; margin-top:10px">
+         <label for="" class="frm_label"> <strong class="title js_menuTitle">菜单类型</strong> </label> 
+       	 <label class="radio-inline" for="click_menu">
+			<input id="click_menu" name="menu_config" value="1" type="radio" menu-type="click" checked="checked" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+			<span class="label-text" style="vertical-align: middle">消息</span>
+		 </label>
+         <label class="radio-inline" for="view_menu">
+			<input id="view_menu" name="menu_config" value="2" type="radio" menu-type="view" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+			<span class="label-text">网页</span>
+		 </label>
+		 <label class="radio-inline" for="miniprogram_menu">
+			<input id="miniprogram_menu" name="menu_config" value="3" type="radio" menu-type="miniprogram" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+			<span class="label-text">小程序</span>
+		 </label>
+	   </div>
+      
+  
+       <div class="frm_control_group js_setConent" style="display: block; margin-top:15px"> 
+        <label for="" class="frm_label"> <strong class="title js_menuContent">菜单内容</strong> </label> 
+       </div> 
+       <div class="menu-content-container"></div>
+
+      </div> 
+     </div> 
+     <!-- <span class="editor_arrow_wrp"> <i class="editor_arrow editor_arrow_out"></i> <i class="editor_arrow editor_arrow_in"></i> </span> --> 
+    </div>
+   </div> 
+  </div>
+ </div>
+</div>
+<script type="text/javascript">
+var params = {}; var selectModulelDialog = null;
+var menuConfigMap = new Map();
+$(document).ready(function(){
+	
+	
+	//一级菜单拖拉排序
+	var menuList = document.getElementById("menuList");
+	var sort = Sortable.create(menuList, {
+		animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
+		  handle: ".module", // Restricts sort start click/touch to the specified element
+		  draggable: ".module", // Specifies which items inside the element should be sortable
+		  ghostClass:"js-module",
+		  onUpdate: function (evt){
+		     var item = evt.item; // the current dragged HTMLElement
+		  }
+	});
+	
+	init();
+	function init(){
+		getMenus();
+	}
+	
+	//加载菜单数据
+	function getMenus(){
+		$(".menu_preview_area").mask("正在读取菜单数据...");
+		obz.ajaxJson(obz.ctx+"/wechat/menu/list", params, function(resp){
+			$(".menu_preview_area").unmask();
+			if(resp.code==200){
+				clearMenus();
+				var data = resp.data;
+				if(!data.attrs.menu) {
+					$("#menuList li.js_addMenuBox").eq(0).show();
+					unBindLiClick();
+					bindLiClick();
+					return;	
+				}
+				var menus = data.attrs.menu.button;
+				if(menus.length<=0){
+					//没有菜单
+					$("#menuList li.js_addMenuBox").eq(0).show();
+					return;
+				}
+				if(menus.length == 3){
+					$("#menuList li.js_addMenuBox").eq(0).hide();
+				}else{
+					$("#menuList li.js_addMenuBox").eq(0).show();
+				}
+				var classIndex = -1;
+				if(menus.length == 3 || menus.length==2) classIndex = 3;
+				if(menus.length == 1) classIndex = 2;
+				$("#menuList li.js_addMenuBox").eq(0).addClass("size1of"+classIndex+"");
+				for(var i=0;i<menus.length;i++){
+					var menu = menus[i];
+					menu.index = i+"";
+					//直接显示菜单
+					var itemHtml = obz.dataTemplate4obj($("#menu_item_tpl").html(), menu);
+					$("#menuList").append(itemHtml);
+					$("#menu_"+i).addClass("size1of"+classIndex+"");
+					//判断菜单类型是 view、click、miniprogram,赋予不同的属性值
+					if(menu.type=="click"){
+						$("#menu_"+i).attr("key",menu.key);
+						clickMenusConfig(menu.key)
+					}else if(menu.type=="view"){
+						$("#menu_"+i).attr("menu-url",menu.url);
+					}else if(menu.type=="miniprogram"){
+						$("#menu_"+i).attr("appid",menu.appid);
+						$("#menu_"+i).attr("apppath",menu.pagepath);
+						$("#menu_"+i).attr("appurl",menu.url);
+					}
+					if(menu.sub_button.length>0){
+						//有子菜单
+						for(var k=0;k<menu.sub_button.length;k++){
+							var submenu = menu.sub_button [k];
+							submenu.index = k+1;
+							submenu.parentId = "menu_"+i;
+
+							var subItemHtml = obz.dataTemplate4obj($("#sub_menu_item_tpl").html(), submenu);
+							$("#menu_"+i).find("ul li.js_addMenuBox").before(subItemHtml);
+							//判断菜单类型是 view、click、miniprogram,赋予不同的属性值
+							if(submenu.type=="click"){
+								$("#menu_"+i).find("ul li").eq(k).attr("key",submenu.key);
+								clickMenusConfig(submenu.key);
+							}else if(submenu.type=="view"){
+								$("#menu_"+i).find("ul li").eq(k).attr("menu-url",submenu.url);
+							}else if(submenu.type=="miniprogram"){
+								$("#menu_"+i).find("ul li").eq(k).attr("appid",submenu.appid);
+								$("#menu_"+i).find("ul li").eq(k).attr("apppath",submenu.pagepath);
+								$("#menu_"+i).find("ul li").eq(k).attr("appurl",submenu.url);
+							}
+						}
+					}
+				}
+				unBindLiClick();
+				bindLiClick();
+				
+			
+			}
+		});
+	}
+	//消息菜单的回复配置
+	function clickMenusConfig(key){
+		obz.ajaxJson("#(webctx)/wechat/menu/menulist", {key:key}, function(resp){
+			if(resp.state == "ok"){
+				var data = resp.data;
+				if(!data) return;
+				if(data == null || data == "") {
+					menuConfigMap.put(key,"");
+					return;
+				}
+				for(var i=0;i<data.length;i++){
+					var menuRpCfgDto = data[i];
+					var menuRpCfg = menuRpCfgDto.menuReplyConfig;
+					if(menuRpCfg.msgType==0){
+						//纯文本消息
+						var clickConfigObj = {};
+						clickConfigObj.msg_type = 0;
+						clickConfigObj.msg_text_content = menuRpCfg.msgTextContent;
+						menuConfigMap.put(menuRpCfg.menuKey,clickConfigObj);
+					}else if(menuRpCfg.msgType==1){
+						//图片
+						var clickConfigObj = {};
+						clickConfigObj.msg_type = 1;
+						clickConfigObj.media_id = menuRpCfg.mediaId;
+						clickConfigObj.media_pic = menuRpCfg.mediaPic;
+						menuConfigMap.put(menuRpCfg.menuKey,clickConfigObj);
+					}else if(menuRpCfg.msgType==5){
+						//图文消息
+						var clickConfigObj = {};
+						clickConfigObj.msg_type = 5;
+						var clickReplyNewsArr = [];
+						var replyNews = menuRpCfgDto.replyNews;
+						for(var k=0;k<replyNews.length;k++){
+							var replyNew = replyNews[k];
+							var clickReplyNewsObj = new Object();
+							clickReplyNewsObj.msg_title = replyNew.msgTitle;
+							clickReplyNewsObj.msg_desc = replyNew.msgDesc;
+							clickReplyNewsObj.msg_pic = replyNew.msgPic;
+							clickReplyNewsObj.msg_url = replyNew.msgUrl;
+							clickReplyNewsObj.msg_org_type = replyNew.msgOrgType;
+							clickReplyNewsObj.mediaid = replyNew.mediaId;
+							clickReplyNewsArr.push(clickReplyNewsObj);
+						}
+						clickConfigObj.replyNews = clickReplyNewsArr;
+						menuConfigMap.put(menuRpCfg.menuKey,clickConfigObj);
+					}else if(menuRpCfg.msgType==9){
+						//事件触发
+						var clickConfigObj = {};
+						clickConfigObj.msg_type = 9;
+						clickConfigObj.event_type = menuRpCfg.eventType;
+						menuConfigMap.put(menuRpCfg.menuKey,clickConfigObj);
+					}
+				}
+			}
+		});
+	}
+	
+	//选择菜单类型，click，view，miniprogram
+	$('input:radio[name="menu_config"]').change( function(){
+		var menuType = $(this).attr("menu-type"); 
+		if( menuType == "click"){
+			chooseType("click");
+			$(".menu-content-container").empty().append($("#click_content_container").html());
+		}else if( menuType == "view"){
+			if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+				menuConfigMap.removeByKey($("li.selected").attr("key"));
+			}
+			chooseType("view");
+			$(".menu-content-container").empty().append($("#view_content_container").html());
+		}else if( menuType == "miniprogram"){
+			if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+				menuConfigMap.removeByKey($("li.selected").attr("key"));
+			}
+			chooseType("miniprogram");
+			$(".menu-content-container").empty().append($("#miniprogram_content_container").html());
+		}
+		
+	});
+	
+	function resetMenuForm(){
+		//清空右边菜单编辑区域数据
+		$(".global_info").html("菜单名称");
+		$(".js_menu_name").val("");
+		$(".menu-content-container").children().remove();
+		$(".editor_inner").hide();
+		$("#js_none").show();
+	}
+	
+	$("#jsDelBt").click(function(){
+		if($("li.selected").hasClass("jslevel1")){
+			//删除一级菜单
+			obz.showMessage("删除一级菜单会连子菜单一起删除，确定删除吗！", function(){
+				$("#menuList li.js_addMenuBox").eq(0).show();
+				$("#menuList li.js_addMenuBox").eq(0).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+$("#menuList li.jslevel1").length);
+				$("#menuList li.jslevel1").each(function(){
+					$(this).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+$("#menuList li.jslevel1").length);
+				});
+				$("li.selected").find("ul li").each(function(){
+					if(menuConfigMap.containsKey($(this).attr("key"))){
+						menuConfigMap.removeByKey($(this).attr("key"));
+					}
+					$(this).remove();
+				});
+				if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+					menuConfigMap.removeByKey($("li.selected").attr("key"));
+				}
+				$("li.selected").remove();
+				resetMenuForm();
+				return false;
+    		});
+		}else{
+			if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+				menuConfigMap.removeByKey($("li.selected").attr("key"));
+			}
+			if($("li.selected").parent().children().length <= 2){
+				$("li.selected").parent().parent().parent().attr("type","click");
+			}
+			$("li.selected").remove();
+			resetMenuForm();
+		}
+		return false;
+	});
+	
+	$("#saveMenu").click(function(){
+		var menuArray = new Array();
+		var errorArray = new Array();
+		//获取设置的回复内容数据
+		var clickConfigArray = new Array();
+		//1.获取一级菜单
+		$("#menuList li.jslevel1").each(function(){
+			if($(this).find("ul li.jslevel2").length > 0){
+				
+				var menu = new Object();
+				menu.name = $(this).find("span.js_l1Title").text();
+				var submenuArray = new Array();
+				//有子菜单
+				$(this).find("ul li.jslevel2").each(function(){
+					var submenu = new Object();
+					submenu.type=$(this).attr("type");
+					submenu.name=$(this).find("span.js_l2Title").text();
+					//判断菜单类型是 view、click、miniprogram,拼装不同的请求对象
+					if(submenu.type == "view"){
+						submenu.url=$(this).attr("menu-url");
+						if(submenu.url == null || submenu.url==""){
+							var errorObj = new Object();
+							errorObj.msg="子菜单" + submenu.name + "没有设置页面链接地址;<br>";
+							errorArray.push(errorObj);
+							return false;
+						}
+					}else if(submenu.type == "click"){
+						submenu.key=$(this).attr("key");
+						if( submenu.key == null || submenu.key=="" || 
+								menuConfigMap.get(submenu.key) == null || 
+								menuConfigMap.get(submenu.key) == ""){
+							var errorObj = new Object();
+							errorObj.msg="子菜单" + submenu.name + "没有设置点击回复内容;<br>";
+							errorArray.push(errorObj);
+							return false;
+						}
+					}else if(submenu.type == "miniprogram"){
+						submenu.url=$(this).attr("appurl");
+						submenu.appid=$(this).attr("appid");
+						submenu.pagepath=$(this).attr("apppath");
+						if(submenu.appid == null || submenu.appid==""){
+							var errorObj = new Object();
+							errorObj.msg="子菜单" + submenu.name + "没有设置小程序app_id;<br>";
+							errorArray.push(errorObj);
+							return false;
+						}
+						if(submenu.pagepath == null || submenu.pagepath==""){
+							var errorObj = new Object();
+							errorObj.msg="子菜单" + submenu.name + "没有设置小程序app_path;<br>";
+							errorArray.push(errorObj);
+							return false;
+						}
+						if(submenu.url == null || submenu.url==""){
+							var errorObj = new Object();
+							errorObj.msg="子菜单" + submenu.name + "没有设置小程序app_url;<br>";
+							errorArray.push(errorObj);
+							return false;
+						}
+					}
+					submenuArray.push(submenu);
+				});
+				menu.sub_button=submenuArray;
+				menuArray.push(menu);
+				
+			}else{
+				//无子菜单
+				var menu = new Object();
+				menu.type=$(this).attr("type");
+				menu.name=$(this).find("span.js_l1Title").text();
+				//判断菜单类型是 view、click、media_id、miniprogram,拼装不同的请求对象
+				if(menu.type == "view"){
+					menu.url=$(this).attr("menu-url");
+					if(menu.url == null || menu.url==""){
+						var errorObj = new Object();
+						errorObj.msg="菜单" + menu.name + "没有设置页面链接地址;<br>";
+						errorArray.push(errorObj);
+						return false;
+					}
+				}else if(menu.type == "click"){
+					menu.key=$(this).attr("key");
+					if($(this).attr("key")==null || $(this).attr("key")==""
+							|| menuConfigMap.get(menu.key) == null
+							|| menuConfigMap.get(menu.key) == ""){
+						var errorObj = new Object();
+						errorObj.msg="菜单" + menu.name + "没有设置点击回复内容;<br>";
+						errorArray.push(errorObj);
+						return false;
+					}
+				}else if(menu.type == "miniprogram"){
+					menu.url=$(this).attr("appurl");
+					menu.appid=$(this).attr("appid");
+					menu.pagepath=$(this).attr("apppath");
+					if(menu.appid == null || menu.appid==""){
+						var errorObj = new Object();
+						errorObj.msg="菜单" + menu.name + "没有设置小程序app_id;<br>";
+						errorArray.push(errorObj);
+						return false;
+					}
+					if(menu.pagepath == null || menu.pagepath==""){
+						var errorObj = new Object();
+						errorObj.msg="菜单" + menu.name + "没有设置小程序app_path;<br>";
+						errorArray.push(errorObj);
+						return false;
+					}
+					if(menu.url == null || menu.url==""){
+						var errorObj = new Object();
+						errorObj.msg="菜单" + menu.name + "没有设置小程序app_url;<br>";
+						errorArray.push(errorObj);
+						return false;
+					}
+				}
+				menuArray.push(menu);
+			}
+		});
+		
+		if(errorArray.length>0){
+			var errmsg = "";
+			for(var i=0;i<errorArray.length;i++){
+				var eobj = errorArray[i];
+				errmsg += eobj.msg;
+			}
+			obz.error(errmsg);
+			return false;
+		}
+		if(menuArray.length<=0 ){
+			obz.warn("没有菜单数据可以提交");
+			return false;
+		}
+		var params = {};
+		params.menus = JSON.stringify(menuArray);
+		if(menuConfigMap.size() > 0){
+			params.menuConfigMaps = JSON.stringify(menuConfigMap);
+		}
+		 obz.showMessage("确定发布菜单吗？", function(){
+			$(".menu_preview_area").mask("正在保存...");
+			obz.ajaxJson(obz.ctx+"/wechat/menu/save", params, function(json) {
+				$(".menu_preview_area").unmask();
+				if(json.code!=200){
+					obz.error(json.msg);
+				}else{
+					obz.msg("提交成功");
+				}
+			},"json");
+		}); 
+	});
+	
+	//删除全部菜单按钮
+	$("#delMenu").click(function(){
+		obz.showMessage("所有菜单一旦删除则无法恢复，请谨慎操作！", function(){
+			$(".menu_preview_area").mask("正在删除...");
+			obz.ajaxJson(obz.ctx+"/wechat/menu/delete",{},function(resp){
+				$(".menu_preview_area").unmask();
+				if(resp.code != 200){
+					obz.error(json.msg);
+				}else{
+					obz.msg("删除成功");
+					init();
+				}
+			})
+		});
+	});
+});
+//清除菜单数据
+function clearMenus(){
+	$("#menuList li.jsMenu").remove();
+	$("#menuList li.js_addMenuBox").eq(0).show();
+}
+
+//清除li元素 css
+function clearLicss(){
+	$("#menuList li").each(function(){
+		if($(this).hasClass("current selected")){
+			$(this).removeClass("current selected");				
+		}
+	});
+}
+//隐藏所有的添加菜单按钮项
+function hideJsTitleBox(){
+	$("div.js_l2TitleBox").hide();
+}
+function unBindLiClick (){
+	$("#menuList li").unbind("click");
+}
+//绑定菜单点击事件
+function bindLiClick() {
+	//菜单点击
+	$("#menuList li").click(function(){
+		$("#js_none").hide();
+		$(".js_menu_name").val("");
+		$(".select_content").children().remove();
+		miniprogramBlur();
+		if($(this).hasClass("jslevel1")){
+			clearLicss();
+			$(this).addClass("current selected");
+			//点击的是一级菜单
+			hideJsTitleBox();
+			$(this).find("div.js_l2TitleBox").show();
+			$(".global_info").html($(this).find("span.js_l1Title").text());
+			$(".js_menu_name").val($(this).find("span.js_l1Title").text());
+			$("#menuList").find("ul.sub_pre_menu_list").removeAttr("id");
+			$("#menu_size").attr("maxlength","5");
+			$("#menu_size_text").text("5");
+			$(this).find("ul.sub_pre_menu_list").attr("id","subPreMenuList");
+			//二级菜单拖拉排序
+			var subPreMenuList = document.getElementById("subPreMenuList");
+			var sort = Sortable.create(subPreMenuList, {
+				animation: 150, 
+				  handle: ".jslevel2", 
+				  draggable: ".jslevel2", 
+				  ghostClass:"js-jslevel2",
+				  onUpdate: function (evt){
+				     var item = evt.item;
+				  }
+			}); 
+			//判断一级菜单下面是否已经存在子菜单
+			if($(this).find("ul li").length > 1){
+				$(".editor_inner").show();$("#js_innerNone").show();
+				$(".js_setNameBox").show();$(".js_setConent").hide();
+				$(".menu-content-container").children().remove();
+			}else{
+				$(".editor_inner").show();$(".js_setConent").show();
+				$(".js_setNameBox").show();$("#js_innerNone").hide();
+				//给菜单赋值
+				menuAssignment(this);
+			}
+		}else if($(this).hasClass("jslevel2")){
+			//点击的是二级菜单
+			clearLicss();
+			$(this).addClass("current selected");
+			$(".global_info").html($(this).find("span.js_l2Title").text());
+			$(".js_menu_name").val($(this).find("span.js_l2Title").text());
+			$(".editor_inner").show();$(".js_setConent").show();
+			$(".js_setNameBox").show();$("#js_innerNone").hide();
+			$("#menu_size").attr("maxlength","12");
+			$("#menu_size_text").text("12");
+			$("#url").show();
+			//给菜单赋值
+			menuAssignment(this);
+			
+		}else {
+			//点击新增菜单
+			if($(this).parent().attr("id") == "menuList"){
+				//点击增加一级菜单
+				var menu = new Object();
+				menu.index = $("#menuList li").length+1;
+				menu.name = "菜单名称";		
+				var itemHtml = obz.dataTemplate4obj($("#menu_item_tpl").html(), menu);
+				$("#menuList").append(itemHtml);
+				var classIndex = $("#menuList li.jslevel1").length+1 > 3 ? 3 : $("#menuList li.jslevel1").length+1;
+				$("#menu_"+menu.index).addClass("size1of"+classIndex+"");
+				//清除其他菜单的样式
+				clearLicss();
+				hideJsTitleBox();
+				//选中点击的菜单，及显示对应的编辑操作
+				$("#click_menu").prop("checked",true);
+				$(".menu-content-container").empty().append($("#click_content_container").html());
+				$("#menu_"+menu.index).addClass("current selected").attr("type","click");
+				$("#menu_"+menu.index).find("div.js_l2TitleBox").show();
+				$(".editor_inner").show();$(".js_setConent").show();
+				$(".js_setNameBox").show();$("#js_innerNone").hide();
+				
+				$("#menuList li.jslevel1").each(function(){
+					$(this).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+classIndex+"");
+				});
+				if($("#menuList li.jslevel1").length == 3){
+					$(this).hide();
+				}else{
+					$(this).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+classIndex+"");	
+				}
+			}else{
+				if(!$(this).parent().attr("id")){
+					$(this).parent().attr("id","subPreMenuList");
+					//二级菜单拖拉排序
+					var subPreMenuList = document.getElementById("subPreMenuList");
+					var sort = Sortable.create(subPreMenuList, {
+						animation: 150, 
+						  handle: ".jslevel2", 
+						  draggable: ".jslevel2", 
+						  ghostClass:"js-jslevel2",
+						  onUpdate: function (evt){
+						     var item = evt.item;
+						  }
+					});
+					if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+						menuConfigMap.removeByKey($("li.selected").attr("key"));
+					}
+				}
+				//点击增加二级菜单
+				if($(this).parent().find("li").length >=6){
+					obz.info("最多添加五个子菜单");
+					return false;
+				}
+				//清除一级菜单的属性
+				$(this).parent().parent().parent().removeAttr("type");
+				if($(this).parent().children().length <= 1)
+				removeAttr();
+				var submenu = new Object();
+				submenu.name = "菜单名称";
+				submenu.parentId=$(this).parent().parent().parent().attr("id");
+				submenu.index = $(this).siblings(".jslevel2").length+1;
+				var subItemHtml = obz.dataTemplate4obj($("#sub_menu_item_tpl").html(), submenu);
+				$(this).before(subItemHtml);	
+			
+				$(".global_info").html(submenu.name);
+				clearLicss();
+				$("#click_menu").prop("checked",true);
+				$(".menu-content-container").empty().append($("#click_content_container").html());
+				$(this).prev().addClass("current selected").attr("type","click");
+				$(".editor_inner").show();$(".js_setConent").show();
+				$(".js_setNameBox").show();$("#js_innerNone").hide();
+				
+			}
+			unBindLiClick();
+			bindLiClick();
+		}
+		return false;
+	});
+}
+//菜单赋值
+function menuAssignment(obj){
+	if($(obj).attr("type")=="click"){
+		$("#click_menu").prop("checked",true);
+		$(".menu-content-container").empty().append($("#click_content_container").html());
+		if($(obj).attr("key")!=null && $(obj).attr("key") !=""
+			&& $(obj).attr("key") && $(obj).attr("key") !="undefined"
+			&& typeof($(obj).attr("key")) != undefined){
+			
+			var clickConfigObj = menuConfigMap.get($(obj).attr("key"));
+			if(clickConfigObj){
+				if(clickConfigObj.msg_type == 0){			
+					$(".select_content").empty().append($("#text_tpl").html()).attr("data-type",clickConfigObj.msg_type);
+					$(".select_content").find("textarea#keyText").val(clickConfigObj.msg_text_content);
+				}else if(clickConfigObj.msg_type == 1){
+					var entity = {};
+					entity.mediaId = clickConfigObj.media_id;
+					entity.mediaPic = clickConfigObj.media_pic;
+					$("div.select_content").empty().append(template("image_sel_tpl", entity)).attr("data-type",clickConfigObj.msg_type);
+				}else if(clickConfigObj.msg_type == 5){
+					var clickReplyNewsArr = clickConfigObj.replyNews;
+					for(var i=0; i<clickReplyNewsArr.length;i++){
+						var clickReplyNewsObj = clickReplyNewsArr[i];
+						var entity = {};
+						entity.mediaId = clickReplyNewsObj.mediaid;
+						entity.msgOrgType = clickReplyNewsObj.msg_org_type;
+						entity.msgTitle = clickReplyNewsObj.msg_title;
+						entity.msgUrl = clickReplyNewsObj.msg_url;
+						entity.msgPic = clickReplyNewsObj.msg_pic;
+						if(entity.msgOrgType == 1)
+						$("div.select_content").append(template("product_sel_tpl", entity)).attr("data-type",clickConfigObj.msg_type);
+						if(entity.msgOrgType == 2)
+						$("div.select_content").append(template("wechat_media_sel_tpl", entity)).attr("data-type",clickConfigObj.msg_type);
+					}
+				}else if(clickConfigObj.msg_type == 9){
+					$(".select_content").empty().append($("#event_sel_tpl").html()).attr("data-type",clickConfigObj.msg_type);
+					$(".select_content").find("select#event_type").val(clickConfigObj.event_type);
+				}
+			}	
+		}
+	}else if($(obj).attr("type")=="view"){
+			$("#view_menu").prop("checked",true);
+			$(".menu-content-container").empty().append($("#view_content_container").html());
+		if($(obj).attr("menu-url")!=null && $(obj).attr("menu-url") !=""
+			&& $(obj).attr("menu-url") && $(obj).attr("menu-url") !="undefined"
+			&& typeof($(obj).attr("menu-url")) != undefined){
+			$(".menu-content-container").empty().append($("#view_content_container").html());
+			$(".select_content").empty().append($("#url_tpl").html());
+			$(".view_inputs_div").find("input#urlText").val($(obj).attr("menu-url"));		
+		}
+	}else if($(obj).attr("type")=="miniprogram"){					
+		$("#miniprogram_menu").prop("checked",true);
+		$(".menu-content-container").empty().append($("#miniprogram_content_container").html());
+		$(".miniprogram_inputs_div").find("input#app_url").val($(obj).attr("appUrl"));
+		$(".miniprogram_inputs_div").find("input#app_id").val($(obj).attr("appId"));
+		$(".miniprogram_inputs_div").find("input#app_path").val($(obj).attr("appPath"));
+	}
+}
+
+function chooseType(type){
+	if($("li.selected").attr("type") != type){
+		removeAttr();
+		$("li.selected").attr("type", type);
+	}
+}
+//清除所选菜单类型的所有属性
+function removeAttr(){
+	$("li.selected").removeAttr("appid").removeAttr("apppath").removeAttr("appurl").removeAttr("menu-url").removeAttr("key").removeAttr("mediaid");
+}
+
+/* == 消息事件 start== */
+/*选择文本事件*/
+function textClick(obj){
+	//每次点击触发，清空菜单map函数key值对应的val
+	if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+		menuConfigMap.removeByKey($("li.selected").attr("key"));
+	}
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "0");		
+	$(obj).parent().parent().find("div.select_content").empty().append($("#text_tpl").html());
+}
+
+/*选择图片事件*/
+function openImageClick(obj){
+	obz.selectImageOne(function (selImgs) {
+		if(selImgs.length>0){
+			var imgObj = selImgs[0];
+			return parseToImageEntity(obj, imgObj);
+		} 
+	});
+	return false;
+}
+/*选择图片事件*/
+function parseToImageEntity(obj, img){
+	//每次点击触发，清空菜单map函数key值对应的val
+	if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+		menuConfigMap.removeByKey($("li.selected").attr("key"));
+	}
+	var entity = {};
+	entity.mediaId = img.mediaId;
+	entity.mediaPic = img.url;
+	if(entity.mediaId == null || entity.mediaId == ""){
+		obz.error("该图片无法发送消息，请先上传到微信服务器");
+		return false;
+	}
+	//清除已有素材的内容
+	$(obj).parent().parent().find("div.select_content").children().remove();
+	
+	var clickConfigObj = {};
+	clickConfigObj.msg_type = 1;
+	clickConfigObj.media_id = entity.mediaId;
+	clickConfigObj.media_pic = entity.mediaPic;
+	menuConfigMapPut(clickConfigObj);
+	
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "1");								
+	$(obj).parent().parent().find("div.select_content").append(template("image_sel_tpl", entity));
+	return true;
+}
+
+/*选择微信图文素材*/
+function openWechatMediaDialog(obj){
+	var url = "#(webctx)/media/wechat";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择微信图文素材",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = TBatch.getCheckedCount();
+            		if(count <=0) {
+            			obz.warn("请选择微信图文素材")
+            			return;
+            		}
+            		if(parseToNewsEntity(obj, "wechat_media_sel_tpl", 2))
+            			self.close();
+            	}
+            }]
+    });
+	return false;
+}
+function openProductDialog(obj){
+	var url = "#(webctx)/product/youzan";
+	BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择商品",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}, {
+            	label: '确定',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var count = TBatch.getCheckedCount();
+            		if(count <= 0) {
+            			obz.warn("请选择商品")
+            			return;
+            		}
+            		if(parseToNewsEntity(obj, "product_sel_tpl", 1))
+            			self.close();
+            	}
+            }]
+    });
+	return false;
+}
+//有赞商品、微信素材对话框
+function parseToNewsEntity(obj, tpl, type){
+	//每次点击触发，清空菜单map函数key值对应的val
+	if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+		menuConfigMap.removeByKey($("li.selected").attr("key"));
+	}
+	//清除素材的内容
+ 	if($(obj).parent().next().attr('data-type') != 5)
+	$(obj).parent().parent().find("div.select_content").children().remove();
+	var count = $(obj).parent().parent().find("div.select_content").find("div.newsmsg_item").length;
+	log("count:" + count);
+	var newCount = TBatch.getCheckedCount();
+	if( newCount + count >1){
+		obz.info("菜单回复消息不能超过1个素材");
+		return false;
+	}
+	
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "5");	
+	
+	var clickConfigObj = {}
+	clickConfigObj.msg_type = 5;
+	var clickReplyNewsArr = [];
+	var idsArr = TBatch.getChecked().split("-");
+	for(var i=0;i<idsArr.length;i++){
+		var id = idsArr[i];
+		if(id != null && id !=""){
+			var tr = $("#tr_id_"+id);
+			var entity = {};
+			entity.mediaId = tr.attr("data-id");
+			entity.msgTitle = tr.attr("data-title");
+			entity.msgDesc = tr.attr("data-digest");
+			entity.msgUrl = tr.attr("data-url");
+			entity.msgPic = tr.attr("data-image");
+			entity.msgOrgType = type;
+			//$("li.selected").attr("mediaid",entity.mediaId);
+			var clickReplyNewsObj = new Object();
+			clickReplyNewsObj.msg_title = entity.msgTitle;
+			clickReplyNewsObj.msg_desc = entity.msgDesc;
+			clickReplyNewsObj.msg_pic = entity.msgPic;
+			clickReplyNewsObj.msg_url = entity.msgUrl;
+			clickReplyNewsObj.msg_org_type = entity.msgOrgType;
+			clickReplyNewsObj.mediaid = entity.mediaId;
+			clickReplyNewsArr.push(clickReplyNewsObj);
+			$(obj).parent().parent().find("div.select_content").append(template(tpl, entity));
+		}
+	}
+	if(count <= 0){	
+		clickConfigObj.replyNews = clickReplyNewsArr;
+	}
+	 else{
+		var countItemArr = [];
+		$(".select_content").find("div.newsmsg_item").each(function(){
+			var countItemsObj = {};
+			countItemsObj.msg_title = $(this).attr("data-title");
+			countItemsObj.msg_desc = $(this).attr("data-desc");
+			countItemsObj.msg_pic = $(this).attr("data-image");
+			countItemsObj.msg_url = $(this).attr("data-url");
+			countItemsObj.msg_org_type = $(this).attr("data-type");
+			countItemsObj.mediaid = $(this).attr("media_id");
+			countItemArr.push(countItemsObj);
+		});
+		clickConfigObj.replyNews = countItemArr;
+	} 
+	menuConfigMapPut(clickConfigObj);
+	
+	return true;
+}
+/*选择事件触发*/
+function openWechatEvent(obj){	
+	//每次点击触发，清空菜单map函数key值对应的val
+	if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+		menuConfigMap.removeByKey($("li.selected").attr("key"));
+	}
+	$(obj).parent().parent().find("div.select_content").attr("data-type", "9");		
+	$(obj).parent().parent().find("div.select_content").empty().append($("#event_sel_tpl").html());
+}
+/* == 消息事件  end== */
+ 
+/* == 页面事件 start== */
+/*选择页面地址*/
+function urlClick(obj){
+	removeAttr();
+	$(obj).parent().parent().find("div.select_content").empty().append($("#url_tpl").html());
+}
+/*选择有赞商品页面*/
+function openUrlProductDialog(obj){
+	var url = "#(webctx)/product/youzan/itemUrl";
+	dialog =BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择商品",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}]
+    });
+	return false;
+}
+/*选择微信图文素材*/
+obz.dialog;
+function openUrlWechatMediaDialog(obj){
+	var url = "#(webctx)/media/wechatItemUrl";
+	dialog = BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_WIDE,
+		title: "选择微信图文素材",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(dialogItself){
+                dialogItself.close();
+            }}]
+    });
+	return false;
+}
+
+function chooseItem(obj){
+	removeAttr();
+	$(".select_content").empty().append($("#url_tpl").html());
+	$(".view_inputs_div").find("input#urlText").val($(obj).parent().parent().attr("data-url"));
+	if(dialog != null )dialog.close();
+
+	$("li.selected").attr("menu-url", $(obj).parent().parent().attr("data-url"));	
+}
+
+/* == 页面事件 end== */
+
+//删除已选择的素材
+function delNewsRow(obj){
+	//删除已选择的素材
+	var index = $(obj).parent().index();
+	$(obj).parent().remove();
+	var menukey = $("li.selected").attr("key");
+	
+	var clickConfigObj = menuConfigMap.get(menukey);
+	if(clickConfigObj.msg_type == 1){
+		menuConfigMap.removeByKey(menukey);
+	}else if(clickConfigObj.msg_type == 5){
+		var clickReplyNewsArr = clickConfigObj.replyNews;
+		clickReplyNewsArr.splice(index,1);
+		menuConfigMap.removeByKey(menukey);
+	}
+}
+/* 菜单配置map函数赋值 */
+function menuConfigMapPut(clickConfigObj){
+	if($("li.selected").attr("key") == null || $("li.selected").attr("key") == ""){
+		//获取时间戳随机数
+		var key=new Date().getTime();
+		$("li.selected").attr("key",key);
+		menuConfigMap.put(key,clickConfigObj);
+	}else{
+		if(menuConfigMap.containsKey($("li.selected").attr("key"))){
+			menuConfigMap.removeByKey($("li.selected").attr("key"));
+		}
+		menuConfigMap.put($("li.selected").attr("key"),clickConfigObj);
+	}
+}
+/* 失去焦点事件  赋值 */
+//菜单名称文本框失去焦点事件
+$(".js_menu_name").blur(function(){
+	//查找当前选中的li。设置菜单名称
+	if($("li.selected").hasClass("jslevel1")){
+		if($(this).val() != ""){
+			$("li.selected").find("span.js_l1Title").text($(this).val());
+		}
+	}else{
+		if($(this).val() != ""){
+			$("li.selected").find("span.js_l2Title").text($(this).val());
+		}
+	}
+	return false;
+});
+//选中触发事件
+function eventChange(obj){
+	if($(obj).val() != ""){
+		var clickConfigObj = {};
+		clickConfigObj.msg_type = 9;
+		clickConfigObj.event_type = $(obj).val();
+		menuConfigMapPut(clickConfigObj);
+	}
+}
+//文本消息失去焦点
+function loseFocusClick(obj){
+	if($(obj).val() != ""){				
+		var clickConfigObj = {};
+		clickConfigObj.msg_type = 0;
+		clickConfigObj.msg_text_content = $(obj).val();
+		menuConfigMapPut(clickConfigObj)
+	}
+} 
+//网页地址 失去焦点
+function loseFocusView(obj){
+	if($(obj).val() != ""){	
+		$("li.selected").attr("menu-url", $(obj).val());				
+	}
+}
+//小程序 失去焦点
+function miniprogramBlur(){
+	$("#app_id").blur();
+	$("#app_path").blur();
+	$("#app_url").blur();
+}
+function loseFocusMiniprogramId(obj){
+	if($(obj).val() != ""){
+		$("li.selected").attr("appid", $(obj).val());				
+	}
+}
+function loseFocusMiniprogramPath(obj){
+	if($(obj).val() != ""){
+		$("li.selected").attr("apppath", $(obj).val());				
+	}
+}
+function loseFocusMiniprogramUrl(obj){
+	if($(obj).val() != ""){
+		$("li.selected").attr("appurl", $(obj).val());				
+	}
+}
+</script>
+<!-- html 模板文件 -->
+<!-- 文本素材 -->
+<script type="text/template" id="text_tpl">
+<textarea id="keyText" class="form-control" aria-required="true" onblur="loseFocusClick(this)" maxlength="1024" style="resize: vertical;"></textarea>
+<a onclick="WxmMsg.insertNick(this)" href="javascript:void(0)">插入微信昵称</a>
+</script>
+<!-- 图片素材 -->
+<script type="text/template" id="image_sel_tpl">
+<div class="imagemsg_item" media_id="{{mediaId}}" media_pic="{{mediaPic}}" style="float:left;padding-left:3px;"><img style="width:120px;height:120px;" src="{{mediaPic}}"/><br><a href="javascript:void(0)" onclick="delNewsRow(this)"><font color="red">移除</font></a></div>
+</script>
+<!-- 事件触发 -->
+<script type="text/template" id="event_sel_tpl">
+<div class="eventmsg_item" style="float:left;padding-left:3px;">
+  <select id="event_type" class="control-inline" onchange="eventChange(this)">
+    <option value="">请选择触发事件</option>
+    #for(menuEvent : menuEvents)
+	<option value="#(menuEvent.eventType)">#(menuEvent.eventName)</option>
+	#end
+  </select>
+</div>
+</script>
+<!-- 有赞商品 -->
+<script type="text/template" id="product_sel_tpl">
+<div class="newsmsg_item" data-type="{{msgOrgType}}" media_id="{{mediaId}}" data-url="{{msgUrl}}" data-title="{{msgTitle}}" data-image="{{msgPic}}" style="float:left;padding-left:3px;"><a href="{{msgUrl}}" target="_blank" title="{{msgTitle}}"><img style="width:60px;height:60px;" src="{{msgPic}}" alt="{{msgTitle}}"/><br><font color="red">(有赞商品)</font></a><br><a href="javascript:void(0)" onclick="delNewsRow(this)"><font color="red">移除</font></a></div>
+</script>
+<!-- 微信素材 -->
+<script type="text/template" id="wechat_media_sel_tpl">
+<div class="newsmsg_item" id="wechatNews" data-type="{{msgOrgType}}" data-url="{{msgUrl}}" data-title="{{msgTitle}}" data-desc="{{msgDesc}}" data-image="{{msgPic}}" media_id="{{mediaId}}"  style="padding-left:3px;"><a href="{{msgUrl}}" target="_blank" title="{{msgTitle}}"><font color="red">(微信素材)</font>{{msgTitle}}</a>&nbsp;<a href="javascript:void(0)" onclick="delNewsRow(this)"><font color="red">移除</font></a></div>
+</script>
+<!-- 页面地址素材 -->
+<script type="text/template" id="url_tpl">
+<div class="url jsMain view_inputs_div" id="url"> 
+<p class="menu_content_tips tips_global">订阅者点击该菜单会跳到以下链接</p>
+ <div class="frm_controls"> 
+   <input type="text" class="frm_input" onblur="loseFocusView(this)" id="urlText" name="urlText" style="width: 80%"/> 
+   <p class="profile_link_msg_global menu_url mini_tips warn dn js_warn" style="display: none;"> 请勿添加其他公众号的主页链接 </p> 
+   <p class="frm_tips" id="js_urlTitle" style="display: none;"> 来自<span class="js_name"></span><span style="display:none;"> -《<span class="js_title"></span>》</span> </p> 
+ </div>
+</div>
+</script>
+
+<!-- 菜单类型 -->
+<!-- 消息回复 -->
+<script type="text/template" id="click_content_container">
+<div id="wechatconfig-list"> 
+  <div class="menu_content url jsMain"> 
+    <a href="javascript:void(0)" class="type_text" onclick="textClick(this)" style="text-decoration: underline;">文本</a> &nbsp;/&nbsp;  
+	<a href="javascript:void(0)" class="type_image_itme" onclick="openImageClick(this)" style="text-decoration: underline;">图片</a> &nbsp;/&nbsp; 
+	<a href="javascript:void(0)" class="type_zan_item" onclick="openProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp; 	
+	<a href="javascript:void(0)" class="type_wechat_media" onclick="openWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;
+	<a href="javascript:void(0)" class="type_event" onclick="openWechatEvent(this)" style="text-decoration: underline;">事件触发</a> &nbsp;/&nbsp;
+  </div>
+  <div class="menu_content select_content" style="overflow:hidden;min-height: 40px;"></div>
+</div>
+</script>
+<!-- 页面回复 -->
+<script type="text/template" id="view_content_container">
+<div id="wechatconfig-list"> 
+  <div class="menu_content url jsMain"> 
+    <a href="javascript:void(0)" class="type_url" onclick="urlClick(this)" style="text-decoration: underline;">页面地址</a> &nbsp;/&nbsp;  
+	<a href="javascript:void(0)" class="type_zan_item" onclick="openUrlProductDialog(this)" style="text-decoration: underline;">有赞商品</a> &nbsp;/&nbsp;  
+	<a href="javascript:void(0)" class="type_wechat_media" onclick="openUrlWechatMediaDialog(this)" style="text-decoration: underline;">微信素材</a> &nbsp;/&nbsp;    
+  </div>
+  <div class="menu_content select_content" style="overflow:hidden;min-height: 40px;"></div>
+</div>
+</script>
+<!-- 小程序回复 -->
+<script type="text/template" id="miniprogram_content_container">
+<div class="form-group menu_content" style="overflow: hidden;"> 
+<div class="col-sm-10 form-control-static"> 
+  <div class="miniprogram_inputs_div">
+	<input type="text" id="app_id" name="app_id" class="form-control" onblur="loseFocusMiniprogramId(this)" style="max-width:500px;" placeholder="输入小程序Appid，小程序需先与当前公众号关联" maxlength="255"/><br>
+	<input type="text" id="app_path" name="app_path" class="form-control" onblur="loseFocusMiniprogramPath(this)" style="max-width:500px;" placeholder="输入小程序路径，例如：pages/index/index" maxlength="255"/><br>
+	<input type="text" id="app_url" name="app_url" class="form-control" onblur="loseFocusMiniprogramUrl(this)" style="max-width:500px;" placeholder="不支持小程序的老版本客户端将打开本url" maxlength="255"/>  
+  </div>
+</div>
+</div>
+</script>
+<!-- 菜单类型 end-->
+
+<script type="text/template" id="menu_item_tpl">
+<li class="jsMenu pre_menu_item module jslevel1 ui-sortable ui-sortable-disabled" type="{type}" id="menu_{index}"> 
+ <a href="javascript:void(0);" class="pre_menu_link"> 
+  <i class="icon_menu_dot js_icon_menu_dot dn" style="display: none;"></i> 
+  <i class="icon20_common sort_gray"></i> 
+  <span class="js_l1Title">{name}</span> 
+ </a> 
+ <div class="sub_pre_menu_box js_l2TitleBox" style="display:none;"> 
+  <ul class="sub_pre_menu_list"> 
+   <li class="js_addMenuBox">
+	 <a href="javascript:void(0);" class="jsSubView js_addL2Btn" title="最多添加5个子菜单" >
+	   <span class="sub_pre_menu_inner js_sub_pre_menu_inner"><i class="icon14_menu_add"></i>添加菜单</span>
+	  </a>
+    </li> 
+  </ul> 
+  <i class="arrow arrow_out"></i> 
+  <i class="arrow arrow_in"></i> 
+ </div> 
+</li>
+</script>
+<script type="text/template" id="sub_menu_item_tpl">
+<li id="subMenu_menu_{parentId}_{index}" type="{type}" class="jslevel2">
+ <a href="javascript:void(0);" class="jsSubView" >
+  <span class="sub_pre_menu_inner js_sub_pre_menu_inner"><i class="icon20_common sort_gray"></i>
+    <span class="js_l2Title">{name}</span>
+  </span>
+ </a>
+</li>
+</script>
+#end

@@ -1,0 +1,67 @@
+<style>
+.customT{
+	background-color: #F5F5F5;
+	border-bottom: 0 !important;
+}
+.customT th{
+	text-align: center;
+	width: 200px;
+}
+.customT td{
+	text-align: center;
+	width: 200px;
+	font-size: 20px;
+}
+.borderbox{
+	border-width: 1px;
+    border-style: solid;
+    border-color: rgb(212, 212, 212);
+    border-image: initial;
+    border-radius: 2px;
+    width:160px; 
+}
+.bootstrap-dialog-message{padding-left: 12px;padding-top: 0px;}
+</style>
+<div class="wrapper wrapper-content" id="awardDiv">
+	<div class="content ibox-content">
+		<input id="activeId" name="activeId" type="hidden" value="#(id??)">
+		<table id="send_table" class="table table-striped table-bordered bootstrap-datatable datatable">
+		  <thead>
+			  <tr>
+				<th>激活码段的起始位</th>
+				<th>激活码段的结束位</th>
+				<th>激活时间</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="sendLotGrid"></tbody>
+	  	</table>
+	  	<div id="loading" style="padding-left: 430px"></div>
+	</div>   
+</div>
+<script type="text/html" id="send_item_table_tr_tpl">
+{{each data as item i}}
+		<tr>
+			<td>{{item.codeStart}}</td>
+			<td>{{item.codeEnd}}</td>
+			<td>{{item.updated}}</td>
+		</tr>
+{{/each}}  
+</script>
+
+<script type="text/template" id="send_noresult_tr_tpl">
+	<tr class="package"><td colspan="6" class="center">没有结果集</td></tr>
+</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".modal-dialog").attr("style","width:1200px;")
+	var params = {};
+	params.id = $("#activeId").val();
+	obz.ajaxJson("#(webctx)/marketcode/marketcodecodeactive/activercdList", params, function(resp){
+		if(resp && resp.data && resp.data.length<=0){
+            $(".sendLotGrid").append($("#send_noresult_tr_tpl").html())
+		}else{
+			$(".sendLotGrid").append(template('send_item_table_tr_tpl', resp));
+		}
+	});
+});
+</script>

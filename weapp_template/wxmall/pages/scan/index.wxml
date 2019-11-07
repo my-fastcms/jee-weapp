@@ -1,0 +1,33 @@
+<view class="container">
+ <block wx:if="{{taskName != '' && userName != ''}}">
+  <view>
+    <view class="weui-panel__bd weui-cell">
+      <view cass="task-box">
+        <view><text class="task-title">任务通知：</text></view>
+        <view class="task-li">欢迎成为我们的好朋友</view>
+        <view class="task-li"><text style='float:left'>任务名称：</text>
+          <view class="task-content">
+           <text>{{taskName}}</text>
+          </view>
+        </view>
+        <view class="task-li"><text style='float:left'>通知类型：</text>
+          <view class="task-content">
+            <text>你通过@{{userName}}分享的二维码成为我们的好朋友</text>
+          </view>
+        </view>
+        <view class="task-li"><text style='float:left'>参与方式：</text>
+          <view class="task-content">
+            <text>点击[ 去生成海报 ]去生成个人专属任务海报,分享出去赚取人气值获得丰厚奖励,\n在【个人－任务宝】查看任务进度</text>
+          </view>
+        </view>
+        <view class="task-li thank-tip task-title">感谢你的支持</view>
+      </view>
+    </view>
+  </view>
+    <navigator class="bottom-box" url="/pages/task/index">去生成海报</navigator>
+  </block>
+  <block wx:else>
+    <view class="no-task-tip">活动已结束，请期待下次活动</view>
+    <view class="go-task-index" bindtap="goTaskIndex">去首页看看 >></view>
+  </block>
+</view>

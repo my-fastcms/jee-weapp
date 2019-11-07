@@ -1,0 +1,20 @@
+<view bindtap="bindViewTap" class="item" wx:for="{{agentProduct}}" wx:key="id" wx:for-index="idx" bindtap="toDetails" wx:for-item="item" data-id="{{item.id}}">
+  <view class="weui-media-box weui-media-box_appmsg">
+  <view class="goods-box">
+      <view class="img-box">
+        <image src="{{item.image}}" mode='aspectFill' class="image" />
+      </view>
+  </view>
+    <view class="weui-media-box__bd" style='width:100%'>
+        <view class="goods-title">{{item.name}}</view>
+        <view class='flex-x-between flex-y-center'>
+          <view>
+            <view class="goods-price" style='color:{{navbar_bgcolor}}'><text class='size-price'>¥</text>{{item.price}}</view> 
+            <view class='p-cost'><text></text></view> 
+          </view>
+          <view class='multigroup' style='background:{{navbar_bgcolor}}'>购买</view>
+        </view>
+    </view>
+  </view>
+</view>
+<view class="loading complete" hidden='{{!endFlag}}'>没有数据了</view>

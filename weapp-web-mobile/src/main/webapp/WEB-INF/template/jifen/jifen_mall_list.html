@@ -1,0 +1,199 @@
+ #include ("/_includes/_layout.html")
+#@layout("积分商城","wxmall,点步科技","Wxmall社区","wxmall") 
+#define css()
+<link rel="stylesheet" href="/resources/css/jquery-weui.css">
+<style>
+.weui-media-box_hd{
+	margin-right: .8em;
+    width: 75px;
+    height: 75px;
+    line-height: 75px;
+    text-align: center;
+}
+.weui-media-box_thumb{
+    width: 100%;
+    height:100%;
+    vertical-align: top;
+}
+.weui-media-box_title{
+	font-weight: 400;
+    font-size: 16px;
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.weui-media-box_desc{
+	color: #999;
+    font-size: 14px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    float: left;
+    padding-top: 3px;
+    line-height: 20px;
+}
+.price_desc{
+    text-align: right;
+    display: block;
+    width: 100%;
+}
+.weui-media-box_bd{
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    min-width: 0;
+}
+.weui-content{
+	min-height: 100%;
+}
+.menu{
+	display: table;
+	height: 45px;
+	width: 100%;
+	background: white;
+	margin-bottom:10px;
+}
+.menu div{
+	display: table-cell;
+	vertical-align: middle;
+}
+</style>
+#define content()
+<div class="menu">
+	<div style="padding-left: 20px; color: #999">可兑换积分：#if(userFollower.jifen_number??) #(userFollower.jifen_number) #else 0 #end</div>
+	<div style="padding-right: 20px; text-align: right;"><a href="#(webctx)/jifen/mall/awardIndex" style="color: rgb(30,148,224);">已兑换的奖品</a></div>
+</div>
+<div class="weui-panel weui-panel_access" style="margin-top:0px">
+	<div id="list"></div>
+	<div class="weui-loadmore">
+	    <i class="weui-loading"></i>
+	    <span class="weui-loadmore_tips">正在加载</span>
+	</div>
+</div>
+#define script()
+<script src="/resources/js/jquery-weui.min.js"></script>
+<script id="tmp" type="text/html">
+<div class="weui-cells" style="margin-top:0px">
+	  <div class="weui-cell">
+	    <div class="weui-media-box_hd">
+	    	<img class="weui-media-box_thumb" src="/resources/images/{image}.png">
+	    </div>
+	    <div class="weui-media-box_bd">
+	     <h4 class="weui-media-box_title">{title}</h4>
+	     <div class="weui-media-box_desc price_desc">
+	       <p class="weui-media-box_desc" style="padding-right:10px">{price} </p>
+	       <a href="javascript:;" style="line-height: 2;display: inline-block; border:1px solid red;color:red" award-id="{id}" onclick="award(this)" class="weui-btn weui-btn_mini">兑换</a>
+	     </div>
+	    </div>
+	  </div>
+</div>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+$(function(){
+	submit(params);
+	var loading = false;  //状态标记
+	//滚动加载
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		loading = true;
+		page ++;
+		params.page = page;
+		submit(params);
+	});
+	function submit(arr){
+		$.ajax({
+			type: "post",
+			url: "#(webctx)/jifen/mall/list",
+			data: arr,
+			async: true,
+			success: function(data){
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				if(data.data.length<=0){
+					$(document.body).destroyInfinite();
+	                $('.weui-loadmore').remove();
+				}else{
+					for( var i = 0 ; i < data.data.length ; i ++ ){
+						var awardData = data.data[i];
+						awardData.price = awardData.needPoint + " 积分"
+						if(awardData.awardType == 1 || awardData.awardType == 2){
+							awardData.title = awardData.cardName;
+							awardData.image = "card";
+						}else if(awardData.awardType == 3){
+							awardData.title = awardData.productName;
+							if(typeof(awardData.diffPrice) != "undefined"){
+								awardData.price = "￥:"+awardData.diffPrice+ "元 + " + awardData.needPoint + " 积分" ;
+							}
+							awardData.image = "prize_item_jifenbao";
+						}else if(awardData.awardType == 4){
+							awardData.title = awardData.productName;
+							awardData.image = "prize_item_jifenbao";
+						}else if(awardData.awardType == 5){
+							awardData.title = awardData.actName;
+							awardData.image = "redpack";
+						}
+						
+						var html = formatTemplate(awardData, $("#tmp").html());
+						$("#list").append(html);
+						loading = false;
+					}	
+					if(data.data.length<10){
+						$(document.body).destroyInfinite();
+		                $('.weui-loadmore').remove();
+					}
+				}
+			},
+			error: function(){
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+});
+function award(obj){
+	var awardId = $(obj).attr("award-id");
+	$.ajax({
+		type: "post",
+		url: "#(webctx)/jifen/mall/award",
+		data: {awardId:awardId},
+		async: true,
+		success: function(data){
+			$.showLoading("兑换中");
+			if(data.code != 200){
+				$.hideLoading();
+				$.alert(data.msg);
+				return;
+			}else{
+				$.hideLoading();
+				
+				var _data = data.data;
+				if(_data.awardType == 3 || _data.awardType == 4){
+					//如果是自营商品或者有赞商品
+					$.alert("兑换成功，即将跳转到奖品领取界面...", function(){
+						location.href = _data.awardUrl;
+					})
+				}else{
+					$.alert("兑换成功 <br/>在公众号回复 [ "+_data.awardToken+" ]领取奖品")					
+				}
+			}
+		},
+		error: function(){
+			alert("网络异常,请联系管理员!");
+		}
+	});
+}
+</script>
+#end
+#end
+#end

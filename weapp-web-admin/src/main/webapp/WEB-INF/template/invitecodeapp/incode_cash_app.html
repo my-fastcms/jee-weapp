@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <title>点步微助手--佣金提现</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+   <meta name="renderer" content="webkit"/>
+   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=375px, user-scalable=no"/>
+   #include ("/_includes/header.html")
+   <link rel="stylesheet" href="#(webctx)/resources/css/weui.min.css"/>
+   <style>
+   .weui-tab {
+    	position: relative;
+    	height: 100%;
+	}
+	.weui-navbar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    width: 100%;
+    background-color: #fafafa;
+	}
+	.weui-navbar:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+    color: #ccc;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+	}
+	.weui-navbar__item {
+	color: #888;
+    position: relative;
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    padding: 13px 0;
+    text-align: center;
+    font-size: 15px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+	}
+	.weui-navbar__item.proinfo-tab-tit {
+    padding: 10px 0;
+	}
+	.weui-navbar__item.weui-bar__item--on {
+    color: #e21323;
+    font-weight: bold;
+    background-color: inherit;
+	}
+	.weui-navbar__item.proinfo-tab-tit.weui-bar__item--on:before {
+    content: "";
+    width: 34px;
+    height: 3px;
+    background: #e21323;
+    position: absolute;
+    left: 50%;
+    margin-left: -17px;
+    bottom: -1px;
+    z-index: 10;
+	}
+	.weui-tab__bd {
+    	padding: 50px 10px 0px;
+	}
+	.input-group{
+		margin-top: 10px;
+	}
+	.input-group-btn{
+		position: absolute;
+		top: 0px;
+		right: 0px;
+	}
+ 	#trade_pwd-error{ 
+		display: block;
+	}
+   </style>
+</head>
+<body>
+<div class="weui-tab">
+	<div class="weui-navbar " style="position:fixed;  left:0; right:0; height:44px; background:#fff;">
+    	<a href="#(webctx)/invitecode/app" class="weui-navbar__item proinfo-tab-tit font-14">邀请码生成</a>
+        <a href="#(webctx)/invitecode/app/stat" class="weui-navbar__item proinfo-tab-tit font-14">我邀请的人</a>
+        <a href="#(webctx)/invitecode/app/mission" class="weui-navbar__item proinfo-tab-tit font-14 weui-bar__item--on">我的佣金</a>
+        <a href="#(webctx)/invitecode/app/cashrcd" class="weui-navbar__item proinfo-tab-tit font-14">提现明细</a>
+	</div>
+	<div class="weui-tab__bd">
+		<div class="alert alert-success">
+			<i class="fa fa-info-circle"></i><strong>提示:</strong>
+			<p>通过邀请码邀请用户注册并购买平台小程序模板后，可以获得一定的佣金</p>
+			<p>每天只能提现一次，提现审核3个工作日左右到账，如果没到账，请联系客服</p>
+		</div>
+		<form id="_myForm_" class="form-horizontal">
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">我的可提现金额(￥)：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips(' 结算后方可提现佣金 。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div class="col-md-2">
+                        <input type="text" class="form-control" value="#(mission)" readonly="readonly"/>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">提现金额(￥)：</label>
+	            <div class="col-md-2">
+                        <input type="text" name="want_cash" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">支付宝收款账户：</label>
+	            <div class="col-md-2">
+                        <input type="text" name="cash_account" class="form-control"/>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">交易密码：</label>
+	            <div class="col-md-3">
+	            	<div class="input-group">
+                        <input type="password" name="trade_pwd" class="form-control"/>
+                        <span class="input-group-btn"><a href="#(webctx)/invitecode/app/tradepwd" class="btn btn-primary">忘记交易密码?</a></span>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	        	<label class="col-md-3 control-label">验证码：</label>
+				<div class="col-md-9">
+					<label class="input-group col-sm-2">
+						<input class="form-control" type="text" id="captcha" name="captchaToken" placeholder="验证码"/>
+					</label>
+					<label class="input-group col-sm-5">
+						<img id="captchaImage" src="#(webctx)/captcha?width=100&height=35&fontsize=30" alt="换一张" />
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+	            <div class="col-md-5" align="right">
+	            	<button type="submit" class="btn btn-success btn-sm">申请提现</button>
+	            	<a href="#(webctx)/invitecode/app" class="btn btn-default btn-sm">取   消</a>
+	            </div>
+	        </div>
+		</form>
+	</div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+$().ready(function() {
+	var $captcha = $("#captcha");
+	var $captchaImage = $("#captchaImage");
+	var change_captcha = function() {
+		var timestamp = (new Date()).valueOf();
+		var imageSrc = $captchaImage.attr("src");
+		if(imageSrc.indexOf("?") >= 0) {
+			imageSrc = imageSrc.substring(0, imageSrc.indexOf("?"));
+		}
+		imageSrc = imageSrc + "?timestamp=" + timestamp + "&width=100&height=35&fontsize=30";
+		$captchaImage.attr("src", imageSrc);
+	};
+	$captchaImage.click(change_captcha);
+	
+	//validate signup form on keyup and submit
+	var icon = "<i class='fa fa-times-circle'></i> ";
+	$("#_myForm_").validate({
+		//debug:true,
+		errorElement: "em",
+	    success: function(em) {
+	        em.text("").addClass("success");//验证通过的动态CSS
+	    },
+	    submitHandler: function() {
+	    	obz.showMessage("确认保存吗?", function(){
+	    		$("#_myForm_").mask("正在保存...");
+		    	var params = $("#_myForm_").wxmall_serialize();
+		    	obz.ajaxJson(obz.ctx+"/invitecode/app/applycash", params, function(json) {
+		    		$("#_myForm_").unmask();
+					if(json.code!=200){
+						obz.error(json.msg);
+					}else{
+						obz.msg('保存成功', function(){
+							location.reload();
+						});					
+					}
+				},"json");
+	    	});
+	    },
+	    rules: {
+	    	want_cash: "required", trade_pwd: "required", captchaToken: "required", cash_account: "required"
+	    },
+	    messages: {
+	    	want_cash: icon + "请输入提现金额", trade_pwd: icon + "请输入交易密码", captchaToken: icon + "请输入验证码", cash_account: icon + "请输入支付宝收款账户" 
+	    }
+	});
+});
+</script>

@@ -1,0 +1,64 @@
+#include ("/_includes/_layout.html")
+#@layout("小程序概览", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+    <div class="white-bg dashboard-header">
+        <div class="row">
+	        <div class="col-sm-4">
+	            <div style="border:1px solid #eee;padding:25px 20px;border-radius: 4px;">
+	                    <h5>转发次数</h5>
+	                    <h2><span id="sparkline1">0</span></h2>
+	                    <div></div>
+	                </div>
+	         </div>
+	       
+	        <div class="col-sm-4">
+	            <div style="border:1px solid #eee;padding:25px 20px;border-radius: 4px;">
+	                    <h5>转发人数</h5>
+	                    <h2><span id="sparkline2">0</span></h2>
+	                    <div></div>
+	                
+	            </div>
+	        </div>
+	        <div class="col-sm-4">
+	            <div style="border:1px solid #eee;padding:25px 20px;border-radius: 4px; ">
+	                    <h5>累计用户数</h5>
+	                    <h2><span id="sparkline3">0</span></h2>
+	                    <div></div>
+	            </div>
+	        </div>
+	      </div>  
+	     
+     </div>   
+</div>
+#end
+#define script()
+<script src="#(webctx)/resources/assets/js/plugins/flot/jquery.flot.js"></script>
+<script src="#(webctx)/resources/assets/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+<script src="#(webctx)/resources/assets/js/plugins/flot/jquery.flot.spline.js"></script>
+<script src="#(webctx)/resources/assets/js/plugins/flot/jquery.flot.pie.js"></script>
+<script src="#(webctx)/resources/assets/js/plugins/flot/jquery.flot.symbol.js"></script>
+<!-- Jvectormap -->
+<script src="#(webctx)/resources/assets/js/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="#(webctx)/resources/assets/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- Peity -->
+<!-- <script src="#(webctx)/resources/assets/js/plugins/peity/jquery.peity.min.js"></script> -->
+<script type="text/javascript" src="#(webctx)/resources/assets/js/plugins/easypiechart/jquery.easypiechart.js"></script>
+<!-- <script src="#(webctx)/resources/assets/js/plugins/sparkline/jquery.sparkline.min.js"></script> -->
+#end
+<script type="text/javascript">
+obz.ajaxJson("#(webctx)/weappstat/survey",{},function(resp){
+	if(resp.code==200){
+		var list = resp.data.list;
+		if(list){
+			var data = list[0];
+			$("#sparkline1").text(data.share_pv);
+			$("#sparkline2").text(data.share_uv);
+			$("#sparkline3").text(data.visit_total);	
+		}
+	}
+});
+
+if($("#my_invite_code_url").length >0)
+	$("#my_invite_code_url").val(document.domain + "/admin/register?incode=#(seller.my_invite_code)");
+</script>

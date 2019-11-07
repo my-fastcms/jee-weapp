@@ -1,0 +1,170 @@
+ #include ("/_includes/_layout.html")
+#@layout("助力免单","wxmall,点步科技","Wxmall社区","wxmall") 
+#define css()
+<style>
+a{
+	color: #999;
+}
+.weui-content{
+	height: 100%
+}
+.product-item{
+	overflow: hidden;
+	background-color: #fff;		
+	padding:10px 20px;
+	margin: 10px 0px;
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
+}
+.menu{
+	background: #fdfdfd;
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: table;
+    position: fixed;
+    z-index: 500;
+    height:8%;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #efefef;
+    box-shadow: 0px 0px 1px #efefef;
+} 
+.menu div{
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	color: #999;
+}
+.weui-footer{
+	padding-bottom: 60px
+}
+.assisfree-order-none{
+	text-align: center;
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    margin: 50% 0px;
+    color: #999;
+}
+</style>
+#end
+#define content()
+<div class="weui-panel_access" style="margin-top:0px">
+	<div><img style="width: 100%; height: 100%;" src="#(webctx)/resources/images/assisfree.jpg" /></div>
+	<div id="list"></div>
+	<div class="weui-loadmore">
+	    <i class="weui-loading"></i>
+	    <span class="weui-loadmore_tips">正在加载</span>
+	</div>
+</div>
+<div class="menu">
+	<div style="padding: 10px 0px"><a href="#(webctx)/assisfree" style="border-right: 1px solid #efefef;display: list-item;">助力免单</a></div>
+	<div><a href="#(webctx)/assisfree/order">我的订单</a></div> 
+</div>
+#end
+#define script()
+<script type="text/html" id="product_item_tpl">
+{{each data as item i}}
+<div class="product-item">
+  <div style="width:90px; height:90px; margin-right: 10px; float: left;">
+		{{if item.product_id != null}}
+	  		<img style="width:100%; height:100%" src="#(img_domain){{item.image}}"/>
+		{{else}}
+		<a href="{{item.product_url}}">
+			<img style="width:100%; height:100%" src="{{item.image}}"/>
+		<a/>
+		{{/if}}
+  </div>
+  <div style="color: #999;font-size: 14px;">{{item.product_name}}</div>
+  <div style="color: #999;font-size: 12px; margin-top: 10px"> 需 {{item.need_user_count}} 人助力</div>
+  <div style="color: red;font-size: 12px;overflow:hidden;line-height: 38px;">
+	  <div style="float: left;">￥<span style="font-size: 14px;">{{item.price}}</span></div>
+	  <div style="float: right; margin-top: 10px; ">
+		{{if item.product_id != null}}
+			<a href="#(webctx)/product/assisfreeDetail?id={{item.product_id}}&assisfreeId={{item.id}}" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini">立即助力</a>
+		{{else}}
+			<a href="#(webctx)/assisfree/user?id={{item.out_id}}&assisfreeId={{item.id}}&openid=#(openid??)" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini">立即助力</a>
+		{{/if}}
+	  </div>
+  </div>
+</div>
+{{/each}} 
+</script>
+<script type="text/html" id="assisfree_none_tpl">
+<div class="assisfree-order-none">
+	<div>暂无助力商品</div>
+</div>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+$(function(){
+	submit(params);
+	var loading = false;  //状态标记
+	//滚动加载
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		loading = true;
+		page ++;
+		params.page = page;
+		submit(params);
+	});
+	function submit(arr){
+		$.ajax({
+			type: "post",
+			url: "#(webctx)/assisfree/productList",
+			data: arr,
+			async: true,
+			success: function(data){
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				if(data.data.length<=0){
+					$(document.body).destroyInfinite();
+	                $('.weui-loadmore').remove();
+	                $(".weui-panel_access").append($("#assisfree_none_tpl").html())
+				}else{
+					$("#list").append(template('product_item_tpl', data));
+					loading = false;
+					if(data.data.length<10){
+						$(document.body).destroyInfinite();
+		                $('.weui-loadmore').remove();
+					}
+				}
+			},
+			error: function(){
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+	
+	#if(user??)
+		wx.ready(function () {   //需在用户可能点击分享按钮前就先调用
+			//自定义“分享给朋友”及“分享到QQ”按钮的分享内容（1.4.0） #(session._buyerUser.open_id)
+			wx.updateAppMessageShareData({ 
+		        title: '和我助力享免单', 
+		        desc: '快来和我一起抢0元礼品吧', 
+		        link: 'http://#(appId??).dbumama.com/assisfree', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+		        imgUrl: '#(user.headimgurl)', // 分享图标
+		        success: function () {
+		        	// 设置成功
+		        }
+			})
+			//自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容（1.4.0）
+			wx.updateTimelineShareData({ 
+		        title: '和我助力享免单', // 分享标题
+		        link: 'http://#(appId??).dbumama.com/assisfree', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+		        imgUrl: '#(user.headimgurl)', // 分享图标
+		        success: function () {
+		          // 设置成功
+		        }
+			});
+		});
+	#end
+});
+
+</script>
+#end

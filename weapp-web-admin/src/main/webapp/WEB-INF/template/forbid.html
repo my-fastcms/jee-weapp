@@ -1,0 +1,191 @@
+#include ("/_includes/_layout.html")
+#@layout("插件已过期", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link href="#(webctx)/resources/css/pay.css" rel="stylesheet"/>
+<style type="text/css">
+.account-information {
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+.transfer-entry {
+    padding-top: 30px;
+}
+.spanF{
+	font-family: 微软雅黑;
+	font-size:25px;
+	font-weight:bold;
+}
+</style>
+#end
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content ibox-content">
+	<div class="purchase-block purchase-box">
+            <!--product-main-->
+            #if(authUserApp??)
+            <div class="alert alert-warning">该应用已于#(authUserApp.end_date??)到期，请续费</div>
+            #end
+            <div class="product-main">
+            	<div class="purchase-info">
+	            	<span class="purchase-item item2">购买：</span>
+	            	<span class="text-red text-b">#(app.appName??)</span> 
+	            	<span class="text-b" style="padding-left: 60px;">
+	            		#if(authUserApp??)
+	            		<a href="javascript:void(0)" class="btn-default btn-sm" title="只能试用一次">免费试用</a>
+	            		#else
+	            		<a href="javascript:void(0)" class="btn-primary btn-sm" onclick="testUse()">免费试用</a>
+	            		#end
+	            	</span>
+            	</div>
+                <div class="purchase-info">
+                    <span class="purchase-item item1">购买时长：</span>
+                    <ul class="selectMonth purchase-time select-month-off">
+                    	#for(p:purchases)
+                    		#if(p.isDefault == 1) 
+                    		<li data-month="#(p.expiresIn)" class="active" data-price="#(p.payFee)" data-id="#(p.id)">
+                             	<a href="javascript:void(0);"><span>#(p.name)</span><br>#(p.desc)</a>
+                         	</li>
+                    		#end
+                    		#if(p.isDefault == 0)
+                    		<li data-month="#(p.expiresIn)" data-price="#(p.payFee)" data-id="#(p.id)">
+                             	<a href="javascript:void(0);"><span>#(p.name)</span><br>#(p.desc)</a>
+                         	</li>
+                    		#end
+                    	#end
+                     </ul>
+                </div>
+                <div class="purchase-info">
+                    <span class="purchase-item item2">应付金额：</span>
+                    <span class="text-red text-b" id="spnTotalFee">0</span> &nbsp;元
+                    <!-- <span class="text-bold">元</span> <span id="savingText">（已节省<span class="text-red" id="savingPrice">125</span>元<span id="savingAdvise">，建议购买24个月可以节省1177元</span>）</span> -->
+                </div>
+                <div class="purchase-info">
+                    <span class="purchase-item">有效期至：</span>
+                    <span class="text-bold" id="ExpirTime">2017年06月10日</span>
+            	</div>
+            	<div align="center" style=" margin-top:10px;margin-left: 40px;">
+            		<!-- 新用户可试用3天<br/> -->
+            		<span style="font-size: 18px;">请添加客服微信付费</span>
+            	</div>
+            	<div align="center">
+            		<img id="qrcode_img" width="200px" height="200px;" src="#(webctx)/resources/img/weixinkefu.png" />
+            	</div>
+        </div>
+    </div>
+	</div>
+</div>
+<script type="text/javascript">
+	console.log("#(purchases??)");
+	
+	$(document).ready(function(){
+
+		var tradeNo = "";
+		
+		var memberEndDate = $("#purchase_end_date").html();
+		var begtime_ms = new Date();
+		
+		$("#spnTotalFee").text(parseInt($("ul.selectMonth").find("li.active").attr("data-price") * parseInt($("ul.selectMonth").find("li.active").attr("data-month") / 30)));
+		$("#ExpirTime").text(begtime_ms.addDay_dbu($("ul.selectMonth").find("li.active").attr("data-month")).format_dbu("yyyy年MM月dd日"));
+		$("ul.selectMonth li").click(function(){
+			$("ul.selectMonth li").each(function(){
+				$(this).removeClass("active");
+			});
+			$(this).addClass("active");
+			$("#spnTotalFee").text(parseInt($(this).attr("data-price")*parseInt($(this).attr("data-month") / 30)));
+		    $("#ExpirTime").text(begtime_ms.addDay_dbu($(this).attr("data-month")).format_dbu("yyyy年MM月dd日"));
+		    //genCode();
+		    return false;
+		});
+		$("ul.selectMonth li").each(function(){
+			if($(this).attr("data-id") == '#(purch.id??)'){
+				$("ul.selectMonth li").each(function(){
+					$(this).removeClass("active");
+				});
+				$(this).addClass("active");
+				$("#spnTotalFee").text($(this).attr("data-price")*$(this).attr("data-month") / 30);
+			    $("#ExpirTime").text(begtime_ms.addDay_dbu($(this).attr("data-month")).format_dbu("yyyy年MM月dd日"));
+			}
+		});
+		
+		if($("ul.selectMonth li").length == 1){
+			$("ul.selectMonth li").each(function(){
+				$(this).addClass("active");
+				$("#spnTotalFee").text($(this).attr("data-price")*$(this).attr("data-month") / 30);
+			    $("#ExpirTime").text(begtime_ms.addDay_dbu($(this).attr("data-month")).format_dbu("yyyy年MM月dd日"));
+			})
+		}
+		
+		function genCode(){
+			
+			var expirTime = null;
+			var pid = null;
+			$("ul.selectMonth li").each(function(){
+				if($(this).hasClass("active")){
+					expirTime = $(this).attr("data-month");
+					pid = $(this).attr("data-id");
+				}
+			});
+			
+			if(expirTime == null || $("#spnTotalFee").text() == null || pid == null) return;
+	
+			obz.ajaxJson("#(webctx)/pay/qrcode", {pid:pid, appId:#(app.id??), expirTime:expirTime}, function(resp){
+				if(resp.state == "ok"){
+					$("#qrcode_img").attr("src", "#(webctx)/qrcode/genImage64?url="+resp.url);
+					tradeNo = resp.tradeNo;					
+				}
+			});
+		}
+		
+		//genCode();
+		
+		setTimeout(function(){
+			//isPaySucceed();
+		}, 1000 * 3);
+
+		function isPaySucceed(){
+		    if(tradeNo != null){
+		    	log("======isPaySucceed:" + Math.random());
+		    	
+		        $.ajax({url: "#(webctx)/pay/checkPay",
+		            type: "POST",
+		            data: { "tradeNo": tradeNo, "csrf_token": $("#CSRF_TOKEN_HIDDEN").val()},
+		            cache: false
+		        }).done(function (resp){
+		        	if(resp ==null || resp.state != "ok"){
+		        		var error = resp.message ? "系统错误" : resp.message;
+		                obz.error(error);
+		                return;
+		        	}
+		        	
+		        	if(resp !=null && resp.state == "ok"){
+		        		if(!resp.data){
+		        			setTimeout(isPaySucceed, 1500);
+		        		}else{
+		                    obz.msg("购买成功", function(){
+		                    	location.reload();		                    	
+		                    });
+		        		}
+		        	}
+		       }).fail(function () {
+		           setTimeout(isPaySucceed, 1500);
+		       });
+		    }else{
+		        setTimeout(isPaySucceed, 1000 * 3);
+		    }
+		}
+	});
+	
+	function testUse(){
+		obz.showMessage("一个应用只能试用一次，确定试用3天吗?", function(){
+			obz.ajaxJson("#(webctx)/pay/test", {appId:#(app.id??)}, function(resp){
+				if(resp !=null && resp.state == "ok"){
+					obz.msg("操作成功", function(){
+                    	location.reload();		                    	
+                    });
+				}
+			});
+		});
+	}
+</script>
+#end

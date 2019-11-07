@@ -1,0 +1,252 @@
+<view class='weui-content'>
+  <!-- <view class="wy-center-top" style='background-color:{{navbar_bgcolor}}'> -->
+  <!-- background-color:{{navbar_bgcolor}} background-color:#fa3c64 -->
+  <view class="wy-center-top" style='background-color:{{navbar_bgcolor}}'>
+    <view class="weui-media-box weui-media-box_appmsg">
+      <view class="weui-media-box__hd">
+        <open-data class="weui-media-box__thumb headimg" type='userAvatarUrl' />
+      </view>
+      <view class="weui-media-box__bd">
+        <view class="weui-media-box__title user-name">
+        <block wx:if="{{needAuth}}">
+        <button class="empower-login" open-type="getUserInfo" bindgetuserinfo='bindGetUserInfo'>授权登录</button>
+        </block>
+        <block wx:else>
+        <open-data type="userNickName" lang="zh_CN"></open-data>
+        <view class="user-name" style='font-size:12px;'>
+          <open-data type="userProvince" lang="zh_CN"></open-data>
+          <open-data type="userCity" lang="zh_CN"></open-data>
+        </view>
+        </block>
+        </view>
+        <!-- <view class="user-integral">待返还金额：<em class="num">500.0</em>元</view> -->
+      </view>
+      <!-- <block wx:else>
+        <button bindgetuserinfo="onGetUserInfo" open-type="getUserInfo" type="primary">用户授权</button>
+      </block> -->
+    </view>
+    <!-- <view class="xx-menu weui-flex">
+      <view class="weui-flex__item"><view class="user-lable">账户余额</view><view class="xx-menu-list">987</view></view>
+      <view class="weui-flex__item"><view class="user-lable">我的团队</view><view class="xx-menu-list">459</view></view>
+      <view class="weui-flex__item"><view class="user-lable">收藏商品</view><view class="xx-menu-list">4</view></view>
+    </view> -->
+  </view>
+  <view class='p-30'>
+    <!-- <view class="weui-panel__hd">
+      <view class="weui-cell center-alloder">
+          <view class="weui-cell__hd">
+              <image style="width:20px;height:20px" src="../../style/images/center-icon-order-all.png" alt=""/>
+          </view>
+          <view class="weui-cell__bd weui-cell_primary">
+            <navigator url="/pages/order/order?statusIndex=0">
+              <view class="center-list-txt">全部订单</view>
+            </navigator>
+          </view>
+        <view class="weui-cell__ft"></view>
+      </view>   
+    </view> -->
+    <view class="weui-panel__bd">
+      <view class="weui-flex">
+        <view class="weui-flex__item">
+          <view class="center-ordersModule">
+            <navigator url="/pages/order/order?statusIndex=0">
+              <view wx:if="{{unpayedCount>0}}" class="weui-badge orderTip">{{unpayedCount}}</view>
+              <view class="imgicon">
+                <image style="width:20px;height:20px" src="../../style/images/center-icon-order-dfk.png" />
+              </view>
+              <view class="name">待付款</view>
+            </navigator>
+          </view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="center-ordersModule">
+            <navigator url="/pages/order/order?statusIndex=1">
+              <view wx:if="{{groupingCount>0}}" class="weui-badge orderTip">{{groupingCount}}</view>
+              <view class="imgicon">
+                <image style="width:20px;height:20px" src="../../style/images/ungroup.png" />
+              </view>
+              <view class="name">待成团</view>
+            </navigator>
+          </view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="center-ordersModule">
+            <navigator url="/pages/order/order?statusIndex=2">
+              <view wx:if="{{payedCount>0}}" class="weui-badge orderTip">{{payedCount}}</view>
+              <view class="imgicon">
+                <image style="width:20px;height:20px" src="../../style/images/center-icon-order-dfh.png" />
+              </view>
+              <view class="name">待发货</view>
+            </navigator>
+          </view>
+        </view>
+        <view class="weui-flex__item">
+          <view class="center-ordersModule">
+            <navigator url="/pages/order/order?statusIndex=3">
+              <view wx:if="{{shippedCount>0}}" class="weui-badge orderTip">{{shippedCount}}</view>
+              <view class="imgicon">
+                <image style="width:20px;height:20px" src="../../style/images/center-icon-order-dsh.png" />
+              </view>
+              <view class="name">待收货</view>
+            </navigator>
+          </view>
+        </view>
+        <view class="weui-flex__item">
+          <view href="orders.html" class="center-ordersModule">
+            <navigator url="/pages/order/order?statusIndex=4">
+              <view wx:if="{{complateCount>0}}" class="weui-badge orderTip">{{complateCount}}</view>
+              <view class="imgicon">
+                <image style="width:20px;height:20px" src="../../style/images/center-icon-order-dpj.png" />
+              </view>
+              <view class="name">已完成</view>
+            </navigator>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-panel__bd">
+      <view class='title-u'>
+        <image style="width:38rpx;height:38rpx" src="../../style/images/center-icon-jk.png" alt="" class="center-list-icon" />我的佣金</view>
+      <view class="weui-flex">
+        <view class="weui-flex__item" bindtap='navigateToAgentCmsRcd'>
+          <view class="center-ordersModule">
+            <view class="center-money">
+              <em>{{totalMission}}</em>
+            </view>
+            <view class="name">总佣金</view>
+          </view>
+        </view>
+        <view class="weui-flex__item" bindtap='navigateToAgentMission'>
+          <view class="center-ordersModule">
+            <view class="center-money">
+              <em>{{canGetMission}}</em>
+            </view>
+            <view class="name">可提现</view>
+          </view>
+        </view>
+        <view class="weui-flex__item" bindtap='navigateToAgentCashRcd'>
+          <view class="center-ordersModule">
+            <view class="center-money">
+              <em>{{cachMission}}</em>
+            </view>
+            <view class="name">累计提现</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- <view class="weui-cell weui-cell_access" bindtap="navigateToshopcart">
+      <view class="weui-cell__hd">
+        <image style="width:20px;height:20px" src="../../style/images/center-icon-yhk.png" alt="" />
+      </view>
+      <view class="weui-cell__bd weui-cell_primary">
+        <text class="center-list-txt">购物车</text>
+      </view>
+      <view class="weui-cell__ft"></view>
+    </view> -->
+
+    <!-- <view class="weui-cell weui-cell_access" bindtap="navigateToCard">
+                <view class="weui-cell__hd"><image style="width:20px;height:20px" src="../../style/images/center-icon-jyjl.png" alt=""/></view>
+                <view class="weui-cell__bd weui-cell_primary">
+                  <text class="center-list-txt">我的卡券</text>
+                </view>
+                <view class="weui-cell__ft"></view>
+              </view> -->
+
+    <block wx:if="{{(agent == null && needAudit == 1) || (agent.status !=1 && needAudit == 1)}}">
+      <view class="weui-cell weui-cell_access" bindtap="navigateToAgent">
+        <view style='display:flex;'>
+          <view class="weui-cell__hd">
+            <image style="width:20px;height:20px" src="../../style/images/center-icon-sc.png" alt="" />
+          </view>
+          <view class="weui-cell__bd weui-cell_primary">
+            <text class="center-list-txt">我要推广</text>
+          </view>
+        </view> 
+        <view class="weui-cell__ft"></view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="weui-cell weui-cell_access" bindtap="navigateToAgentShare">
+        <view style='display:flex;'>
+          <view class="weui-cell__hd">
+            <image style="width:20px;height:20px" src="../../style/images/center-icon-sc.png" alt="" />
+          </view>
+          <view class="weui-cell__bd weui-cell_primary">
+            <text class="center-list-txt">我要推广</text>
+          </view>
+        </view>  
+        <view class="weui-cell__ft"></view>
+      </view>
+    </block>
+
+    <view class="weui-cell weui-cell_access" bindtap="navigateToAddress">
+      <view style='display:flex;'>
+        <view class="weui-cell__hd">
+          <image style="width:20px;height:20px" src="../../style/images/center-icon-dz.png" alt="" />
+        </view>
+        <view class="weui-cell__bd weui-cell_primary">
+          <text class="center-list-txt">地址管理</text>
+        </view>
+      </view>  
+      <view class="weui-cell__ft"></view>
+    </view>
+
+   
+    <!-- <view class="weui-cell weui-cell_access" bindtap="navigateToMyBargainProduct">
+      <view style='display:flex;'>
+        <view class="weui-cell__hd">
+          <image style="width:20px;height:20px" src="../../style/images/bargain_my.png" alt="" />
+        </view>
+        <view class="weui-cell__bd weui-cell_primary">
+          <text class="center-list-txt">我的砍价</text>
+        </view>
+      </view>  
+      <view class="weui-cell__ft"></view>
+    </view> -->
+
+    <view class="weui-cell weui-cell_access" bindtap="navigateToRefundOrder">
+      <view style='display:flex;'>
+        <view class="weui-cell__hd">
+          <image style="width:20px;height:20px" src="../../style/images/refundment.png" alt="" />
+        </view>
+        <view class="weui-cell__bd weui-cell_primary">
+          <text class="center-list-txt">维权订单</text>
+        </view>
+      </view>  
+      <view class="weui-cell__ft"></view>
+    </view>
+    <!-- <view class="weui-cell weui-cell_access" bindtap="navigateToTask">
+      <view style='display:flex;'>
+        <view class="weui-cell__hd">
+          <image style="width:20px;height:20px" src="../../style/images/task.png" alt="" />
+        </view>
+        <view class="weui-cell__bd weui-cell_primary">
+          <text class="center-list-txt">任务奖励</text>
+        </view>
+      </view>
+      <view class="weui-cell__ft"></view>
+    </view> -->
+
+    <!-- <view class="weui-cell weui-cell_access" bindtap="navigateToAboutus">
+                <view class="weui-cell__hd"><image style="width:20px;height:20px" src="../../style/images/center-icon-yhk.png" alt="" /></view>
+                <view class="weui-cell__bd weui-cell_primary">
+                  <text class="center-list-txt">关于我们</text>
+                </view>
+                <view class="weui-cell__ft"></view>
+              </view> -->
+
+    <!-- <view class="weui-cell weui-cell_access" bindtap="navigateToReAuth">
+                <view class="weui-cell__hd"><image style="width:20px;height:20px" src="../../style/images/center-icon-out.png" alt="" /></view>
+                <view class="weui-cell__bd weui-cell_primary">
+                  <text class="center-list-txt">重新授权</text>
+                </view>
+                <view class="weui-cell__ft"></view>
+              </view> -->
+
+  </view>
+</view>
+
+<!-- <view style="height:20rpx;background: #eee;width:100%;"></view>
+<view class="version">收亿科技提供技术支持</view>
+<view class='www'>www.91soeasy.cn</view>
+<view style="height:20rpx;background: #eee;width:100%;"></view> -->

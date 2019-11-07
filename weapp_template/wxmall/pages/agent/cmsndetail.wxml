@@ -1,0 +1,71 @@
+<view class="weui-content" style="margin-bottom:45px;">
+<block wx:for="{{orders}}" wx:for-item="order" wx:key="order.orderId">
+  <view class="weui-panel" wx:if="{{order}}" data-id="{{order.orderId}}">
+    <view class="weui-panel__hd">
+      <view class="weui-cell" style="padding:3rpx;">
+        <view class="weui-cell__bd ">
+          订单号：{{order.orderSn}}
+        </view>
+        <view class="weui-cell__ft">
+          <text class="status">{{order.orderStatus}}</text>
+        </view>
+      </view>
+    </view>
+    <!-- weui-panel__bd -->
+    <!-- <view class=" address_box" wx:if="{{order.receiverName}}">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <view class="name-shou">{{order.receiverName}} {{order.receiverPhone}}</view>
+          <view class='addre-shou'>{{order.receiverProvince}}{{order.receiverCity}}{{order.receiverCountry}}</view>
+          <view class="addre-shou">{{order.receiverAddr}}</view>
+        </view>
+      </view>
+    </view> -->
+
+    <!-- <view class=" address_box" wx:if="{{order.shopName}}">
+      <view class="weui-cell">
+        <view class="weui-cell__bd">
+          <view class="name-shou">{{order.shopName}}</view>
+          <view class="addre-shou">{{order.shopComtact}}({{order.shopContacPhone}})</view>
+          <view class="addre-shou">{{order.shopAddr}}</view>
+        </view>
+      </view>
+    </view> -->
+
+  </view>
+
+  <view class="order_info">
+    <!--  -->
+    <view class="weui-media-box weui-media-box_appmsg" bindtap="toProductDetail"  wx:for="{{order.orderItems}}" wx:key="id" data-id="{{item.productId}}" >
+      <view class="weui-media-box__hd">
+        <image class="weui-media-box__thumb" src="{{item.productImg}}"></image>
+      </view>
+      <view class="weui-media-box__bd">
+        <view class="weui-media-box__desc class_padding">{{item.productName}}</view>
+        <view class="weui-media-box__desc price">¥{{item.price}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-content" style="margin-bottom:45px">
+    <view class="weui-form-preview__bd">
+      <view class="weui-form-preview__item">
+        <text class="weui-form-preview__label">商品金额</text>
+        <text class="weui-form-preview__value">￥{{order.totalPrice}}</text>
+      </view>
+      <view class="weui-form-preview__item">
+        <text class="weui-form-preview__label">运  费</text>
+        <text class="weui-form-preview__value">￥{{order.postFee}}</text>
+      </view>
+      <view class="weui-form-preview__item">
+        <text class="weui-form-preview__label">所得佣金</text>
+        <text class="weui-form-preview__value name-shou">￥{{order.commssions[0].commissionValue}}</text>
+      </view>
+    </view>
+  </view>
+</block>
+</view>
+
+
+
+

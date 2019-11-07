@@ -1,0 +1,74 @@
+#include ("/_includes/_layout.html")
+#@layout("红包领取成功","wxmall,点步科技","Wxmall社区","wxmall") 
+<style>
+.repack-bg{
+	height: 100%;
+	position: relative;
+	margin:auto 0;
+}
+.repack-box{
+	display:block;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left:0;
+	right:0;
+	margin:20% 0;
+	border-radius: 10px;
+}
+.weui-content{
+	height: 100%
+}
+h2{
+	font-size: 20px;
+	margin-top:10px;
+	font-family: "微软雅黑";
+}
+.tip{
+	display: inline-block;
+    width: 90%;
+    color: #999;
+    margin-top: 10px;
+    font-size: 18px;
+}
+</style>
+#define content()
+<div class="repack-bg">
+	<div class="repack-box">
+		<div class="repack-msg">
+			<div style="text-align: center;"><img src="#(webctx)/resources/images/redpack-ico.png" /></div>
+			<div style="text-align: center;">
+				<h2>请求已确认,等待系统发送红包</h2>
+				<span class="tip">请回到微信主窗口,系统稍后会推送红包通知,收到后请点击拆开红包,拆开后红包金额直接转入零钱。</span>
+			</div>
+			<div style="text-align: center;width: 50%;position: absolute; left: 15%;right: 0px;margin: auto; margin-top: 20%;"><img style="width:100%;height: 100%" src="#(webctx)/resources/images/redpack-tip.png" /></div>
+		</div>
+	</div>
+</div>
+#define script()
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	<!--禁用微信分享按钮-->
+	function onBridgeReady() {
+		// 通过下面这个API隐藏右上角按钮
+        WeixinJSBridge.call('hideOptionMenu');
+    	// 通过下面这个API隐藏底部导航栏
+        WeixinJSBridge.call('hideToolbar');
+    }
+
+    if (typeof WeixinJSBridge == "undefined") {
+        if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+        } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+        }
+    } else {
+        onBridgeReady();
+    }
+    
+})
+</script>
+#end
+#end

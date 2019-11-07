@@ -1,0 +1,127 @@
+#include ("/_includes/_layout.html")
+#@layout("活动列表", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content ibox-content">
+		<div class="panel-body">
+			<div style="float: left; margin-right: 20px;">
+			<table width="100%" border="0">
+				<tr>
+					<td colspan="3" style="text-align: left;">
+						<a href="#(webctx)/activity/add" id="add-activity" class="btn btn-success">新建活动</a>
+					</td>	
+					<td colspan="3" style="text-align: left;">
+						<input style="margin:0 10px;" type="text" id="name" placeholder="活动名称" class="control-inline" />
+					</td>
+					<td colspan="3" style="text-align: left;">
+						<button id="myqueryBtn" class="btn btn-success btn-sm">查询</button>
+					</td>
+				</tr>
+			</table>
+			</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+				<th>活动名称</th>
+				<th>活动时间</th>
+				<th>状态</th>
+				<th>操作</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	</div>   
+</div>
+<script type="text/html" id="item_table_tr_tpl">
+{{each list as item i}}
+<tr class="package">
+	<td>{{item.name}}</td>
+	<td>{{item.startDate}} ~ {{item.endDate}}</td>
+	<td><span class="label {{if item.status=="已过期" || item.status=="未开始"}} label-default {{else}} label-success {{/if}}">
+		{{item.status}}</span>
+	<td>
+		&nbsp;<a id="edit_{{item.id}}" href="javascript:void(0)">编辑</a>
+		&nbsp;<a id="look_{{item.id}}" href="javascript:void(0)">查看</a>
+	</td>
+</tr>	
+{{/each}} 	
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="5" class="center">没有结果集</td></tr>
+</script>
+#end
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = {};
+	params.active = $("#a_status_sel").val();
+	var table = new obz.TableView("pager", obz.ctx + "/activity/list", params, function(resp){
+		$(".itemsLotGrid").empty();
+		if(resp && resp.list && resp.list.length>0){
+		for(var i=0; i< resp.list.length;i++){
+			/*截断时分秒*/
+			resp.list[i].startDate = resp.list[i].startDate.substr(0,10);
+			resp.list[i].endDate = resp.list[i].endDate.substr(0,10);
+		
+			var ertime = (new Date(resp.list[i].startDate).getTime()) - (new Date().getTime());
+			var time = (new Date(resp.list[i].endDate).getTime()) - (new Date().getTime());
+			//转为天数
+			if(ertime < 0 && time > 0){
+				resp.list[i].status = "进行中";
+			}else if(ertime >= 0 && time > 0){
+				resp.list[i].status = "未开始";
+			}else if(ertime < 0 && time < 0){
+				resp.list[i].status = "已过期";
+			}
+		}
+		for(var i=0; i< resp.list.length;i++){
+			var time = (new Date(resp.list[i].endDate).getTime()) - (new Date().getTime());
+			//time为负数，既为结束 
+			if(time > 0){
+				$("#add-activity").removeAttr("href").bind("click",function(){
+						obz.error("已有进行中或未开始的活动！！！");
+				});
+				break;
+			}else{
+				$("#add-activity").unbind().attr("href","#(webctx)/activity/add");
+			}
+		}
+		$('.itemsLotGrid').html(template('item_table_tr_tpl', resp));
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+	table.init();
+	
+	$("#myqueryBtn").click(function(){
+		var params = {};
+		params.name = $("#name").val();
+		table.setParams(params);
+		table.init();
+	});
+	
+	var TableOpt = {
+			edit : function(param){
+				var id = param[1];
+				location.href = obz.ctx + "/activity/add/"+id;   		
+			},
+			look : function(param){
+				var id = param[1];
+				location.href = obz.ctx + "/activity/look/"+id;  		
+			},
+			init : function(){
+				var optArray = new Array();
+				optArray.push(this.edit);
+				optArray.push(this.look);
+				return optArray;
+			}
+		}
+	
+});
+Template.init("#menu-activity");
+</script>

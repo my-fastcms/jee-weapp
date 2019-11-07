@@ -1,0 +1,63 @@
+#include ("/_includes/_layout.html")
+#@layout("设置交易密码", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" >
+	       	   <a href="#(webctx)/user/balance" class="J_menuTab active">在线充值</a>
+	           <a href="#(webctx)/user/balance/recharge" class="J_menuTab ">我的充值记录</a>
+	           <a href="#(webctx)/user/balance/rcd" class="J_menuTab ">我的红包记录</a>
+	       </div>
+	   	</nav>
+	</div>
+	
+	<div class="ibox-content" >
+	
+		<div class="alert alert-danger">
+            注意：充值金额只用于红包代发，红包代发收取6%的手续费，即充值100，实际到账94，不代发，不收取手续费<br>除此之外不限红包个数，不限红包金额，如需发送少于1元钱的红包，请联系微信客服.
+        </div>
+	
+		<form id="_myForm_" class="form-horizontal">
+	        <div class="form-group">
+	            <label class="col-md-3 control-label">充值金额(元)：</label>
+	            <div class="col-md-3">
+                	<select class="form-control" id="recharge_sel" style="width: 90px;">
+                		<!-- <option>0.1</option> -->
+                		<option>5</option>
+                		<option>100</option>
+                		<option selected="selected">300</option>
+                		<option>500</option>
+                		<option>1000</option>
+                		<option>5000</option>
+                	</select>
+	            </div>
+	        </div>
+	        
+	         <div class="form-group">
+	            <div class="col-md-6" align="center">
+	               <img id="qrcode_img" src="#(webctx)/qrcode/genImage64?url=#(qrcode)" width="300" height="300"/>
+	               <br/>
+	               <span class="alert-success">请微信扫码支付</span><br/>
+	               <span class="alert-success">支付成功后请查看充值记录</span>
+	            </div>
+	        </div>
+		</form>
+	</div>
+</div>
+#end
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#recharge_sel").change(function(){
+		genCode();
+	});
+	
+	function genCode(){
+		obz.ajaxJson("#(webctx)/user/balance/qrcode", {payFee:$("#recharge_sel").val()}, function(resp){
+			$("#qrcode_img").attr("src", "#(webctx)/qrcode/genImage64?url="+resp.data);
+		});
+	}
+	
+	genCode();
+});
+</script>

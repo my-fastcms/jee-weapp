@@ -1,0 +1,20 @@
+#define layout(title, keywords, description, page)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <title>#if(title??) #(title??) #else wxmall #end</title>
+   #include ("/_includes/header.html")
+   #@css?()
+</head>
+<body ontouchstart>
+<div class='weui-content'>
+#@content?()
+</div>
+
+#include ("/_includes/footer.html") 
+#include ("/_includes/scripts.html") 
+#@script?()
+
+</body>
+</html>
+#end

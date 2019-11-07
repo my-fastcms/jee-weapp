@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head><title>点步营销插件平台--忘记密码</title>#include ("/_includes/header.html")<meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body class="gray-bg">
+<div class="middle-box text-center loginscreen   animated fadeInDown">
+    <div>
+        <div><h1 class="logo-name">WEAPP</h1></div>
+        <h3>点步小程序拼团服务平台</h3>
+        <p>重置密码</p>
+        <form class="m-t" role="form" action="">
+        <input id="CSRF_TOKEN_HIDDEN" type="hidden" value="#(CSRF_TOKEN)"/>
+            <div class="form-group">
+                <input id="phone" type="text" class="form-control" placeholder="请输入手机号" required=""/>
+            </div>
+            <div class="form-group">
+            	<div class="input-group">
+				<input type="text" class="form-control" placeholder="短信验证码" id="phone_code"/>
+				<span class="input-group-btn"><a id="sendCodeBtn" href="javascript:void(0)" class="btn btn-primary">发送验证码</a></span>
+				</div>
+			</div>
+            <div class="form-group">
+                <input id="password" type="password" class="form-control" placeholder="请输入密码" required=""/>
+            </div>
+            <div class="form-group">
+                <input id="confirmpassword" type="password" class="form-control" placeholder="请再次输入密码" required=""/>
+            </div>
+            <div class="form-group">
+				<div class="controls">
+					<label class="input-group col-sm-5">
+						<input type="text" id="captcha" class="form-control" name="captchaToken" placeholder="验证码"/>
+					</label>
+					<label class="input-group col-sm-5">
+						<img id="captchaImage" src="#(webctx)/captcha?width=100&height=35&fontsize=30" alt="换一张" />
+					</label>
+				</div>
+			</div>
+            
+            <button id="restPwdBtn" type="button" class="btn btn-primary block full-width m-b">确 定</button>
+
+            <p class="text-muted text-center"><small>已经有账户了？</small><a href="#(webctx)/login">点此登录</a></p>
+
+        </form>
+    </div>
+</div>	
+<script type="text/javascript">
+$(function(){
+	var UA = navigator.userAgent.toLowerCase();
+	var browerKernel = {
+		isWebkit: function() {
+			if (/webkit/i.test(UA)) return true;
+			else return false;
+		},
+		isFirefox: function() {
+			if (/firefox/i.test(UA)) return true;
+			else return false;
+		}
+	}
+
+	if(!browerKernel.isWebkit()){
+		alert("您当前浏览器无法兼容本系统！\n推荐使用Google Chrome 浏览器！\n\n其它兼容浏览器：\n360浏览器极速模式\n搜狗高速浏览器3\n世界之窗极速版\n猎豹浏览器\nQQ浏览器\n其它浏览器请自测");
+	}
+	
+	var $captcha = $("#captcha");
+	var $captchaImage = $("#captchaImage");
+	var change_captcha = function() {
+		var timestamp = (new Date()).valueOf();
+		var imageSrc = $captchaImage.attr("src");
+		if(imageSrc.indexOf("?") >= 0) {
+			imageSrc = imageSrc.substring(0, imageSrc.indexOf("?"));
+		}
+		imageSrc = imageSrc + "?timestamp=" + timestamp + "&width=100&height=35&fontsize=30";
+		$captchaImage.attr("src", imageSrc);
+	};
+
+	$captchaImage.click(change_captcha);
+	
+	function checkPassWord(password) {
+		var custpwd = password;
+		var diReg = /^[0-9]*$/;
+		var chReg = /^[A-Za-z]*$/;
+		if (custpwd == "") {;
+			obz.warn('密码不能为空。');
+			return false;
+		}
+		if (custpwd.length < 8) {
+			obz.warn('密码长度为8到30个字符。');
+			return false;
+		}
+		if (diReg.test(custpwd)) {
+			obz.warn('密码不可全为数字。');
+			return false;
+		}
+		if (chReg.test(custpwd)) {
+			obz.warn('密码不可全为字母。');
+			return false;
+		}
+		
+		var hasdiReg = /[0-9]+/;
+		var haschReg = /[A-Za-z]+/;
+		if(!(hasdiReg.test(custpwd)||haschReg.test(custpwd))){
+			obz.warn('密码由英文字母、数字、符号两种及以上组成。');
+			return false;
+		}
+		return true;
+	}
+	
+	function resetPwd(){
+		var phone = $("#phone").val();
+		var password = $("#password").val();
+		var confirmPwd = $("#confirmpassword").val();
+		var phoneCode = $("#phone_code").val();
+		
+		if(phone == "" || password == "" || confirmPwd == "" || phoneCode == ""){
+			obz.warn("请填写完整信息！");
+			return false;
+		}
+		
+		if(!checkPassWord(password)) return;
+		
+		if(password != confirmPwd){
+			obz.warn("两次密码输入不一致");
+			return false;
+		}
+		
+		var captcha = $("#captcha").val();
+		
+		if(captcha == null || captcha ==""){
+			obz.warn("请输入验证码");
+			return false;
+		}
+		
+		var params = {};
+		params.phone = phone;
+		params.password = password;
+		params.confirmPwd = confirmPwd;
+		params.phoneCode = phoneCode;
+		params.captchaToken = captcha;
+		$(".content").mask("正在提交数据...");
+		obz.ajaxJson(obz.ctx+"/resetPwd", params, function(resp){
+			$(".content").unmask();
+			if(resp.code != 200){
+				change_captcha();
+				$("#captcha").val("");
+				return;
+			}
+			obz.msg("密码已重置,即将跳到登陆界面...", function(){
+				location.href = "#(webctx)/";
+			});
+		});
+	}
+	
+	$("#restPwdBtn").click(function(){
+		resetPwd();
+	});
+	
+	$("#sendCodeBtn").click(function(){
+		if($("#phone").val() == null || $("#phone").val() == ""){
+			alert("请输入手机号码");
+			return;
+		}
+		$(".content").mask("正在发送验证码...");
+		obz.ajaxJson(obz.ctx+"/sendPwdCode", {phone:$("#phone").val()}, function(resp){
+			$(".content").unmask();
+			if(resp.code == 200){
+				obz.msg("短信验证码已发送");//alert(resp.msg);
+			}
+		});
+	});
+	
+	$(document).keyup(function(event){
+		if(event.keyCode ==13){
+			resetPwd();
+		}
+	});
+	
+});
+
+</script>	
+</body>
+</html>

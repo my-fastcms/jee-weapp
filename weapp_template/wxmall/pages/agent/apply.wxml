@@ -1,0 +1,68 @@
+<view class="container">
+  <form bindsubmit="saveForm">
+    <view class="weui-cells weui-cells_form">
+      <view class="weui-cell">
+        <view class="weui-cell__hd">
+          <label class="weui-label" for="name">姓名</label>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="name" value="{{agent.agent_name ? agent.agent_name : name}}" class="weui-input" placeholder="真实姓名" bindinput="getName" type="text" />
+        </view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__hd">
+          <label class="weui-label" for="mobile">手机号</label>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="mobile" value="{{agent.agent_phone ? agent.agent_phone : phone}}" bindinput="getPhone" class="weui-input" placeholder="手机号码" type="number"/>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_vcode">
+        <view class="weui-cell__hd">
+          <label class="weui-label">短信验证码</label>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="phoneCode" class="weui-input" type="number" placeholder="短信验证码" />
+        </view>
+        <view class="weui-cell__ft">
+          <button class="weui-vcode-btn" bindtap='sendCode' disabled="{{buttonDisable}}">{{verifyCodeTime}}</button>
+        </view>
+      </view>
+      <view class="weui-cell weui-cell_vcode">
+        <view class="weui-cell__hd">
+          <label class="weui-label">图片验证码</label>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="imgCode" class="weui-input" placeholder="请输入验证码" />
+        </view>
+        <view class="weui-cell__ft" bindtap='getImgCode'>
+          <block wx:if="{{imgcodeSrc !=''}}">
+            <image class="weui-vcode-img" style="width: 80px;padding-right: 5px;" src="{{imgcodeSrc}}" alt="换一张" />
+          </block>
+        </view>
+      </view>
+      <view class="weui-cell">
+        <view class="weui-cell__hd">
+          <label class="weui-label" for="address">详细地址</label>
+        </view>
+        <view class="weui-cell__bd">
+          <input name="address" value="{{agent.agent_addr ? agent.agent_addr : address}}" class="weui-input" placeholder="详细地址" type="text" bindtap='selectAddr' />
+        </view>
+      </view>
+    </view>
+    <view class="content-padded">
+      <block wx:if="{{agent.status == 2}}">
+        <button type="default" class="weui-btn weui-btn_primary">正在审核中...</button>
+      </block>
+      <block wx:elif="{{agent.status == 3}}">
+        <button type="warn" class="weui-btn weui-btn_primary">已取消分销资格</button>
+      </block>
+      <block wx:elif="{{agent.status==0}}">
+        <button type="primary" formType="submit" class="weui-btn weui-btn_primary">审核不通过，再次申请</button>
+      </block>
+      <block wx:else>
+        <button type="primary" formType="submit" class="submit-b">提交申请</button>
+      </block>
+    </view>
+  </form>
+</view>

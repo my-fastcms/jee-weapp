@@ -1,0 +1,122 @@
+#include ("/_includes/_layout.html")
+#@layout("满减送", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div id="tableList" class="content  ibox-content">
+		<div id="promotionToolsbar" class="panel-body">
+			<div style="float: left; margin-right: 20px;"><a href="#(webctx)/fullcut/set" class="btn btn-success">新建满减送</a>
+			&nbsp;&nbsp;&nbsp;
+				<select id="a_status_sel" class="control-inline">
+					<option value="">全部</option>
+					<option value="0" selected="selected">进行中</option>
+					<option value="1">未开始</option>
+					<option value="2">已结束</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;
+				<select id="a_active_sel" class="control-inline">
+					<option value="">全部</option>
+					<option value="1" selected="selected">有效</option>
+					<option value="0">已删除</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px; float: right;"></div>
+		</div>
+		
+		<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+					<th><span style="vertical-align: middle;">&nbsp;&nbsp;活动名称</span></th>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>活动状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody class="cashbackLotGrid"></tbody>
+		</table>
+	</div>
+</div>
+<!-- 模板开始 -->
+<script type="text/template" id="cashback_table_tr_tpl">
+{{each list as item i}}
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{{item.id}}" style="margin-right: 4px; vertical-align: middle;"/></td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{{item.fullCutName}}</span></td>
+			<td><span>{{item.startDate}}</span></td>
+			<td><span>{{item.endDate}}</span></td>
+			<td><span>{{if item.status==0}} 进行中 {{else if item.status==1}} 未开始 {{else if item.status==2}} 已结束 {{else}} 未知状态 {{/if}}</span>
+{{if item.active==false}}<span style="color:red">(已删除)</span>{{/if}}</td>
+			<td>
+				&nbsp;<a id="edit#{{item.id}}" href="javascript:void(0)" style="text-decoration: underline;">编辑</a>
+				&nbsp;<a id="del#{{item.id}}" href="javascript:void(0)" style="text-decoration: underline;{{if item.active==false}} display:none; {{/if}}">删除</a>
+			</td>
+		</tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package">
+			<td class="center" colspan="7">
+				没有结果集，现在去创建吧，
+				<a href="#(webctx)/fullcut/set" style="text-decoration: underline;">去创建</a>
+			</td>
+		</tr>
+</script>
+#end
+<script type="text/javascript">
+	$(document).ready(function() {
+		var params = {};
+		params.status=$("#a_status_sel").val();
+		params.active=$("#a_active_sel").val();
+		var table = new obz.TableView("pager", obz.ctx + "/fullcut/list", params, function(resp){
+			$(".cashbackLotGrid").empty();
+			if(resp && resp.list && resp.list.length>0){
+				$('.cashbackLotGrid').html(template('cashback_table_tr_tpl', resp));
+				//初始化checkbox点击事件
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(ActivityTableOpt.init());
+			}else{
+				$(".cashbackLotGrid").append($("#table_noresult_tr_tpl").html());
+			}
+		});
+		table.init();
+		//=============================表格操作事件开始=============================================
+		var ActivityTableOpt = {
+			edit : function(param){
+				var id = param[1];
+				location.href = obz.ctx + "/fullcut/set/?pid="+id;
+			}, 
+			del : function(param){
+				obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+	    			var ids = param[1];
+		    		obz.ajaxJson(obz.ctx + "/fullcut/delSet", {ids: ids}, function(resp){
+		    			if(resp.code==200){
+		    				obz.msg('删除成功', function(){
+		    					location.reload();
+		    				});			
+		    			}
+		    		});
+	    		});
+				return false;
+			},
+			init : function(){
+				var optArray = new Array();
+				optArray.push(this.edit);
+				optArray.push(this.del);
+				return optArray;
+			}
+		}	
+		//=============================表格操作事件结束=============================================
+		$("#a_status_sel").change(function(){
+			params.status=$("#a_status_sel").val();
+			params.active=$("#a_active_sel").val();
+			table.init();
+		});
+		$("#a_active_sel").change(function(){
+			params.active=$("#a_active_sel").val();
+			params.status=$("#a_status_sel").val();
+			table.init();
+		});
+	});
+</script>

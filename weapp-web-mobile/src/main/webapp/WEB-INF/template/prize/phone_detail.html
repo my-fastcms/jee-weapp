@@ -1,0 +1,44 @@
+#include ("/_includes/_layout.html")
+#@layout("订单结算", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/detail.css">
+#end
+#define script()
+<script type="text/javascript" src="#(webctx)/resources/js/phonecash.js"></script>
+#end
+#define content()
+  	<div class="register_msgcont">
+		<h1 class="register_msgtitle">#(prize.exchange_title??)</h1>
+		<div class="immediately_explain">
+			<ul>
+				<li><p>充值话费面值：<span>#(prize.phone_cash ??)</span>元</p></li>
+				<li><p>剩余数量：<span>#(prize.publish_count?? - prize.had_exchange_count??)</span></p></li>
+				<li><p>结束时间：<span>#date(end_date)</span></p></li>
+				<li><p>每人限兑<span>#(prize.exchange_count ??)</span>次，您已兑<span>#(exchange_count ??)</span>次</p></li>
+				<li>
+				<p>需要#(_sellerUser.jifenalias ??)：<span>#(prize.need_points ??)</span><span class="sep">，我的#(_sellerUser.jifenalias??)：</span><span>#(buyerUser.scroe??)</span></p>
+				</li>
+				<li class="width_input">
+					<p>真实姓名：</p><p><input type="text" id="name" class="text"/></p>
+					<p>充值手机号：</p><p><input type="text" id="phone" class="text" maxlength="11"/></p>
+				</li>
+			</ul>		
+			<a class="immediately_sign btn_exchange" href="javascript:javascript:(0);">立即兑换</a>
+		</div>
+<input type="hidden" id="db_prize_id" value="#(prize.id ??)"/>
+  	<input type="hidden" id="db_seller_nick" value="#(_sellerUser.encodSellerNick ??)"/>
+  	<input type="hidden" id="db_real_buyer_nick" value="#(_buyerUser.realNick ??)" />
+  	<div id="tips" class="immediately_popupbg">
+		<div class="immediately_popup">
+			<div class="immediately_popup_cont">
+				<div class="exchange_success_box">
+					<div class="tips">提交成功，我们会尽快为您处理！<br/>如果有问题请联系客服。</div>
+				</div>
+			</div>
+			<div class="immediately_popup_cont">
+				<a class="but" href="javascript:location.reload();">确定</a>
+			</div>
+		</div>
+	</div>
+  	</div>
+#end

@@ -1,0 +1,57 @@
+.weui-panel__hd {
+  font-size: 28rpx;
+  color: #666;
+  padding: 17rpx 20rpx;
+}
+.status {
+  color: orangered;
+  font-family: "微软雅黑"
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+.name-shou {
+  padding: 10rpx 0;
+  color: #fa3c64;
+  font-size: 32rpx;
+}
+.addre-shou {
+  font-size: 28rpx;
+  color: #666;
+}
+.weui-cell__bd{-webkit-box-flex:1;-webkit-flex:1;flex:1}
+.weui-cell{padding:10px 15px;position:relative;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center}
+
+/**收货地址  **/
+.address_box{
+  min-height: 80px;font-size: 12px;
+  background: #fff url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAAICAMAAAAFmMshAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAACNUExURV6X8v3n57TP+faUlPf6/2ad8/zf3/JeXv/////7+9/q/Pefn+fw/X6t9crd+/719fz9//NoaPJhYW6i85S69vm0tO/1/tTk/PV+fv7v76rI+Han9PzU1PJkZPNubviqqvq/v/q+vvR1dfipqfWIiPvKyoqz9p7A95/B9/aKioiy9b7V+vvJyb/W+vR3dzIYPh8AAACcSURBVCjPldLHDoNADEXRAQaYofcOKaS3//+8VAV7Z7/91ZEsCwXnnF36mgG13kHQF9YCpIbFYLc3xAYFg+0jpRa49TM6O200ZKsTg82viVrgeDXS2bRErOxsOmub8hN9YV2mdHacY8SaHLaTv+wN6/VEZzO/hWxyzxlXPlb/8AXvH4yfsgz0U1HPYIsAlGJoGOzOQWwdMtiLh9onBzMVnawViSIAAAAASUVORK5CYII=") repeat-x scroll -7px bottom / 60px 4px;
+}
+
+.order_info {
+  background: #fff;
+  margin: 30rpx;
+  border: 1rpx solid #eee;
+  border-radius: 10rpx;
+}
+
+
+.weui-media-box__hd{
+  width:82px; 
+  height:82px; 
+  margin: 10rpx;
+  border: 1rpx solid white;
+  border-radius: 10rpx;
+  }
+.weui-media-box {
+  padding: 2px;
+  position: relative;
+}
+.class_padding{
+  margin-top: 5rpx;
+  margin-bottom: 20rpx;
+}

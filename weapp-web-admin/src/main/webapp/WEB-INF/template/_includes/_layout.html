@@ -1,0 +1,87 @@
+#define layout(title, keywords, description, page)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   <title>#if(title??) 点步营销插件平台-#(title??) #else 点步营销插件平台  #end</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+   <meta name="renderer" content="webkit"/>
+   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+   <!-- <meta name="referrer" content="never"/>
+   <meta name="referrer" content="no-referrer"/> -->
+   #include ("/_includes/header.html")
+   #@css?()
+</head>
+<body class="fixed-sidebar full-height-layout" style="overflow:hidden;">
+<input id="CSRF_TOKEN_HIDDEN" type="hidden" value="#(CSRF_TOKEN)"/>
+#if(session?? && session.weapp_in_session??)
+<input id="AUTH_USER_TYPE" type="hidden" value="#(session.weapp_in_session.service_type??)"/>
+#end
+<!-- Site wrapper -->
+<div id="wrapper">
+	#if (session?? && session.weapp_in_session??)
+	#include ("/_includes/menus.html")
+	#end
+	<nav class="navbar" style="margin: 0 0 0 220px;border-color: #e7eaec;border-bottom-style: solid;border-width: 1px;">
+		<div class="navbar-header">
+			#if (session?? && session.weapp_in_session??)
+			<div class="top-navigation navbar-custom-menu pull-left">
+				<ul class="nav navbar-nav" id="topMenu">
+					<li><a href="javascript:void(0)" class="addTabPage" title="系统管理" menu-group="1"><i class="fa fa-gear"></i> <span>系统管理</span></a></li>
+					<li><a href="javascript:void(0)" class="addTabPage" title="微信商城" menu-group="2"><i class="fa fa-cart-arrow-down"></i> <span>微信商城</span></a></li>
+					<li><a href="javascript:void(0)" class="addTabPage" title="应用中心" menu-group="3"><i class="fa fa-columns"></i> <span>应用中心</span></a></li>
+				</ul>
+				<script>
+					$(function(){
+						$('#topMenu').on('click', '.addTabPage', function (e) {
+							$('#topMenu li').removeClass('active');
+							$(this).parent().addClass('active');
+							var menuGroupId = $(this).attr("menu-group");
+							$("#side-menu").children().each(function () {
+								var li = $(this);
+								if(li.attr("menu-group") !=null && li.attr("menu-group") != menuGroupId){
+									li.hide();
+								}else{
+									li.show();
+								}
+							});
+							return false;
+						});
+					});
+				</script>
+			</div>
+			#end
+		</div>
+		<ul class="nav navbar-top-links navbar-right">
+			#if(activity??)
+			<li class="dropdown hidden-xs">
+				<a href="javascript:void(0)" id="activityBtn"><font color="#999c9e">查看活动</font></a>
+			</li>
+			#end
+			<li class="dropdown hidden-xs">
+				<a href="#(webctx)/user">
+					#shiroAuthenticated()
+					#shiroPrincipal() 您好，
+					#if(principal.phone??) #(principal.phone) #else #(principal.nick) #end
+					#if(principal.kdt_id??)(有赞店铺)#end
+					#end
+					#end
+				</a>
+			</li>
+			<li class="hidden-xs"><a href="#(webctx)/logout"><i class="fa fa-power-off"></i>退出</a></li>
+		</ul>
+	</nav>
+	<!--右侧部分开始-->
+    <div id="page-wrapper" #if (session?? && session.weapp_in_session??) style="margin: 0 0 0 220px" #else style="margin: 0 0 0 0px"  #end> <!-- navbar-static-top -->
+        <div class="J_mainContent" id="content-main" style="padding-bottom: 20px;">#@content?()</div>
+	    #include ("/_includes/footer.html")
+    </div>
+     <!--右侧部分结束-->
+     
+     #include ("/_includes/right-side.html")
+     
+</div>
+<!-- ./wrapper -->
+#@script?()
+</body>
+</html>
+#end

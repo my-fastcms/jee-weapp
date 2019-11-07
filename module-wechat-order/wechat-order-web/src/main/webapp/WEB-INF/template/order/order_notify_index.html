@@ -1,0 +1,327 @@
+#include ("/_includes/_layout_wechat.html")
+#define css()
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<style>
+.notify_type_active{background-color: #f4f5f9;}
+</style>
+#end
+#@layout("订单提醒", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content row ibox-content col-sm-10">
+	<div class="content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content">
+		           <a href="#(webctx)/menu/notify" class="J_menuTab">菜单提醒</a>
+		           <a href="#(webctx)/order/notify" class="J_menuTab active">订单提醒</a>
+		           <a href="#(webctx)/product/notify" class="J_menuTab">商品提醒</a>
+		       </div>
+		   	</nav>
+		</div>
+  <div class="menu_setting_area js_editBox"> 
+   <div class="menu_preview_area"> 
+    <div class="mobile_menu_preview"> 
+     <div class="mobile_hd tc">
+     	#if(session.weapp_in_session??) 
+     		#(session.weapp_in_session.nick_name) 
+     	#end</div> 
+     <div class="mobile_bd">
+     	 <div class="chat-discussion" style="margin-top: 12px;">
+              <div class="chat-message" style="padding: 0 0 !important;">
+                  <img class="message-avatar" src="http://wx.qlogo.cn/mmopen/BqvlDRnYWYZEGQZgmic2tvNb6H1Ju14c3jYpIs9BWG8g1T6kjAIP6DBNCHDribJDnaFicZkVia9BwjQSCpxSJvgvYdSjKWZ8a6f0/0" alt="">
+                  <div class="message">
+                      <a class="message-author" href="javascript:void(0)">新订单提醒</a>
+                      <span class="message-content">您有一个新订单，客户xxx购买了xxx商品</span>
+                      <span class="message-content">订单编号:xxxxxxxxxx</span>
+                  </div>
+              </div>
+              <br>
+              <div class="chat-message" style="padding: 0 0 !important;">
+                  <img class="message-avatar" src="http://wx.qlogo.cn/mmopen/BqvlDRnYWYZEGQZgmic2tvNb6H1Ju14c3jYpIs9BWG8g1T6kjAIP6DBNCHDribJDnaFicZkVia9BwjQSCpxSJvgvYdSjKWZ8a6f0/0" alt="">
+                  <div class="message">
+                      <a class="message-author" href="javascript:void(0)">订单已支付提醒</a>
+                      <span class="message-content">客户xxx的订单已支付，快去备货吧</span>
+                      <span class="message-content">订单编号:xxxxxxxxxx</span>
+                  </div>
+              </div>
+              <br>
+              <div class="chat-message" style="padding: 0 0 !important;">
+                  <img class="message-avatar" src="http://wx.qlogo.cn/mmopen/BqvlDRnYWYZEGQZgmic2tvNb6H1Ju14c3jYpIs9BWG8g1T6kjAIP6DBNCHDribJDnaFicZkVia9BwjQSCpxSJvgvYdSjKWZ8a6f0/0" alt="">
+                  <div class="message">
+                      <a class="message-author" href="javascript:void(0)">订单退款提醒</a>
+                      <span class="message-content">客户xxx的订单发起退款申请，请售后及时处理</span>
+                      <span class="message-content">订单编号:xxxxxxxxxx</span>
+                  </div>
+              </div>
+	     </div>
+     </div> 
+    </div>
+   </div> 
+   
+    <!-- 菜单编辑区域 -->
+    <div class="menu_form_area"> 
+    <div id="js_rightBox" class="portable_editor to_left" style="display: block;">
+
+	    <div class="col-md-3" style="padding-right:0 !important;">
+            <div id="order_notify_types" class="chat-users">
+                <div class="users-list">
+                    <div class="chat-user notify_type_active">
+                        <div class="chat-user-name"><a href="javascript:void(0)" id="WAIT_BUYER_PAY" style="text-decoration: underline;" title="点我设置订单提醒">新订单提醒</a></div>
+                    </div>
+                    <div class="chat-user">
+                        <div class="chat-user-name"><a href="javascript:void(0)" id="WAIT_SELLER_SEND_GOODS" style="text-decoration: underline;" title="点我设置订单提醒">订单已支付提醒</a></div>
+                    </div>
+                    <div class="chat-user">
+                        <div class="chat-user-name"><a href="javascript:void(0)" id="TRADE_ORDER_REFUND" style="text-decoration: underline;" title="点我设置订单提醒">订单退款提醒</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	    <div class="editor_inner col-md-9">
+	    	<input type="hidden" value="" id="notify_config_id"/>
+	     	<div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+	       		<h4>提醒规则设置</h4> 
+	      	</div> 
+	      	<div class="menu_form_bd"> 
+	      	<div class="menu_content_container"> 
+	        	<div class="menu_content" style="overflow:hidden;">
+	        		<label class="radio-inline" for="rdo1">
+						<input id="rdo1" name="notify_enable_config" value="1" type="radio" checked="checked" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+						<span class="label-text" style="vertical-align: middle">开启提醒</span>
+					</label>
+	                <label class="radio-inline" for="rdo0">
+						<input id="rdo0" name="notify_enable_config" value="0" type="radio" style="vertical-align: middle;margin-top:2px; margin-bottom:1px">
+						<span class="label-text">关闭提醒</span>
+					</label>
+	        	</div>
+	       	</div> 
+	      </div> 
+	      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+	       <h4 class="global_info1">通知接收者设置</h4> 
+	      </div> 
+	      <div class="menu_form_bd" id="view"> 
+	      	<div class="menu_content_container"> 
+				<div id="users-list" class="menu_content"></div>
+	       	</div>
+	       	<div class="msg_sender_msg mini_tips warn"> 
+		       	<a href="javascript:void(0)" class="btn btn-primary btn-xs" onclick="openAddWechatUserDialog()">新增消息接收者</a>
+		       	<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('消息接收者，建议设置成为您店铺客服人员或者销售，请使用需要接收提醒的用户微信扫码。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+		    </div>
+	      </div> 
+	      
+	      <div class="panel-footer" align="center">
+		   	 	<button id="saveOrderNotifyConfig" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+			</div>
+	     </div>
+
+    </div>
+   </div> 
+  </div>
+	</div>
+	
+	<div class="help">
+        <h5>功能描述</h5>
+        <ul class="list-unstyled project-files">
+            <li><a href="javascript:void(0)">根据订单状态，及时通知公众号运营者，让公众号运营者随时掌握店铺订单动态信息</a></li>
+        </ul>
+        <br/>
+        <h5><font color="blue">温馨提示</font></h5>
+        <ul class="list-unstyled project-files">
+            <li><a href="javascript:void(0)">新增通知接收者后，需要勾选复选框才能让接收者接收到提醒</a></li>
+            <li><a href="javascript:void(0)">新增，移除通知接收者，对所有消息提醒生效</a></li>
+        </ul>
+        <br/>
+        <h5><font color="red">特别注意</font></h5>
+        <ul class="list-unstyled project-files">
+        	 <li><a href="javascript:void(0)" style="color:red;">有赞支持多个插件配置，但是带参数二维码扫码通知只会通知给一个插件，所以，如果需要使用通知提醒功能，需要关闭其他插件的带参数二维码扫码事件</a></li>
+        </ul>
+    </div>
+</div>
+<!-- html 模板文件开始 -->
+<script type="text/template" id="user_item_tpl">
+<div class="chat-user">
+	<input type="checkbox" name="notifyer_radio" data-id="{{id}}" {{if checked}} checked="checked" {{/if}} style="float:left;margin-right:10px;"/>
+    <img class="chat-avatar" src="{{headimgurl}}" alt="">
+    <div class="chat-user-name">
+        <a href="javascript:void(0)">{{nickname}}</a>
+<a href="javascript:void(0)" data-id="{{id}}" data-nick="{{nickname}}" onclick="delNotiyer(this)" class="pull-right label label-danger"><font color="white">移除</font></a>
+    </div>
+</div>
+</script>
+<!-- html 模板文件结束 -->
+#define script()
+<script type="text/javascript">
+function setConfig(notifyCfg){
+	if(notifyCfg){
+		var enabelInt = notifyCfg.enableConfig == false ? 0 : 1;
+		$(":radio[name='notify_enable_config'][value='" + enabelInt + "']").prop("checked", "checked");
+		$("#notify_config_id").val(notifyCfg.id);
+	}else{
+		$(":radio[name='notify_enable_config'][value='1']").prop("checked", "checked");
+		$("#notify_config_id").val("");
+	}
+}
+
+function delNotiyer(obj){
+	obz.showMessage("移除后就不能接收任何消息通知，确认移除"+$(obj).attr("data-nick")+"吗?", function(){
+		var id = $(obj).attr("data-id");
+		obz.ajaxJson("#(webctx)/menu/notify/delNotifyer", {id : id}, function(resp){
+			if(resp.state == "ok"){
+				obz.msg("操作成功", function(){
+					getConfig();
+				})
+			}		
+		});
+	});
+}
+
+var addNotifyerDialog = null;
+function openAddWechatUserDialog(obj){
+	var url = "#(webctx)/menu/notify/addNotifyer";
+	addNotifyerDialog = BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_SMALL,
+		title: "请使用您的微信扫一扫",
+        message: $('<div></div>').load(url)
+    });
+	return false;
+}
+
+function closeDialog(){
+	if(addNotifyerDialog) addNotifyerDialog.close();
+}
+
+setTimeout(function(){
+	isScanSucceed();
+}, 1000 * 3);
+
+function isScanSucceed(){
+    if($("#scenceId").val() != null){
+    	log("======isScanSucceed:" + Math.random());
+        $.ajax({url: "#(webctx)/menu/notify/checkScan",
+            type: "POST",
+            data: { "scenceId": $("#scenceId").val(), "csrf_token": $("#CSRF_TOKEN_HIDDEN").val()},
+            cache: false
+        }).done(function (resp){
+        	if(resp ==null || resp.state != "ok"){
+        		var error = resp.message ? "系统错误" : resp.message;
+                obz.error(error, function(){
+                	closeDialog();
+                });
+                return;
+        	}
+        	
+        	if(resp !=null && resp.state == "ok"){
+        		if(!resp.data){
+        			setTimeout(isScanSucceed, 1500);
+        		}else{
+                    log("=============="+resp.data);
+                    getNotifyCfg(getMenuKey());
+                    closeDialog();
+        		}
+        	}
+       }).fail(function () {
+           setTimeout(isScanSucceed, 1500);
+       });
+    }else{
+        setTimeout(isScanSucceed, 1000 * 3);
+    }
+}
+
+function getNotifyType(){
+	var notifyType = "";
+	$("#order_notify_types").find("a").each(function(){
+		if($(this).parent().parent().hasClass("notify_type_active")){
+			notifyType = $(this).attr("id");
+			return true;
+		}
+	});
+	return notifyType;
+}
+
+//加载通知者列表数据
+function getConfig(){
+	$("#users-list").mask("正在读取数据...");
+	obz.ajaxJson("#(webctx)/order/notify/get", {notifyType : getNotifyType()}, function(resp){
+		$("#users-list").unmask();
+		if(resp.state == "ok"){
+			
+			setConfig(resp.config);
+			
+			var data = resp.data;
+			if(!data){
+				$("#users-list").html("还没有消息通知接收者");
+				return;
+			}
+			$("#users-list").empty();
+			var users = data;
+			for(var i=0;i<users.length;i++){
+				var user = users[i];
+				//直接显示通知者列表
+				var itemHtml = template("user_item_tpl", user);
+				$("#users-list").append(itemHtml);
+			}
+		}
+	});
+}
+
+
+$(document).ready(function(){
+	getConfig();
+	
+	$("#order_notify_types").find("a").click(function(){
+		$("#order_notify_types").find("a").each(function(){
+			$(this).parent().parent().removeClass("notify_type_active");
+		});
+		$(this).parent().parent().addClass("notify_type_active");
+		getConfig();
+	});
+	
+	$("#saveOrderNotifyConfig").click(function(){
+		var notifyType = getNotifyType();
+		log("============notifyType:" + notifyType);
+		if(notifyType == null || notifyType == ""){
+			obz.warn("请选择订单提醒类型");
+			return;
+		}
+		
+		//获取当前选中的菜单
+		var notifyerIdArr = new Array();
+		//获取选中的被通知者
+		$("input:checkbox[name='notifyer_radio']:checked").each(function() { // 遍历name=test的多选框
+		  	var notifyerId = $(this).attr("data-id");  // 每一个被选中项的值
+		  	log("====openId:" + notifyerId);
+		  	var openIdEntity = new Object();
+		  	openIdEntity.notifyerId = notifyerId;
+		  	notifyerIdArr.push(openIdEntity);
+		});
+		
+		if(notifyerIdArr.length<=0){
+			obz.warn("请至少选择一个通知接收者");
+			return;
+		}
+		
+		//获取通知规则
+		var enableConfig = $(':radio[name="notify_enable_config"]:checked').val();
+		log("===========rule enableConfig:" + enableConfig);
+		
+		//提交到后台
+		var params = {};
+		params.notifyers = JSON.stringify(notifyerIdArr);
+		params.enableConfig = enableConfig;
+		params.id = $("#notify_config_id").val();
+		params.notifyType = notifyType;
+		
+		$(".menu_form_area").mask("正在保存菜单配置...");
+		obz.ajaxJson("#(webctx)/order/notify/save", params, function(resp){
+			$(".menu_form_area").unmask();
+			if(resp.state == "ok"){
+				obz.msg("保存成功", function(){
+					$("#notify_config_id").val(resp.data.id);
+				});
+			}
+		});
+	});
+});
+</script>
+#end
+#end

@@ -1,0 +1,116 @@
+#include ("/_includes/_layout.html")
+#@layout("领奖记录","wxmall,点步科技","Wxmall社区","wxmall") 
+<style>
+.award-bg{
+	height: 100%;
+	position: relative;
+	background: #fdfdfd;
+}
+.award-box{
+	display:block;
+	position: absolute;
+	top: 0;
+	bottom:0;
+	left:0;
+	right:0;
+	margin: 20% 2%;
+}
+.award{
+	width: 100%; 
+	height: 100%;
+}
+.weui-content{
+	min-height: 100%
+}
+.award-box .item-name{
+	color: #999;
+}
+.award-box span{
+	color: #000;
+}
+.award-item{
+	border: 1px solid #e7eaec;
+    background: white;
+	padding: 0px 2%;
+}
+.award-box li{
+	line-height: 30px;
+	border-bottom: 1px dashed #e7eaec;
+	margin-top: 10px;
+}
+.award-box li li{
+	border-bottom: none;
+	line-height:25px;
+	margin-top: 10px;
+}
+.award-status{
+    border: 1px solid;
+    padding: 0px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: relative;
+    float:right;
+    bottom: 14px;
+}
+.award-box li li .award-status-rcd{
+    border: 1px solid;
+    padding: 0px 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    position: relative;
+    float:right;
+    bottom: 14px;
+    color: #eb0000;
+}
+.footer-list-box{
+	background-color:#fdfdfd;	
+	text-align: left;
+	padding:10px 0px 10px 20px;
+	margin: 10px 0px;
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
+}
+.footer-box{
+	text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 50% 0px;
+    color: #999;
+}
+.weui-loadmore{
+	position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+#detail_list{
+	position: relative;
+}
+</style>
+#define content()
+<div class="weui-tab">
+	<div class="weui-navbar " style="position:fixed;  left:0; right:0; height:44px; background:#fff;">
+	    <a href="#(webctx)/task/detail?taskid=#(taskid??)" class="weui-navbar__item proinfo-tab-tit font-14">好友助力</a>
+   	    <a href="#(webctx)/task/award/index?taskid=#(taskid??)" class="weui-navbar__item proinfo-tab-tit font-14 weui-bar__item--on">领奖记录</a>
+   	    <a href="#(webctx)/task/detail/orders?taskid=#(taskid??)" class="weui-navbar__item proinfo-tab-tit font-14">排行榜</a>
+    </div>
+	<div class="weui-tab__bd">
+	<div class="weui-tab__bd-item weui-tab__bd-item--active" id="detail_list">
+		#if(awards?? && awards.size()>0)
+		#for(award : awards)
+		<div class="footer-list-box">
+			<div style="margin-right: 10px; float: left;">#(award.awardName??) </div>
+			<div style="color: black;font-size: 14px;"> #(award.status??)</div>
+			#if(award.status == "待领取" && award.awardType == 3)
+			<div><a href="#(webctx)/task/award/detail?taskAwardsendRcdId=#(award.id)">立即领取</a></div>
+			#end
+		</div>
+		#end
+		#else
+		<div style="padding-top: 50px;text-align: center;font-size: 14px;">没有数据</div>
+		#end
+	</div>
+	</div>
+</div>
+#end

@@ -1,0 +1,96 @@
+<div id="main_send_good">
+<div class="alert alert-danger">
+	<strong>退款会直接调用微信接口给用户退款，即时到账，请确认无误后再点击！！！</strong>
+</div>
+<input type="hidden" id="orderIds" value="#(orderIds)"/>
+<table class="table table-striped table-bordered" style="margin-right: 20px;">
+		    <thead class="js-freight-cost-list-header">
+	            <tr><td>商品</td><td>数量</td><td>金额（元）</td></tr>
+		    </thead>
+		    <tbody>
+		     #for(resultDto: orderDetailResultDto)
+                 #for(items: resultDto.orderItems)
+				    <tr>
+						<td><img src="#(items.productImg)" style="margin: 2px" width="30" height="30" number="1">#if(items.productName.length()>8) #textcut(items.productName, 8) #else #(items.productName) #end</td>
+						<td>#(items.quantity)</td>
+						<td>#(items.totalPrice)</td>
+					</tr>
+			     #end
+			     <tr>
+			     <td>
+                   <label class="col-md-4 control-label">退款金额:</label>
+                   <div class="col-md-6">
+                   <div  id="error_cash">
+	                <input type="text" id="cash_#(resultDto.orderId)" name="cash_#(resultDto.orderId)" class="form-control" value="#(resultDto.payFee)" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+	                <label class="error_cash" style="color:red;" for="cash"></label>
+	            	</div>
+                   </div>
+		         </td>
+		         <td colspan="2">
+                   <label class="col-md-3 control-label">退款标识<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('提供给微信后台退款标识。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+                   <div class="col-md-9">
+	                <input type="text" id="transactionId_#(resultDto.orderId)" name="transactionId_#(resultDto.orderId)" class="form-control" value="#(resultDto.transactionId)" readonly="readonly"/>
+                   </div>
+		         </td>
+		         </tr>
+			#end
+            </tbody>
+		</table>
+         
+         <div class="panel-default">
+		  	<div class="panel-body" align="right">
+				<button type="button" onclick="refund();" class="btn btn-primary btn-sm">确认退款</button>
+		  	</div>
+	  	</div>
+</div>	  	
+<script type="text/javascript">
+function refund(){
+	clearError()
+	var params={}, error = {};
+	var orderIds = $("#orderIds").val();
+	if(orderIds.indexOf("-")!=-1){
+		orderIds=orderIds.substring(0,orderIds.length-1);
+	}
+	
+	var itemsAll = new Array();
+	var hasError = false;
+	var orderid=orderIds.split("-");
+	for(var i=0;i<orderid.length;i++){
+		 var _oid = orderid[i];
+		 var cash = $("#cash_"+_oid).val() || null;
+		 if(cash == null || cash == ""){
+			 if(!hasError) hasError=true;
+			 $("#cash_"+_oid).next().html("退款金额不能为空");
+		 }else{
+			 var entity = new Object();
+			 entity.orderId = _oid;
+			 entity.cash = cash;
+			 itemsAll.push(entity);
+		 }
+	}
+	
+	if(hasError == true){
+		return false;
+	} 
+	
+	params.items = JSON.stringify(itemsAll);
+	
+	$("#main_send_good").mask("正在退款...");
+	obz.ajaxJson(obz.ctx+"/order/saveRefund", params, function(json) {
+		$("#main_send_good").unmask();
+		 if(json.code!=200){
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+		}else{
+			obz.msg('退款成功', function(){
+				location.reload();
+			});					
+		}
+	},"json");
+}
+
+function clearError(){
+	$(".error_cash").empty();
+	var cash=$("input[name='cash']");
+	cash.css("border-color", "");
+}
+</script> 

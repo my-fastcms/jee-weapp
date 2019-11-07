@@ -1,0 +1,53 @@
+<form bindsubmit="saveReview">
+  <view class="order_title">
+      <view class="weui-flex">
+          <view class="title_img">
+            <image src="{{product.productImg}}" class="order_comment_img"></image>
+          </view>
+          <view class="weui-flex__item order_comment_box">
+              <view class="">{{product.productName}}</view>
+               <view class="grey">订单号：{{order.orderSn}}</view>
+               <view class="grey">{{order.orderCreated}}</view>
+          </view>
+      </view>
+  </view>
+  <view class="weui-flex order_comment_type">
+    <view class="weui-flex__item">
+      <view class="placeholder" bindtap="selectCommentType"  data-type="3">
+        <image src="{{commentType=='3'?'/style/images/icon_good_select.png':'/style/images/icon_good.png'}}" style="width:50rpx;height:50rpx;"></image>
+        <text class="{{commentType=='3'?'order_comment_type_selected':'order_comment_type_default'}}" style='padding-left:10rpx;'>好评</text>
+      </view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="placeholder" bindtap="selectCommentType" data-type="2">
+        <image src="{{commentType=='2'?'/style/images/icon_middle_select.png':'/style/images/icon_middle.png'}}" style="width:50rpx;height:50rpx;"></image>
+        <text class="{{commentType=='2'?'order_comment_type_selected':'order_comment_type_default'}}" style='padding-left:10rpx;'>中评</text>
+      </view>
+    </view>
+    <view class="weui-flex__item">
+      <view class="placeholder" bindtap="selectCommentType"  data-type="1">
+        <image src="{{commentType=='1'?'/style/images/icon_bad_select.png':'/style/images/icon_bad.png'}}" style="width:50rpx;height:50rpx;"></image>
+        <text class="{{commentType=='1'?'order_comment_type_selected':'order_comment_type_default'}}" style='padding-left:10rpx;'>差评</text>
+      </view>
+    </view>
+  </view>
+  <view class="order_comment_textarea_box">
+     <textarea bindblur="bindTextAreaBlur" style="border:1px solid #e1e1e1;" placeholder="请输入评论内容"></textarea>
+  </view>
+  <view style="padding:12px;text-align:center;">
+       <button type="primary" size="mini" formType="submit"> 发　　表 </button>
+  </view>
+</form>
+
+<block wx:if="{{reviews!=null && reviews.length>0}}">
+  <view class="weui-flex" style='padding-left:5rpx;'>我的评论</view>
+  <view class="weui-cell" style='padding:5px 5px' wx:for="{{reviews}}" wx:key="reviewId" wx:for-index="idx"  wx:for-item="item" data-id="{{item.id}}">
+      <view class="weui-cell__bd weui-cell_primary" style="padding-right:8px;">
+          <view class="pl-media-desc">{{item.content}}</view>
+          <view style="color:grey;font-size:12px;">{{item.created}}</view>
+      </view>
+      <view wx:if="{{item.score==3}}" class="weui-cell__ft pl-star">好评</view>
+      <view  wx:if="{{item.score==2}}" class="weui-cell__ft pl-star">中评</view>
+      <view  wx:if="{{item.score==1}}" class="weui-cell__ft pl-star">差评</view>
+  </view>
+</block>

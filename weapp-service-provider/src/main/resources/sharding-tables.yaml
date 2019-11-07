@@ -1,0 +1,22 @@
+dataSources:
+  main: !!com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    jdbcUrl: jdbc:mysql://localhost:3307/weapp?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: root
+
+shardingRule:
+  tables:
+    t_buyer_user: 
+      actualDataNodes: main.t_buyer_user${0..5}
+      tableStrategy: 
+        inline:
+          shardingColumn: id
+          algorithmExpression: t_buyer_user${id % 2}
+      keyGeneratorColumnName: id
+  bindingTables:
+    - t_buyer_user
+  defaultKeyGeneratorClassName: io.shardingsphere.core.keygen.DefaultKeyGenerator
+
+props:
+  sql.show: false

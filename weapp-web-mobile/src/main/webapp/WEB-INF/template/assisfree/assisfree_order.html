@@ -1,0 +1,236 @@
+ #include ("/_includes/_layout.html")
+#@layout("助力免单","wxmall,点步科技","Wxmall社区","wxmall") 
+#define css()
+<style>
+.weui-content{
+	height: 100%
+}
+.product-item{
+	overflow: hidden;
+	background-color: #fff;	
+	padding:10px 20px;
+	margin: 10px 0px;
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
+}
+.assisfree-order-none{
+	text-align: center;
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    margin: 50% 0px;
+    color: #999;
+}
+</style>
+#end
+#define content()
+<div class="weui-panel_access" style="margin-top:0px">
+	<div id="list"></div>
+	<div class="weui-loadmore">
+	    <i class="weui-loading"></i>
+	    <span class="weui-loadmore_tips">正在加载</span>
+	</div>
+</div>
+#end
+#define script()
+<script type="text/template" id="order_item_tpl">
+{{each data as item i}}
+<div class="product-item">
+ <div style="width:120px; height:120px; margin-right: 10px; float: left;">
+	{{if item.product_id != null}}
+  		<img style="width:100%; height:100%" src="#(img_domain){{item.image}}"/>
+	{{else}}
+  		<img style="width:100%; height:100%" src="{{item.image}}"/>
+	{{/if}}
+ </div>
+ <div style="color: #000;font-size: 14px;"> {{item.name}}</div>
+ <div style="color: #999;font-size: 12px;color: red;"> 助力截止时间：{{if !item.isEnd}}{{item.created}}{{else}}已结束{{/if}}</div>
+ <div style="color: #999;font-size: 12px; margin-top: 5px"> 需 {{item.need_user_count}} 人助力</div>
+ <div class="" style="color: #999;font-size: 12px;overflow:hidden;margin-right: 35px">
+  <div style="float: right; margin-top: 2px;"><span>{{if item.count != 0}} 还差 {{item.count}} 人{{else}}已完成  {{/if}}</span></div>
+ </div>
+ <div style="color: red;font-size: 12px;overflow:hidden;line-height: 38px;">
+  <div style="float: left;">￥<span style="font-size: 14px;">{{item.price}}</span></div>
+  <div style="float: right; margin-top: 5px;">
+	{{if item.count != 0}}
+ 	  {{if item.isEnd}}
+	    <a style="line-height: 2;border:1px solid red;color:red" onclick="reuser({{item.userPosterId}},{{if item.product_id != null}}{{item.product_id}}{{else}}{{item.out_id}}{{/if}},{{item.assisfreeId}})" class="weui-btn weui-btn_mini">重新助力</a>
+      {{else}}
+		{{if item.product_id != null}}
+	   		<a href="#(webctx)/assisfree/user?id={{item.product_id}}&assisfreeId={{item.assisfreeId}}&openid=#(openid??)" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini">立即助力</a>
+		{{else}}
+	    	<a href="#(webctx)/assisfree/user?id={{item.out_id}}&assisfreeId={{item.assisfreeId}}&openid=#(openid??)" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini">立即助力</a>
+		{{/if}}
+     {{/if}}
+	{{else}}
+		{{if item.product_id != null}}
+			<a onclick="purchase({{item.product_id}})" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini purchase">立即领取</a>
+		{{else}}
+			<a href="{{item.product_url}}" style="line-height: 2;border:1px solid red;color:red" class="weui-btn weui-btn_mini purchase">立即领取</a>
+		{{/if}}
+	{{/if}}
+  </div>
+  </div>
+</div>
+{{/each}} 
+</script>
+<script type="text/html" id="ass_order_tpl">
+<div class="assisfree-order-none">
+	<div>暂无助力订单</div>
+</div>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+$(function(){
+	submit(params);
+	var loading = false;  //状态标记
+	//滚动加载
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		loading = true;
+		page ++;
+		params.page = page;
+		submit(params);
+	});
+	function submit(arr){
+		$.ajax({
+			type: "post",
+			url: "#(webctx)/assisfree/orderList",
+			data: arr,
+			async: true,
+			success: function(data){
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				if(data.data.length<=0){
+					$("#list").append($("#ass_order_tpl").html());
+					$(document.body).destroyInfinite();
+	                $('.weui-loadmore').remove();
+				}else{
+					for( var i = 0 ; i < data.data.length ; i ++ ){
+						var orderData = data.data[i];
+							//还差多少人完成
+							orderData.count = orderData.need_user_count - orderData.followerCount;
+							orderData.count = orderData.count >= 0 ? orderData.count : 0 ;
+							//转为时间格式
+							orderData.created =new Date(Date.parse(orderData.created.replace(/-/g, "/")));
+							//参加免单时间加上助力时长 = 助力的截止时间
+							orderData.created.setHours(orderData.created.getHours()+orderData.assis_expire);
+							//时间转为字符串
+							orderData.created = orderData.created.format("yyyy-MM-dd  hh:mm:ss");
+
+							var start = new Date(orderData.created.replace("-", "/").replace("-", "/"));
+							var end = new Date();
+							orderData.isEnd = start < end;
+
+					}	
+					$("#list").append(template('order_item_tpl', data));
+					loading = false;
+					if(data.data.length<10){
+						$(document.body).destroyInfinite();
+		                $('.weui-loadmore').remove();
+					}
+				}
+			},
+			error: function(){
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+	
+	
+	<!--禁用微信分享按钮-->
+	function onBridgeReady() {
+		// 通过下面这个API隐藏右上角按钮
+	    WeixinJSBridge.call('hideOptionMenu');
+	}
+
+	if (typeof WeixinJSBridge == "undefined") {
+	    if (document.addEventListener) {
+	        document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+	    } else if (document.attachEvent) {
+	        document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+	        document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+	    }
+	} else {
+	    onBridgeReady();
+	}
+	
+});
+
+function reuser(userPosterId,id,assisfreeId){
+	$.ajax({
+		type: "post",
+		url: "#(webctx)/assisfree/reuser?userPosterId="+userPosterId+"&assisfreeId="+assisfreeId,
+		data: {},
+		async: true,
+		success: function(data){
+			if(data.code != 200){
+				if(data.msg != null || data.msg != "")
+					$.alert(data.msg);
+				else
+					$.toast("出现异常，请稍后重新");
+				return;
+			}else{
+				location.href="#(webctx)/assisfree/user?id="+id+"&assisfreeId="+assisfreeId+"&openid=#(openid??)";
+			}
+		},
+		error: function(){
+			alert("网络异常,请联系管理员!");
+		}
+	});
+}
+function purchase(id){
+	//立即购买
+	var itemsArray = new Array();
+	var entity = new Object();
+	entity.productId = id;
+	entity.pcount = 1;
+	entity.speci = "";				
+	itemsArray.push(entity);
+	$.ajax({
+		type: "post",
+		url: "#(webctx)/pay/isGetAssisfree?pId="+id,
+		data: {},
+		async: true,
+		success: function(data){
+			if(data.code != 200){
+				if(data.msg != null || data.msg != "")
+					$.alert(data.msg);
+				else
+					$.toast("出现异常，请稍后重新");
+				return;
+			}else{
+				window.location="#(webctx)/pay/taskBalance?items="+JSON.stringify(itemsArray)+"&pId="+id;
+			}
+		},
+		error: function(){
+			alert("网络异常,请联系管理员!");
+		}
+	});
+};
+Date.prototype.format = function (format) {
+    var args = {
+        "M+": this.getMonth() + 1,
+        "d+": this.getDate(),
+        "h+": this.getHours(),
+        "m+": this.getMinutes(),
+        "s+": this.getSeconds(),
+        "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+        "S": this.getMilliseconds()
+    };
+    if (/(y+)/.test(format))
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var i in args) {
+        var n = args[i];
+        if (new RegExp("(" + i + ")").test(format))
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? n : ("00" + n).substr(("" + n).length));
+    }
+    return format;
+};
+</script>
+#end

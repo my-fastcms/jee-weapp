@@ -1,0 +1,144 @@
+.wrapper-md {
+    padding: 20px;
+}
+.bg-gray {
+    background: #f2f2f6;
+}
+.m-b-sm {
+    margin-bottom: 10px;
+}
+.r-3x {
+    border-radius: 6px;
+}
+.p-b-none {
+    padding-bottom: 0!important;
+}
+*, :after, :before, input[type=search] {
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+.bg-white {
+    background-color: #fff!important;
+    color: #595961;
+}
+@media (min-width: 768px)
+.hbox, .vbox {
+    border-spacing: 0;
+    width: 100%;
+}
+.vbox {
+    border-spacing: 0;
+    min-height: 240px;
+}
+@media (min-width: 768px)
+.hbox, .vbox {
+    border-spacing: 0;
+    width: 100%;
+}
+.vbox {
+    border-spacing: 0;
+    min-height: 240px;
+}
+@media (min-width: 768px)
+.hbox, .vbox {
+    border-spacing: 0;
+    width: 100%;
+}
+.bg-light {
+    background-color: #fafafa;
+    color: #595961;
+}
+.hbox {
+    display: table;
+    table-layout: fixed;
+    border-spacing: 0;
+    width: 100%;
+    height: 100%;
+}
+body {
+    font-family: Microsoft YaHei,Helvitica,Verdana,Arial,san-serif;
+    font-size: 12px;
+    color: #595961;
+    background-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.42857143;
+}
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+}
+html {
+    font-size: 10px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+.btn-group-vertical>.btn-group:after, .btn-group-vertical>.btn-group:before, .btn-toolbar:after, .btn-toolbar:before, .clearfix:after, .clearfix:before, .container-fluid:after, .container-fluid:before, .container:after, .container:before, .dl-horizontal dd:after, .dl-horizontal dd:before, .form-horizontal .form-group:after, .form-horizontal .form-group:before, .modal-footer:after, .modal-footer:before, .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before, .pager:after, .pager:before, .panel-body:after, .panel-body:before, .row:after, .row:before {
+    content: " ";
+    display: table;
+}
+*, :after, :before, input[type=search] {
+    box-sizing: border-box;
+}
+.btn-group-vertical>.btn-group:after, .btn-toolbar:after, .clearfix:after, .container-fluid:after, .container:after, .dl-horizontal dd:after, .form-horizontal .form-group:after, .modal-footer:after, .nav:after, .navbar-collapse:after, .navbar-header:after, .navbar:after, .pager:after, .panel-body:after, .row:after {
+    clear: both;
+}
+.btn-group-vertical>.btn-group:after, .btn-group-vertical>.btn-group:before, .btn-toolbar:after, .btn-toolbar:before, .clearfix:after, .clearfix:before, .container-fluid:after, .container-fluid:before, .container:after, .container:before, .dl-horizontal dd:after, .dl-horizontal dd:before, .form-horizontal .form-group:after, .form-horizontal .form-group:before, .modal-footer:after, .modal-footer:before, .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before, .pager:after, .pager:before, .panel-body:after, .panel-body:before, .row:after, .row:before {
+    content: " ";
+    display: table;
+}
+*, :after, :before, input[type=search] {
+    box-sizing: border-box;
+}
+@media (min-width: 768px)
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+@media (min-width: 768px)
+::-webkit-scrollbar-thumb {
+    background-color: rgba(50,50,50,.3);
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(50,50,50,.3);
+}
+@media (min-width: 768px)
+::-webkit-scrollbar-track {
+    background-color: rgba(50,50,50,.1);
+}
+::-webkit-scrollbar-track {
+    background-color: rgba(50,50,50,.1);
+}
+::selection {
+    color: #fff;
+    background: #57b382;
+}
+.padder-md {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.m-b-md {
+    margin-bottom: 20px;
+}
+.m-t-none {
+    margin-top: 0!important;
+}
+h5 {
+    font-size: 12px;
+}
+.b-b-e {
+    border-bottom: 1px solid #eee;
+}

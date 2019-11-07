@@ -1,0 +1,15 @@
+<view class="container">
+  <view>
+    <view wx:for="{{addressList}}" class="weui-cell" wx:key="id">
+      <view class="weui-cell__hd" bindtap="selectShop" id="{{item.id}}">
+        <icon wx:if="{{item.isSelected}}" class="weui-icon-checkbox_success" type="success" size="22"></icon>
+        <icon wx:else class="weui-icon-checkbox_circle" type="circle" size="22"></icon>
+      </view>
+      <view class="weui-cell__bd page__bd_spacing" bindtap="selectShop" id="{{item.id}}">
+        <view class="blod">{{item.shopName}} </view>
+        <view>店长：{{item.shopContact}}（{{item.shopContactPhone}}）</view>
+        <view>地址：{{item.shopAddress}}</view>
+      </view>
+    </view>
+  </view>
+</view>

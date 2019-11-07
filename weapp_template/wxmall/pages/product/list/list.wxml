@@ -1,0 +1,55 @@
+<view class="type-container">
+  <scroll-view class="type-navbar" scroll-x="true">
+    <view class="type-box">
+      <view id="0" class="type-navbar-item {{activeCategoryId == 0 ? 'type-item-on' : ''}}" bindtap="tabClick">全部</view>
+    </view>
+    <view class="type-box" wx:for-items="{{categories}}" wx:key="id">
+      <view id="{{item.id}}" class="type-navbar-item {{activeCategoryId == item.id ? 'type-item-on' : ''}}" bindtap="tabClick">{{item.name}}
+      </view>
+    </view>
+  </scroll-view>
+</view>
+<view class="weui-search-bar">
+  <view class="weui-search-bar__form">
+    <view class="weui-search-bar__box">
+      <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+      <input type="text" class="weui-search-bar__input" placeholder="搜索" value="{{inputVal}}" focus="{{inputShowed}}" bindinput="inputTyping" bindconfirm="search" />
+      <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+        <icon type="clear" size="14"></icon>
+      </view>
+    </view>
+  </view>
+  <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="resetSearch">取消</view>
+</view>
+<!-- <view class="pro-sort">
+  <view class="weui-flex">
+    <view class="weui-flex__item"><view class="placeholder NormalCss">综合</view></view>
+    <view class="weui-flex__item"><view class="placeholder SortAscCss">按销量</view></view>
+    <view class="weui-flex__item"><view class="placeholder SortDescCss">按价格</view></view>
+  </view>
+</view> -->
+<!--主体-->
+<!-- <view style="height:{{scollHeight}}px;">
+  <scroll-view style="height:{{scollHeight}}px;"  scroll-y="true"  bindscrolltolower="lower"></scroll-view>
+</view> -->
+
+<view bindtap="bindViewTap" class="item" wx:for="{{products}}" wx:key="id" wx:for-index="idx" wx:for-item="item" data-id="{{item.id}}">
+    <view class="goods-box">
+      <view class='img-box'>
+        <image class="image" src="{{item.mainPic}}"/>
+      </view>
+    </view>
+    <view class="weui-media-box__bd">
+      <view class="goods-title">{{item.name}}</view>
+      <view class="price" style='color:{{navbar_bgcolor}}'>¥
+        <em class="num">{{item.price}}</em>
+      </view>
+      <view>
+        <li class="weui-media-box__info__meta">剩余
+          <em class="num">{{item.store}}</em>
+        </li>
+        <!-- <li class="weui-media-box__info__meta"><em class="num">100%</em>好评</li> -->
+      </view>
+    </view>
+</view>
+<view class="loading complete" hidden='{{!endFlag}}'>没有数据了</view>

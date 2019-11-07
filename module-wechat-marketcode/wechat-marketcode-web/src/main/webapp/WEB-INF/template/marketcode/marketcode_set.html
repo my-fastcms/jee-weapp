@@ -1,0 +1,51 @@
+#include ("/_includes/_layout.html")
+#define css()
+#end
+#define script()
+#end
+#@layout("一物一码设置", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox-content">
+		<form id="__MarketcodeApplyForm__" class="form-horizontal">
+             <div class="form-group">
+                 <label class="col-sm-2 control-label">一物一码密钥</label>
+                 <div class="col-sm-6">
+		   			<input type="input" name="marketcodeKey" class="form-control" value="#(session.weapp_in_session.marketcode_key??)" placeholder="密钥key值"/>
+                 <span class="alert-success">密钥是在微信公众号后台申请一物一码通过之后，微信通过邮件发送给公众号管理员的，请留意邮件内容</span>
+                 </div>
+            </div>
+	       
+	        <div class="form-group">
+	            <div class="" align="center">
+			        <button type="submit" class="btn btn-success btn-sm">提 交</button>
+				</div>
+	        </div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+var icon = "<i class='fa fa-times-circle'></i> ";
+$("#__MarketcodeApplyForm__").validate({
+	ignore: "",
+    submitHandler:function() {
+    	$("#__MarketcodeApplyForm__").mask("正在保存...");
+    	var params = $("#__MarketcodeApplyForm__").serializeJSON();
+    	obz.ajaxJson(obz.ctx+"/marketcode/marketcodeapply/savekey", params, function(json) {
+    		$("#__MarketcodeApplyForm__").unmask();
+    		if(json.state == "ok" || json.code == 200){
+    			obz.msg('保存成功', function(){
+					location.reload();
+				});	
+			}
+		});
+    },
+    rules: {
+    	marketcodeKey: "required",
+    },
+    messages: {
+    	marketcodeKey: icon + "请输入一物一码密钥", 
+    }
+});
+</script>
+#end

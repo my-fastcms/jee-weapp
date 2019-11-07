@@ -1,0 +1,116 @@
+.panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.panel .panel-title {
+    display: inline-block;
+    font-family: Lato,Open Sans,Helvetica,sans-serif;
+    font-size: 24px;
+    font-weight: 100;
+    margin: 5px;
+    padding: 0;
+}
+.import-goods-title {
+    color: #5971e8;
+}
+
+.align-center {
+    width: 100%;
+    text-align: center;
+}
+
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+ .page-content .panel-content {
+    padding: 20px 20px 10px;
+    border-radius: 0 0 2px 2px;
+    background-clip: padding-box;
+}
+
+.p-b-10 {
+    padding-bottom: 10px!important;
+}
+
+.step-progress {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	color: #849397
+}
+
+.step-progress>li {
+	position: relative;
+	display: table-cell;
+	text-align: center;
+	font-size: .8em
+}
+
+.step-progress>li:before {
+	content: attr(data-step);
+	display: block;
+	margin: 0 auto;
+	background: #dfe3e4;
+	width: 3em;
+	height: 3em;
+	text-align: center;
+	margin-bottom: .25em;
+	line-height: 3em;
+	border-radius: 100%;
+	position: relative;
+	z-index: 1000
+}
+
+.step-progress>li:after {
+	content: "";
+	position: absolute;
+	display: block;
+	background: #dfe3e4;
+	width: 100%;
+	height: .5em;
+	top: 1.25em;
+	left: 50%;
+	margin-left: 1.5em\9;
+	z-index: 2
+}
+
+.step-progress>li:last-child:after {
+	display: none
+}
+
+.step-progress>li.is-complete {
+	color: #5971e8
+}
+
+.step-progress>li.is-complete:after,.step-progress>li.is-complete:before {
+	color: #fff;
+	background: #5971e8
+}
+
+.step-progress>li.is-active {
+	color: #5971e8
+}
+
+.step-progress>li.is-active:before {
+	color: #fff;
+	background: #5971e8
+}
+
+.step-progress--medium {
+	font-size: 1.5em
+}
+
+.step-progress--large {
+	font-size: 2em
+}

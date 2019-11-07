@@ -1,0 +1,163 @@
+<style type="text/css">
+.panel-body {
+    padding: 0;
+}
+.panel-body .category-list-region {
+    background: #f2f2f2 none repeat scroll 0 0;
+    box-sizing: border-box;
+    padding: 9px 0;
+    width: 160px;
+    height:450px;
+    float:left;
+}
+.panel-body .category-list-region li {
+    cursor: pointer;
+    height: 40px;
+    width:160px;
+    line-height: 40px;
+    overflow: hidden;
+    padding: 0 15px 0 15px;
+    position: relative;
+    text-overflow: ellipsis;
+}
+.panel-body .category-list-region li:hover {
+    background: #fafafa none repeat scroll 0 0;
+}
+.panel-body .category-list-region li.active {
+    background: #fff none repeat scroll 0 0;
+}
+.panel-body .category-list-region li span {
+    color: #999;
+    position: absolute;
+    right: 30px;
+    top: 0;
+}
+.category-list li {
+    display: inline-block;
+}
+ul {
+     padding-left:0px!important;
+    list-style:  none;
+}
+.bootstrap-dialog-message {
+  padding-left:5px;
+}
+</style>
+
+<div class="panel-body">
+	#if(imageGroups && imageGroups.size>0)
+    <div class="category-list-region js-category-list-region">
+        <ul class="category-list">
+        	#for (igroup: imageGroups)
+               	<li class="js-category-item" data-id="#(igroup.id)">#(igroup.groupName)
+                    <span>(#(igroup.imageNum))</span>
+                </li>
+            #end   
+        </ul>
+    </div>
+    #end
+    <div class="panel-footer" style="height: 50px;">
+	<button id="uploadImagess" type="button" class="btn btn-sm btn-success" style="margin-left:20px;;margin-bottom: 1px;float: left;">上传视频</button>
+		 <div id="pagerImage" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+	</div>
+    <div class="form-group" id="listNewImg">
+       <ul class="selectMonth app-image select-month-off" id="image-list"></ul>
+    </div>
+    <div class="add-local-image-button"> + </div>
+</div>
+<div class="panel-footer">
+	<div class="selected-count-region hidden" style="display: block;float: left;">已选择<span class="js-selected-count">0</span>个视频</div>
+	<div  style="display: block;" align="center">
+		<button id="saveImages" type="button" class="btn btn-sm btn-success" disabled="disabled"><i class="fa fa-dot-circle-o"></i>确      定</button>
+	</div>
+</div>
+<script type="text/template" id="ul_li_tpl">
+    <li><img alt="" src="#(webctx)/upload/{filePath}"><div class="image-title">{fileName}</div></li>
+</script>
+<script type="text/template" id="group_ul_li_tpl">
+    <li class="js-category-item" data-id="{id}">{groupName}<span>({imageNum})</span></li>
+</script>
+<script type="text/javascript">
+var selectNewImg = new Array();
+var listNewImg="";
+var listNewImgUrl="";
+var listImgId="";
+var single = '#(model)';
+var params = {};
+var table = new obz.TableView("pagerImage", obz.ctx + "/attachment/getVedioList", params, function(resp){
+	$("#image-list").empty();
+	if(resp && resp.list && resp.list.length>0){
+		var result =resp;
+		var dataList = result.list;
+		if(dataList.length>0){
+			$(".add-local-image-button").addClass("hidden");
+			for(var i=0;i<dataList.length;i++){
+				var _li = dataList[i];
+				 $("#image-list").append('<li data-file="'+_li.imgPath+'" data-fileUrl="'+_li.imgUrl+'" data-id="'+_li.id+'">'
+          				 +' <video alt="" src="'+_li.imgPath+'" controls="controls"/>'
+      					 +' <div class="image-title">'+_li.imgUrl+'</div></li>');
+				
+		        }	
+		}else{
+			$(".add-local-image-button").removeClass("hidden");
+		}
+		
+		 $("ul.selectMonth li").click(function() {
+
+			 if(!$(this).hasClass("active")){
+				   if(single && single=="true"){
+						$("ul.selectMonth li").each(function(){	
+							 $(this).removeClass("active");
+						});
+					}
+				    $(this).addClass("active");
+		 	 }else {
+		 		$(this).removeClass("active");
+		 	 }
+			 
+			 var  count =$("ul.selectMonth li.active").length;
+			 $(".js-selected-count").html(count);
+			 
+			 if(count>0){
+			    	$("#saveImages").removeAttr("disabled");
+			 }else{
+			    	$("#saveImages").attr("disabled","disabled");
+			 }
+		});
+	}
+});
+table.init();
+$("#saveImages").click(function() {
+	var listNewImg=[];
+	var listNewImgUrl=[];
+	var listImgId=[];
+	
+	 $("ul.selectMonth li.active").each(function(){
+	    	listNewImg.push($(this).attr("data-file"));
+	    	listNewImgUrl.push($(this).attr("data-fileUrl"));
+	    	listImgId.push($(this).attr("data-id"));
+	    	
+	  });
+ 	 obz.doSelectImage(listNewImg, listNewImgUrl,listImgId);
+     if(selectImageDialog != null) selectImageDialog.close();
+});
+
+$("#uploadImagess").click(function() {
+	var params={};
+	params.groupId=$("ul.category-list li.active").attr("data-id"); 
+	obz.uploadVedio(params);
+});
+$("ul.category-list li").click(function() {
+	$("ul.category-list li").each(function(){	
+		 $(this).removeClass("active");
+	}); 
+	$(this).addClass("active");
+	params.id=$("ul.category-list li.active").attr("data-id");
+	table.init();
+});
+$(".add-local-image-button").click(function() {
+	var params={};
+    params.groupId=$("ul.category-list li.active").attr("data-id"); 
+	obz.uploadVedio(params);
+});
+</script>

@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	#include ("/_includes/header.html")
+   <title>点步微助手--邀请码</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+   <meta name="renderer" content="webkit"/>
+   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"/>
+   <meta name="viewport" content="target-densitydpi=device-dpi, width=375px, user-scalable=no"/>
+   <link rel="stylesheet" href="#(webctx)/resources/css/weui.min.css"/>
+   <style>
+   .weui-tab {
+    	position: relative;
+    	height: 100%;
+	}
+	.weui-navbar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    width: 100%;
+    background-color: #fafafa;
+	}
+	.weui-navbar:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+    color: #ccc;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+	}
+	.weui-navbar__item {
+	color: #888;
+    position: relative;
+    display: block;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    padding: 13px 0;
+    text-align: center;
+    font-size: 15px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+	}
+	.weui-navbar__item.proinfo-tab-tit {
+    padding: 10px 0;
+	}
+	.weui-navbar__item.weui-bar__item--on {
+    color: #e21323;
+    font-weight: bold;
+    background-color: inherit;
+	}
+	.weui-navbar__item.proinfo-tab-tit.weui-bar__item--on:before {
+    content: "";
+    width: 34px;
+    height: 3px;
+    background: #e21323;
+    position: absolute;
+    left: 50%;
+    margin-left: -17px;
+    bottom: -1px;
+    z-index: 10;
+	}
+	.weui-tab__bd {
+    	padding: 50px 10px 0px;
+	}
+	.input-group{
+		margin-top: 10px;
+	}
+	.layui-anim{
+		border-radius:10px;
+	}
+	img{
+		border: 1px solid #ededed;
+	}
+   </style>
+</head>
+<body>
+<div class="weui-tab">
+	<div class="weui-navbar " style="position:fixed;  left:0; right:0; height:44px; background:#fff;">
+    	<a href="#(webctx)/invitecode/app" class="weui-navbar__item proinfo-tab-tit font-14 weui-bar__item--on">邀请码生成</a>
+        <a href="#(webctx)/invitecode/app/stat" class="weui-navbar__item proinfo-tab-tit font-14">我邀请的人</a>
+        <a href="#(webctx)/invitecode/app/mission" class="weui-navbar__item proinfo-tab-tit font-14">我的佣金</a>
+        <a href="#(webctx)/invitecode/app/cashrcd" class="weui-navbar__item proinfo-tab-tit font-14">提现明细</a>
+	</div>
+	<div class="weui-tab__bd">
+		<div class="alert alert-success">
+			<p align="center">公众号营销插件，请在PC端登录 www.dbumama.com</p><br/>
+			<i class="fa fa-info-circle"></i><strong>提示:</strong>
+			<p>邀请码生成后不可更改。</p>
+			<p>使用邀请码邀请好友成功注册平台，并且购买平台小程序模板，则可以获取一定比率的佣金</p>
+			<p>同时被邀请者购买平台小程序模板也能享受邀请码折扣</p>
+		</div>
+	
+		#if(seller && seller.my_invite_code)
+		<div class="form-horizontal" align="center">
+	        <div class="form-group">
+	            <label class="control-label">我的专属邀请码：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('使用邀请码邀请用户注册<br/>可赚取佣金。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div>
+	            	<div class="input-group m-b">
+                        <span id="my_invite_code" class="form-control">#(seller.my_invite_code)</span>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">我的专属分享链接：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('复制链接给好友注册，<br/>则有机会赚取佣金。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div>
+	            	<div class="input-group">
+                        <span id="my_invite_code_url" class="form-control" style="height: auto;"></span>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">我的专属二维码：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('分享二维码邀请好友注册。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div>
+	            	<div class="input-group">
+                        <img src="#(webctx)/qrcode/genadminio/?url=#(webctx)/register?incode=#(seller.my_invite_code)" width="200px" height="200px"/>
+                    </div>
+	            </div>
+	        </div>
+		</div>
+		#else
+		<div class="panel-default">
+		  	<div class="panel-body" align="center">
+				<button type="button" id="genIncodeBtn" class="btn btn-success btn-sm">生成专属邀请码</button>
+		  	</div>
+	  	</div>
+	  	#end
+	</div>
+</div>
+<!-- 标签弹出框  -->
+<div id="itemdlg" style="display:none;">
+  <div style="padding:10px;">
+	<div class="container-fluid">
+	 <div class="form-group" style="margin-bottom:0px;text-align: center;">
+	 	<span><br/>公众号营销插件，请在PC端登录 <br/><br/>www.dbumama.com<br/><br/></span>
+	 </div>
+	</div>	
+  </div>   
+</div>
+<!-- 标签弹出框结束 -->
+</body>
+</html>
+<script type="text/javascript">
+$().ready(function() {
+	$("#genIncodeBtn").click(function(){
+		obz.showMessage("邀请码生成后，不可更改，确定生成吗？", function(){
+			obz.ajaxJson("#(webctx)/invitecode/gen", {}, function(resp){
+				if(resp.code == 200){
+					obz.msg("生成成功", function(){
+						location.reload();
+					});
+				}
+			});
+		});
+	});
+	if($("#my_invite_code_url").length >0)
+		$("#my_invite_code_url").text(document.domain + "/admin/register?incode=#(seller.my_invite_code)");
+	
+	#if(first?? && first == "true")
+		BootstrapDialog.show({
+			size: BootstrapDialog.SIZE_WIDE,
+			title:"",
+	        message: $("#itemdlg").html(),
+	    });
+	#end
+});
+</script>

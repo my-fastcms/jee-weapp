@@ -1,0 +1,257 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+#include("/_includes/css.html")
+<style>
+.modal-body{padding: 0px;  overflow: hidden;}
+.bootstrap-dialog-message{padding-left: 12px; padding-top: 5px;}
+.nav-tabs li{min-width:100px;}
+.nav-tabs li a{text-align: center;}
+.table {width: 100%; max-width: 100%; margin-bottom: 2px !important;}
+.center{text-align: center;}
+.sidebard-panel-width{width: 220px !important;}
+.animated{animation-duration:0s !important;}
+.nav-tabs li{width:150px;}
+.nav-tabs li a{text-align: center;}
+.dd { float: left; width: 20%;}
+.dd-handle-bk-color { background: #d4d4d4;}
+.error{ color: red; }
+menu-active.{border-bottom: 2px solid #0B83C2;padding-bottom: 3px;}
+html{touch-action:none;}
+.sidebar-container ul.nav-tabs li a {border: none; padding: 12px 10px; margin: 0; border-radius: 0; background: #2f40503b !important; color: #fff; text-align: center; border-right: 1px solid #2f40503b !important;}
+.panel-footer{ padding: 10px 15px; background-color: #ffffff !important; border-top: 1px solid #ddd; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}
+</style>
+#include ("/_includes/scripts.html")
+<script type="text/javascript">
+function getCookie(cookiename) {
+    var result;
+    var mycookie = document.cookie;
+    var start2 = mycookie.indexOf(cookiename + "=");
+    if (start2 > -1) {
+        start = mycookie.indexOf("=", start2) + 1;
+        var end = mycookie.indexOf(";", start);
+        if (end == -1) {
+            end = mycookie.length;
+        }
+        result = unescape(mycookie.substring(start, end));
+    }
+    return result;
+}
+function setCookie(cookiename, cookievalue, hours) {
+    var date = new Date();
+    date.setTime(date.getTime() + Number(hours) * 3600 * 1000);
+    document.cookie = cookiename + "=" + cookievalue + "; path=/;expires = " + date.toGMTString();
+}
+obz.ctx = '#(webctx)';
+//toast 配置
+toastr.options = {
+"closeButton": true,
+"progressBar": true,
+"positionClass": "toast-top-center",
+"showDuration": "400",
+"hideDuration": "1000",
+"timeOut": "3000",
+"extendedTimeOut": "1000",
+"showEasing": "swing",
+"hideEasing": "linear",
+"showMethod": "fadeIn",
+"hideMethod": "fadeOut"
+};
+$.fn.wxmall_serialize = function () {
+    var a = this.serializeArray();
+    var $radio = $('input[type=radio],input[type=checkbox]', this);
+    var temp = {};
+    $.each($radio, function () {
+        if (!temp.hasOwnProperty(this.name)) {
+            if ($("input[name='" + this.name + "']:checked").length == 0) {
+                temp[this.name] = "";
+                a.push({name: this.name, value: ""});
+            }
+        }
+    });
+    return jQuery.param(a);
+};
+var env = "#(env)";
+function log(msg){
+	if(console && env=="dev") console.log(msg);
+}
+$(window).bind("load resize", function () {
+    if ($(this).width() < 769) {
+        $('body').addClass('mini-navbar');
+        $('.navbar-static-side').fadeIn();
+    }
+});
+//菜单滚动 谷歌下有问题
+/* $(function () {
+    $('.sidebar-collapse').slimScroll({
+        height: '100%',
+        railOpacity: 0.9,
+        alwaysVisible: true
+    });
+}); */
+function fix() {
+    var neg = $('.main-header').outerHeight() + $('.main-footer').outerHeight();
+    var window_height = $(window).height();
+    var sidebar_height = $(".sidebar").height();
+    
+    if (window_height >= sidebar_height + neg) {
+      $(".content-wrapper, .right-side").css('min-height', window_height - neg);
+    } else {
+      $(".content-wrapper, .right-side").css('min-height', sidebar_height );
+    }
+}
+$.validator.setDefaults({
+    highlight: function (element) {
+        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+    },
+    success: function (element) {
+        element.closest('.form-group').removeClass('has-error').addClass('has-success');
+    },
+    errorElement: "span",
+    errorPlacement: function (error, element) {
+        if (element.is(":radio") || element.is(":checkbox")) {
+            error.appendTo(element.parent().parent().parent());
+        }else if (element.parent().hasClass("input-group")) {
+            error.appendTo(element.parent().parent());
+        }
+        else {
+            error.appendTo(element.parent());
+        }
+    }
+});
+
+/**
+ * 设置当前选中菜单
+ */
+function initMenu() {
+
+    var pathName = location.pathname;
+    if (obz.ctx == pathName || obz.ctx + "/" == pathName) {
+        pathName = obz.ctx + "/index"
+    }
+
+    var activeTreeview, activeLi;
+
+    $("#side-menu").children().each(function () {
+        var li = $(this);
+        li.find('a').each(function () {
+            var href = $(this).attr("href");
+            if (pathName == href) {
+                activeTreeview = li;
+                activeLi = $(this).parent();
+                return false;
+            } else if (pathName.indexOf(href) == 0) {
+                activeTreeview = li;
+                activeLi = $(this).parent();
+            }
+        });
+    });
+
+    if (activeTreeview) {
+        activeTreeview.addClass("active");
+
+        var menuGroupId = activeTreeview.attr("menu-group") || 3;
+
+        $("#side-menu").children().each(function () {
+            var li = $(this);
+            if(li.hasClass("exclude_menu")){
+                return true;
+            }
+
+            if(li.attr("menu-group") == menuGroupId){
+                li.show();
+            }else{
+                li.hide();
+            }
+        });
+
+        $('#topMenu').children().each(function(){
+            var mg = $(this).find("a").attr("menu-group");
+            if(mg == menuGroupId){
+                $(this).addClass('active');
+            }else{
+                $(this).removeClass('active');
+            }
+        })
+
+    }
+    if (activeLi) {
+        activeLi.addClass("active");
+        activeLi.parent().addClass("collapse").addClass("in");
+        activeLi.parent().parent().parent().addClass("collapse").addClass("in");
+    }
+    
+    $(".J_menuItem").click(function(){
+    	var appId = $(this).attr("app_id");
+    	//var url = $(this).attr("href");
+    	setCookie("app_id_in_cookie", appId || "");
+    });
+}
+
+$(document).ready(function(){
+	if (window.history && window.history.pushState) {
+        $(window).on('popstate', function () {
+　　		/// 当点击浏览器的 后退和前进按钮 时才会被触发， 
+            window.history.pushState('forward', null, ''); 
+            window.history.forward(1);
+        });
+    }
+//
+    window.history.pushState('forward', null, '');  //在IE中必须得有这两行
+    window.history.forward(1);
+	
+	$("#header-bg").css({opacity:4});
+	$(".NumDecText").keyup(function(){    
+        $(this).val($(this).val().replace(/[^0-9.]/g,''));    
+    }).bind("paste",function(){
+        $(this).val($(this).val().replace(/[^0-9.]/g,''));     
+    }).css("ime-mode", "disabled");
+	
+	$(".NumText").keyup(function(){
+       	$(this).val($(this).val().replace(/D|^0/g,''));  
+    }).bind("paste",function(){
+    	$(this).val($(this).val().replace(/D|^0/g,''));     
+    }).css("ime-mode", "disabled");
+	
+	fix();
+	$('#side-menu').metisMenu();
+    $('.right-sidebar-toggle').click(function () {
+        $('#right-sidebar').toggleClass('sidebar-open');
+        return false;
+    });
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 0 && !$('body').hasClass('fixed-nav')) {
+            $('#right-sidebar').addClass('sidebar-top');
+        } else {
+            $('#right-sidebar').removeClass('sidebar-top');
+        }
+    });
+
+    $('.full-height-scroll').slimScroll({
+        height: '100%'
+    });
+    
+    initMenu();
+    
+    //ios浏览器兼容性处理
+    if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+        $('#content-main').css('overflow-y', 'auto');
+    }
+    /* $(document).click(function(){
+    	if($('#right-sidebar').hasClass("sidebar-open")){
+    		$("#right-sidebar").removeClass("sidebar-open")
+    	}
+    	return false;
+    }) */
+	
+    $("#wechat_kefu").click(function(){
+    	BootstrapDialog.show({
+			size: BootstrapDialog.SIZE_SMALL,
+			title: "联系客服",
+	        message: '<div align="center"><img width="200px" height="200px;" src="#(webctx)/resources/img/weixinkefu.png" /><br>请扫码添加客服微信<br><br><br></div>'
+	    });
+    });
+    
+    $('.sidebar-collapse').height($(window).height());
+    $('.feed-activity-list').height($(window).height()-115);
+});
+</script>

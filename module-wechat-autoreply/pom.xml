@@ -1,0 +1,16 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.dbumama.weapp</groupId>
+    <artifactId>weapp</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>module-wechat-autoreply</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>wechat-autoreply-model</module>
+  	<module>wechat-autoreply-service-api</module>
+  	<module>wechat-autoreply-service-provider</module>
+  	<module>wechat-autoreply-web</module>
+  </modules>
+</project>

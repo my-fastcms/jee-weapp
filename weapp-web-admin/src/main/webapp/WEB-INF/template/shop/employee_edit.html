@@ -1,0 +1,93 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/product.css"/>
+#end
+#@layout("门店员工", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox-content">
+		<form id="shopForm" class="form-horizontal" >
+			<div>
+				<input type="hidden" id="id" name="id" value="#(employee.id??)"/>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">所属门店<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" id="error_empl_name">
+			            <select id="shop_id" name="shop_id" class="form-control" style="width: 100px">
+			           	 	<option value='' selected='selected'>请选择</option>
+						</select>
+					</div>
+		        </div>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">员工名称<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" id="error_empl_name">
+		                <input type="text" id="empl_name" name="empl_name" class="form-control"  value="#(employee.empl_name??)"/>
+		                <label class="control-label" for="empl_name"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">手机号码<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-4" id="error_phone">
+		                <input type="text" id="phone" name="phone" class="form-control"   value="#(employee.phone??)"/>
+		                <label class="control-label" for="phone"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <div class="col-md-6" align="right">
+		                <button type="submit" class="btn btn-success btn-sm">保 存</button>
+		                <a href="#(webctx)/employee" class="btn btn-white btn-sm" type="reset">取消</a>
+		            </div>
+		        </div>
+			</div>
+			
+	  	</form>
+  	</div>
+</div>
+#end
+<script type="text/javascript">
+$(document).ready(function() {
+	var icon = "<i class='fa fa-times-circle'></i> ";
+    $("#shopForm").validate({
+    	ignore: "",
+    	errorElement: "em",
+        submitHandler:function() {
+        	$("#shopForm").mask("正在保存...");
+        	var params = $("#shopForm").serializeJSON();
+        	obz.ajaxJson(obz.ctx+"/shop/saveEmployee", params, function(json) {
+        		$("#shopForm").unmask();
+    			if(json.code!=200){
+    				obz.error(json.msg);
+    			}else{
+    				obz.msg('保存成功', function(){
+    					location.href = "#(webctx)/shop/employee";
+    				});					
+    			}
+    		});
+        },
+        rules: {
+        	empl_name: "required",phone: "required"
+        },
+        messages: {
+        	empl_name: icon + "请输入员工名称", 
+        	phone: icon + "请输入手机号码",
+        }
+    });
+    getShop();
+});
+
+function getShop(){
+	obz.ajaxJson("#(webctx)/shop/shopList", {}, function(resp){
+		if(resp.code == 200){
+			$("#shop_id").empty();
+			var list = resp.data;
+			$("#shop_id").append("<option value='' selected='selected'>请选择</option>");
+			for(var i=0;i<list.length;i++){
+				var shop = list[i];
+				$("#shop_id").append("<option value='"+shop.id+"'>"+shop.shopName+"</option>");
+			}
+			#if(employee??)
+				$("#shop_id").val("#(employee.shop_id??)");
+			#end
+		}
+	});
+}
+</script>

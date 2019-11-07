@@ -1,0 +1,53 @@
+<div id="right-sidebar">
+    <div class="slimScrollDiv" style="position: relative; width: auto; height: 100%;"><div class="sidebar-container" style="width: auto; height: 100%;">
+
+        <ul class="nav nav-tabs navs-3">
+            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">公众号</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">小程序</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+            	<div class="sidebar-title">
+                    <a class="btn btn-success" href="#(webctx)/weixin/auth2"><i class="fa fa-wechat"></i> 微信公众号授权</a>
+                </div>
+                
+                #if(authUsers?? && authUsers.size()>0)
+            	<div class="feed-activity-list" style="padding-top: 20px;padding-left: 5px;overflow:scroll;">
+                 #for(authUser : authUsers)
+                 <div class="feed-element">
+                     <a href="#(webctx)/authuser/set/?weappId=#(authUser.id??)" class="pull-left">
+                         <img alt="image" class="img-heard" style="width: 50px;height: 50px;" src="#(authUser.head_img??)"/>
+                     </a>
+                     <div class="media-body" style="padding-top: 15px;">
+                         <a href="#(webctx)/authuser/set/?weappId=#(authUser.id??)" class="pull-left" title="点击切换" style="text-decoration: underline;"><strong>#(authUser.nick_name??)</strong></a>
+                     </div>
+                 </div>
+				 #end
+             </div>
+             #end
+            </div>
+            <div id="tab-2" class="tab-pane">
+                <div class="sidebar-title">
+                    <a class="btn btn-success" href="#(webctx)/weixin/auth2"><i class="fa fa-wechat"></i> 微信小程序授权</a>
+                </div>
+                
+                #if(weappUsers?? && weappUsers.size()>0)
+            	<div class="feed-activity-list" style="padding-top: 20px;padding-left: 5px;overflow:scroll;">
+                 #for(weapp : weappUsers)
+                 <div class="feed-element">
+                     <a href="#(webctx)/authuser/set/?weappId=#(weapp.id??)" class="pull-left">
+                         <img alt="image" class="img-heard" style="width: 50px;height: 50px;" src="#(weapp.head_img??)"/>
+                     </a>
+                     <div class="media-body" style="padding-top: 15px;">
+                         <a href="#(webctx)/weapp/set/?weappId=#(weapp.id??)" class="pull-left" title="点击切换" style="text-decoration: underline;"><strong>#(weapp.nick_name??)</strong></a>
+                     </div>
+                 </div>
+				 #end
+             </div>
+             #end
+            </div>
+        </div>
+
+    </div><div class="slimScrollBar" style="background: rgb(0, 0, 0); width: 4px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 60.2357px;"></div><div class="slimScrollRail" style="width: 4px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.4; z-index: 90; right: 1px;"></div></div>
+</div>

@@ -1,0 +1,72 @@
+#include ("/_includes/_layout.html")
+#@layout("", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define css()
+<link href="#(webctx)/resources/css/jiesuan.css" rel="stylesheet"/>
+
+#end
+#define content()
+<div class="content">
+<!-- 收货地址 begin -->
+<div id="topFixedDiv" style="height: 7rem;"> 
+	<input type="hidden" value="#(receiver.id)" id="select_receiverId">
+	<div id="addressDefault" class="weui-cells address_defalut address_border" style="height: 5rem;font-size: 12px;border: none;">
+	    #if( receiver??)
+	    	<div id="select_addr" class="weui-cell weui-cell_access" style="padding: 0px 15px !important;">
+		    	<div class="weui-cell__bd">
+	              	<div>收件人:</div>
+	              	<strong><span id="sel_name" style="color:red;">#(receiver.receiverName)</span></strong> 
+	              	<span id="sel_phone">#(receiver.phone)</span> 
+	              	<div style="text-align: left;"><span id="sel_fullName">#(fullName)</span></div>
+	              	<div style="text-align: left;"><span id="sel_address">#(receiver.address)</span></div>
+	            </div>
+	    		
+	    	</div>
+		#else
+			<div id="select_addr" class="weui-cell weui-cell_access" style="border: none;padding: 0px 15px !important;">
+	            <div >
+	            	请填写收货地址
+	            </div>
+	        </div>
+		#end
+     </div>
+</div>
+<!-- 收货地址 end-->
+<!-- 奖品begin -->
+<div class="order_info" >
+
+<img class="photo" src="#(prize.prize_img)" style="width:300px;height:300px">
+
+
+ <center><span class="fn"><h2>#(prize.prize_name)</h2></span></center>
+
+
+</a>
+#end
+</ul>
+</div>
+<!-- 奖品end -->
+<li class="hproduct">
+
+</li>
+</div>
+<div id="half" class="weui-popup__container popup-bottom" style="z-index: 1000;">
+	<div class="weui-popup__overlay"></div>
+	<div class="weui-popup__modal">
+	  	<div class="toolbar"><div class="toolbar-inner"><a href="javascript:void(0);" class="picker-button close-popup">关闭</a></div></div>
+	  	<div id="address_div" class="modal-content" style="height: 550px;"></div>
+	</div>
+</div>
+
+<!--手机端script需要加载后方-->
+<script type="text/javascript">
+
+	$("#select_addr").click(function(){
+		$.showLoading("正在加载...");
+		$("#address_div").load("#(webctx)/qiandao/select", function(){
+			$.hideLoading();
+			$("#half").popup();
+		});
+	});
+	
+
+</script>

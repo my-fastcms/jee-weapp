@@ -1,0 +1,68 @@
+#include ("/_includes/_layout.html") #@layout("点步插件平台-公众号管理",
+"wxmall,点步科技", "Wxmall社区","wxmall") #define css()
+<link rel="stylesheet" type="text/css" 	href="#(webctx)/resources/css/product_import.css" />
+#end #define content()
+<div class="wrapper wrapper-content" style="height: 600px;padding-top: 30px;text-align: center;">
+		<div class="vertical-align-middle" style="min-width: 600px;">
+			<img src="#(webctx)/resources/images/logo.png" class="center-block margin-bottom-50">
+			<div class="col-sm-12" style="padding-top: 20px;text-align: center;">
+				<div class="col-sm-3"></div>
+				<div class="t-step col-sm-6">
+	                <div class="t-steps"> 
+	                    <span class="t-steps-n">1</span>
+	                    <i class="fa fa-check-circle"></i>
+	                    <h2>微信扫码登录</h2>
+	                </div>
+	                <div class="t-steps active">
+	                    <span class="t-steps-n">2</span>
+	                    <i class="fa fa-check-circle"></i>
+	                    <h2>授权公众号/小程序</h2>
+	                </div> 
+	                <div class="t-steps">
+	                    <span class="t-steps-n">3</span>
+	                    <i class="fa fa-check-circle"></i>
+	                    <h2>进入系统后台</h2>
+	                </div>
+	            </div>
+	            <div class="col-sm-3"></div>
+			</div>
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+					<a class="btn btn-success" href="#(webctx)/weixin/auth2"><i class="fa fa-wechat"></i> 微信公众号授权</a>
+					<br><br>
+					<p>请使用微信公众号管理员完成公众号授权才能使用本软件，<br>授权不会对您的公众号造成任何影响</p>
+					</div>
+					
+					#if(authapps?? && authapps.size()>0)
+                    <div class="ibox-content">
+                        <h3 class="font-bold" style="color: blue;">历史授权账号，可直接点击下方小图标进入系统</h3>
+                    	#for (weapp: authapps)
+                    	#if(weapp.service_type==0)
+                    	<a href="#(webctx)/weapp/set/?weappId=#(weapp.id)" title="小程序.#(weapp.nick_name)"><img class="img-circle" width="60px" height="60px" src="#(weapp.head_img)" alt="小程序.#(weapp.nick_name)"/></a>
+                    	#else
+						<a href="#(webctx)/authuser/set/?weappId=#(weapp.id)" title="公众号.#(weapp.nick_name)"><img class="img-circle" width="60px" height="60px" src="#(weapp.head_img)" alt="公众号.#(weapp.nick_name)"/></a>
+                    	#end
+                    	#end
+                    </div>
+                    #end
+                </div>
+				
+				<div class="text-left" style="background-color: #fff; display: inline-block;">
+					<div class="alert" role="alert" style="padding: 30px 40px 15px;">
+						<h4><i class="icon wb-alert-circle text-warning"></i>授权须知</h4>
+						<ul style="list-style: decimal">
+							<li>授权由微信官方提供，授权信息及您的公众号绝对安全。</li>
+							<li>微信公众号可以同时授权多个平台，互不影响。</li>
+							<li>不同类型的账号拥有不同的接口权限，授权不会获得新的权限。</li>
+							<li>授权公众号代表你已经阅读并且同意
+							<a href="https://mp.weixin.qq.com/cgi-bin/announce?action=getannouncement&amp;key=1503979103&amp;version=1&amp;lang=zh_CN&amp;platform=2" target="_blank">《平台使用协议》</a>。
+							</li>
+						</ul>
+					</div>
+				</div>
+				<!-- <div class="margin-top-50">已有账号？<a href="https://www.xiaohongdian.net/"  class="text-primary">点此登录</a></div> -->
+			</div>
+		</div>
+</div>
+#end

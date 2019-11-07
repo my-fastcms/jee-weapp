@@ -1,0 +1,51 @@
+<view class="container">
+  <block wx:if="{{taskList != null}}">
+    <view>
+      <view class="weui-panel__bd weui-cell">
+        <view cass="task-box">
+          <view class="task-li">
+            <text class="task-title">任务名称：　</text>{{taskList.taskName}}
+          </view>
+          <view class="task-li">
+            <text class="task-title">有效时间：　</text>{{taskList.startDate}} ~ {{taskList.endDate}}
+          </view>
+          <view class="task-li">
+            <text class="task-otitle">任务奖励：　</text>
+            <view class="task-obox">
+              <block wx:if="{{taskList.taskAwards.length>0}}">
+                <view wx:for="{{taskList.taskAwards}}" wx:key="id" wx:for-item="oItem">
+                  <view class="task-oli">{{oItem.name}}</view>
+                </view>
+              </block>
+              <block wx:else>
+                <view>无</view>
+              </block>
+            </view>
+          </view>
+          <view class="task-li">
+            <text class="task-title">完成人数：　</text>{{taskList.finishCount}}
+          </view>
+          <view class="task-li">
+            <text class="task-title">已关注人数：　</text>{{taskList.followerCount}}
+          </view>
+          <view class="task-li">
+            <text class="task-title">任务状态：　</text>
+            <text class="task-status">{{taskList.taskStatus}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <form bindsubmit="formSubmit" report-submit="true" class="formsub">
+      <button formType="submit">
+          <button class="bottom-box" formType="submit" open-type="getUserInfo" bindgetuserinfo="makeTask">
+              我的海报
+          </button>
+      </button>
+    </form>
+    <view class="go-task-list" bindtap="goTaskList" style='margin-top:80rpx;'>查看历史任务 >></view>
+  </block>
+  <block wx:else>
+    <view class="no-task-tip">活动还未开始，请敬请期待</view>
+    <view class="go-task-list" bindtap="goTaskList">查看历史任务 >></view>
+  </block>
+</view>

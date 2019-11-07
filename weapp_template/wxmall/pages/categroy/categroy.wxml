@@ -1,0 +1,15 @@
+
+<view class="content" style="font-size: 14px;">
+    <view class="weui-grids">
+        <view bindtap="bindViewTap" class="weui-grid js_grid">
+            <view class="weui-grid__icon"><image style="width:100%;height:100%" src="../../style/images/icon-link3.png" alt="全部分类"/></view>
+            <view class="weui-grid__label">全部</view>
+        </view>
+
+        <view  wx:for="{{categorys}}" wx:key="id" data-id="{{item.id}}" bindtap="bindViewTap" class="weui-grid js_grid">
+            <view class="weui-grid__icon"><image style="width:100%;height:100%" src="{{item.img_path}}" alt="{{item.name}}"/></view>
+            <view class="weui-grid__label">{{item.name}}</view>
+        </view>	
+      
+    </view>
+</view>

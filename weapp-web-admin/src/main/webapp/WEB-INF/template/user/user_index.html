@@ -1,0 +1,150 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link rel="stylesheet" type="text/css" href="#(webctx)/resources/css/product.css"/>
+#end
+
+#define script()
+<script type="text/javascript">
+function addPictureLogo(obj){
+	var params={};
+	params.model=obj;
+	obz.selectImage(params, function (newlistImg, newlistImgUrl) {
+		if(newlistImg.length>0){
+			var h='<img class="image-preview" src="'+newlistImg[0]+'" >';
+		        h=h+'<a class="close-modal small hide" href="javascript:;" onclick="deleteLogoImg();">×</a>';
+		    $("#_header_img-image-div").empty().append(h);     
+		    $('#_header_img').val(newlistImgUrl[0]);
+		} 
+	});
+}
+
+function deleteLogoImg(){
+	 var h='<a class="main-image-add" onclick="addPictureLogo(true);" href="javascript:;">+加图</a>';
+	 $("#_header_img-image-div").empty().append(h);
+	 $('#_header_img').val('');
+}
+</script>
+#end
+
+#@layout("我的信息", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	       	   <a href="#(webctx)/user" class="J_menuTab active">基本信息</a>
+	           <!-- <a href="#(webctx)/company" class="J_menuTab ">企业信息</a> -->
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-content">
+		<form id="__myForm__" class="form-horizontal">
+	        <div class="form-group">
+	        	<input type="hidden" value="#(seller.id??)" name="id"/>
+	            <label class="col-md-2 control-label">手机号：</label>
+	            #if(seller.phone?? && seller.phone!=null)
+	            <div class="col-md-3">
+                    <input type="text" class="form-control" value="#(seller.phone??)" readonly/>
+	            </div>
+	            #else
+	            <div class="col-md-3">
+                    <a href="#(webctx)/user/bindPhone">绑定手机号码</a>
+	            </div>
+	            #end
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">昵称：</label>
+	            <div class="col-md-3">
+                     <input type="text" class="form-control" value="#(seller.nick??)" readonly/>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">头像:</label>
+	            <div class="col-md-3">
+                    <input id="_header_img" name="header_img" value="#(seller.header_img??)" type="hidden">
+			     	<div id="_header_img-image-div" class="main-image-div">
+                          #if(seller && seller.header_img)
+                          	#if(seller.header_img?? && seller.header_img.startsWith("http"))
+                            <img class="image-preview" src="#(seller.header_img??)" />
+                            #else
+                            <img class="image-preview" src="#(img_domain)#(seller.header_img??)" />
+                            #end
+                               <a class="close-modal small hide" href="javascript:;" onclick="deleteLogoImg();">×</a>
+                          #else
+			                <a class="main-image-add" onclick="addPictureLogo(true);" href="javascript:;" >+加图</a>
+			              #end 
+		            </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">登录密码：</label>
+	            <div class="col-md-3">
+	            	<div class="input-group" >
+                        <input type="password" readonly name="_loginpsw" class="form-control" style="background-color:#fff;"  value="${seller.password??)"/>
+                        <span class="input-group-btn"><a href="#(webctx)/user/setpwd" class="btn btn-primary">重置登录密码</a></span>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">交易密码：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('提现过程中需要使用到的密码。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div class="col-md-3">
+	            	<div class="input-group" >
+                        <input type="password" readonly name="_psw" class="form-control" style="background-color:#fff;"  value="${seller.trade_password??)"/>
+                        <span class="input-group-btn"><a href="#(webctx)/user/tradepwd" class="btn btn-primary">设置交易密码</a></span>
+                    </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">账户余额(元)：<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('余额用于红包代发。', this, {tips: [1, '#3595CC'],time: 0});"></i></label>
+	            <div class="col-md-3">
+                     <input type="text" class="form-control" value="#(seller.balance??)" readonly/>
+                     <br>
+                     <a href="#(webctx)/user/balance">我要充值</a>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <div class="col-md-5" align="center">
+	            	<div class="panel-footer" align="center">
+	                	<button type="submit" class="btn btn-success btn-sm">保 存</button>
+	                </div>
+	            </div>
+	        </div>
+		</form>
+	</div>
+</div>
+#end
+
+<script type="text/javascript">
+$(".main-image-div").hover(function(){
+	$(this).find(".close-modal").removeClass("hide");
+   $(this).find(".close-modal").addClass("hover");
+},function(){
+	 $(this).find(".close-modal").addClass("hide");  
+	 $(this).find(".close-modal").removeClass("hover");
+});
+
+//validate signup form on keyup and submit
+var icon = "<i class='fa fa-times-circle'></i> ";
+$("#__myForm__").validate({
+	ignore: "",
+    submitHandler:function() {
+    	$("#__myForm__").mask("正在保存...");
+    	var params = $("#__myForm__").serializeJSON();
+    	obz.ajaxJson(obz.ctx+"/user/update", params, function(json) {
+    		$("#__myForm__").unmask();
+    		if(json.state && json.state == "fail"){
+    			obz.error(json.message);
+    		}else if(json.code!=200){
+				obz.error(json.msg);
+			}else{
+				obz.msg('保存成功', function(){
+					location.reload();
+				});					
+			}
+		},"json");
+    },
+    rules: {},
+    messages: {}
+});
+
+</script>

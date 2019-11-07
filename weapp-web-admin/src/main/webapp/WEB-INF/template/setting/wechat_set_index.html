@@ -1,0 +1,114 @@
+#include ("/_includes/_layout_wechat.html")
+#@layout("公众号配置", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content row ibox-content col-sm-10">
+		<div class="alert alert-success">
+			<strong>有赞官方规定，一个店铺绑定一个微信公众号，所以此处推荐填写您有赞店铺绑定的公众号，让公众号跟有赞店铺之间数据互通，紧密相连</strong><br>
+			<!-- <strong style="color:blue;">不会填写，请加入技术支持QQ群376490170，有专人一对一指导</strong><br><br> -->
+			<strong>
+			<a href="https://bbs.youzan.com/forum.php?mod=viewthread&tid=671198" target="_blank" style="color:red;">点我查看公众号配置教程</a>
+			</strong>
+		</div>
+		<form name="wechatSetForm" id="wechatSetForm" action="#(webctx)/wechat/set/save" method="post" class="form-horizontal" enctype="multipart/form-data" style="padding-top: 10px;">
+			<input type="hidden" id="sel_app_id" name="id" value="#(authApp.id??)"/>
+			<div class="form-group">
+	            <label class="col-md-2 control-label">公众号名称<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_nick_name">
+	                <input type="text" id="nick_name" name="nick_name" class="form-control" value="#(authApp.nick_name??)"/>
+	                <label class="control-label" for="nick_name"></label>
+	            </div>
+	        </div>
+			<div class="form-group">
+	            <label class="col-md-2 control-label">公众号appId<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_app_id">
+	                <input type="text" id="app_id" name="app_id" class="form-control" value="#(authApp.app_id??)"/>
+	                <label class="control-label" for="app_id"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">公众号appSecret<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_app_secret">
+	                <input type="text" id="app_secret" name="app_secret" class="form-control" value="#(authApp.app_secret??)"/>
+	                <label class="control-label" for="app_secret"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">公众号token<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_app_token">
+	                <input type="text" id="app_token" name="app_token" class="form-control" value="#(authApp.app_token??)"/>
+	                <label class="control-label" for="app_token"></label>
+	            </div>
+	        </div>
+			
+			#if(authApp??)
+			<div class="form-group">
+	            <label class="col-md-2 control-label">插件url</label>
+	            <div class="col-md-8">
+	                <input type="text" class="form-control" value="http://admin.dbumama.com/msg?appId=#(authApp.app_id??)" readonly="readonly"/>
+	                <div class="alert alert-success">
+						<strong style="color:blue;">请复制插件url跟公众号token值，配置到有赞后台插件中心，<a href="https://bbs.youzan.com/forum.php?mod=viewthread&tid=671209" target="_blank">插件配置方法</a></strong>
+					</div>
+	            </div>
+	        </div>
+			#end
+			
+			<div class="panel-default">
+			  	<div class="panel-body" align="center">
+					<button type="submit" class="btn btn-success btn-sm">保存</button>
+			  	</div>
+		  	</div>
+	  	</form>
+	</div>
+	<div class="help">
+         <h5><font color="blue">温馨提示</font></h5>
+         <ul class="list-unstyled project-files">
+             <li><a href="javascript:void(0)">此处填写好公众号相关信息保存后，会出现插件url地址</a></li>
+             <li><a href="javascript:void(0)">请复制插件url地址跟公众号token值，填写到有赞后台的插件中心</a></li>
+             <li><a href="https://bbs.youzan.com/forum.php?mod=viewthread&tid=671198" target="_blank" style="color:red;">查看公众号配置教程</a></li>
+             <li><a href="https://www.youzan.com/v2/apps/plugins" target="_blank" style="color:red;">马上点我去有赞配置插件</a></li>
+             <li><a href="https://help.youzan.com/displaylist/detail_4_908" target="_blank" style="color:red;">有赞第三方插件使用方法</a></li>
+         </ul>
+    </div>
+</div>
+#define script()
+<script type="text/javascript">
+
+//validate signup form on keyup and submit
+var icon = "<i class='fa fa-times-circle'></i> ";
+$("#wechatSetForm").validate({
+	ignore: "",
+	errorElement: "em",
+    submitHandler:function() {
+    	$("#wechatSetForm").mask("正在保存...");
+    	
+    	var params = $("#wechatSetForm").serializeJSON();
+    	
+    	obz.ajaxJson(obz.ctx+"/wechat/set/save", params, function(json) {
+    		$("#wechatSetForm").unmask();
+    		if(json.state == "fail"){
+    			obz.error(json.message==null ? "系统错误" : json.message);
+    		}else{
+    			if(json.data != null){
+					obz.showMessage(json.data + "<br>请复制ip地址到微信公众平台后台，安全中心，设置ip白名单,<br><a href='https://mp.weixin.qq.com' target='_blank'>去设置ip白名单</a>");
+				}else{
+	    			obz.msg('保存成功', function(){
+	    				location.reload();    					
+					});		
+				}
+    		}
+		});
+    },
+    rules: {
+    	app_id: "required", app_secret: "required", app_token: "required", nick_name: "required"
+    },
+    messages: {
+    	app_id: icon + "请输入公众号appId", 
+    	app_secret: icon + "请输入公众号appSecret",
+    	app_token: icon + "请输入公众号appToken",
+    	nick_name: icon + "请输入公众号名称"
+    }
+});
+</script>
+#end
+#end

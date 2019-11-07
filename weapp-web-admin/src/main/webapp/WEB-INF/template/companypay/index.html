@@ -1,0 +1,296 @@
+#include ("/_includes/_layout.html")
+#define css()
+<link href="#(webctx)/resources/css/menu-config.css" rel="stylesheet"/>
+<style>
+.liCss{
+    background-color: #d1dade;
+    color: #5e5e5e;
+    font-size: 11px;
+    font-weight: 600;
+    padding-bottom: 4px;
+    padding-left: 6px;
+    padding-right: 6px;
+    text-shadow: none;
+}
+.chat-avatar {
+    margin-right: 25px;
+ }   
+
+ .modal-dialog{
+ 	width: 400px;
+ }
+</style>
+#end
+#@layout("企业付款", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content" style="padding-bottom: 500px">
+    <div class="row col-sm-12">
+		<div class="ibox-content active_statistics">
+			<div class="title_query padtop"  id="divForm"> 
+				<div class="form-horizontal">
+				<!-- 开始 ===================-->
+					<div style="padding-top: 30px;" class="col-sm-12 col-md-12">
+						
+						<div class="form-group">
+				            <label class="col-md-2 control-label"><span class="requirespan">*</span>收款人</label>
+				            <div class="payee-user col-md-2" style="width: 252px;">
+	
+	                        </div>
+				            <div class="col-md-3">
+								<button id="payChoose" class="btn btn-success btn-sm">选择</button>
+							</div>
+				        </div>
+			        
+	   					<div class="form-group">
+				            <label class="col-md-2 control-label"><span class="requirespan">*</span>收款人姓名</label>
+				            <div class="col-md-5" id="error_payee_name">
+								<div class="input-group col-md-12" style="width: 300px;float: left;" id="error_payment_money">
+									<input style="font: -webkit-control;" type="text" value="" id="payee_name" name="payee_name" class="form-control">
+								</div>
+				            </div>
+				        </div>
+			        
+						<div class="form-group">
+				            <label class="col-md-2 control-label"><span class="requirespan">*</span>付款金额</label>
+				            <div class="col-md-5" id="error_payment_money">
+								<div class="input-group col-md-12" style="width: 300px;float: left;" id="error_payment_money">
+									<input style="font: -webkit-control;" type="text" value="#(payment.payment_money??)" id="payment_money" name="payment_money" class="form-control" onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')">
+									<span class="input-group-addon">单位/元</span>
+								</div>
+								<div class="row">
+									<div class=" col-md-7">
+						        		<span class="alert-success">支持小数点后两位</span>
+						        	</div>
+						        </div>
+				            </div>
+				        </div>
+				        
+				        <div class="form-group">
+				            <label class="col-md-2 control-label"><span class="requirespan">*</span>手机号码</label>
+				            <div class="col-md-2" style="width: 211px;">
+								<input style="font: -webkit-control;" type="text" value="#(phone??)" readonly="readonly" class="form-control">
+	                        </div>
+				        </div>
+				        
+				        <div class="form-group">
+				            <label class="col-md-2 control-label"><span class="requirespan">*</span>手机验证码</label>
+				            <div class="col-md-2" style="width: 211px;">
+								<input style="font: -webkit-control;" type="text" value="" id="phone_code" name="phone_code" onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')" class="form-control">
+	                        </div>
+				            <div class="col-md-3">
+								<button id="phoneCode" class="btn btn-success btn-sm">获取验证码</button>
+							</div>
+				        </div>
+			        
+						<div class="form-group">
+				            <label class="col-md-2 control-label"><span class="requirespan">*</span>付款说明</label>
+				            <div class="col-md-5">
+				                <textarea id="explain" name="explain" maxlength="255" class="form-control" style="width: 300px;height: 150px" >#(payment.explain??)</textarea>
+				            </div>
+				        </div>
+			        
+		        		<div class="form-group">
+							<label class="col-md-2 control-label"><span class="requirespan">*</span>验证码</label>
+							<div class="col-md-5">
+				                <input style="width: 300px;float: left;" class="form-control" type="text" id="captcha" name="captchaToken" placeholder="验证码"/>
+								<label class="input-group col-sm-10" style="padding-top: 10px;">
+									<img id="captchaImage" src="#(webctx)/captcha?width=100&height=35&fontsize=30" alt="换一张" />
+								</label>
+				            </div>
+						</div>
+					</div>
+					<!-- 结束 ===================-->
+					<div style="padding-top: 30px;padding-bottom: 100px;text-align: -webkit-center;">
+				   	 	<button type="button" onclick="pay()"  class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>确认</button>
+				   	 	&nbsp;&nbsp;<a href="#(webctx)/company" class="btn btn-default btn-sm">取   消</a>
+					</div>
+				</div>
+
+				
+	        </div>  
+	    </div>
+	</div>
+</div>
+<script type="text/javascript">
+var InterValObj; //timer变量，控制时间
+var count = 60; //间隔函数，1秒执行
+var curCount;//当前剩余秒数
+//发送手机验证码
+
+$("#phoneCode").click(function(){
+	$("#divForm").mask("正在发送验证码...");
+	obz.ajaxJson(obz.ctx+"/companypay/phoneCode", {}, function(resp){
+		$("#divForm").unmask();
+		if(resp.code == 200){
+			obz.msg("短信验证码已发送");//alert(resp.msg);
+			sendPhoneCode();
+		}
+	});
+});
+
+function sendPhoneCode(){
+    curCount = count;
+    //设置button效果，开始计时
+    $("#phoneCode").text("请等待"+curCount + "秒");
+    $("#phoneCode").removeClass("btn-success");
+    $("#phoneCode").addClass("btn-default");
+    $("#phoneCode").attr("disabled",true);
+    InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+}
+//timer处理函数
+function SetRemainTime() {
+      if (curCount == 1) {        
+        window.clearInterval(InterValObj);//停止计时器
+        $("#phoneCode").removeAttr("disabled");//启用按钮
+        $("#phoneCode").removeClass("btn-default");
+        $("#phoneCode").addClass("btn-success");
+        $("#phoneCode").text("获取验证码");
+      }
+      else {
+        curCount--;
+        $("#phoneCode").text("请等待"+curCount + "秒");
+      }
+}
+
+function pay(){
+	var params = {};
+	var payment_money = $("#payment_money").val(), explain = $("#explain").val(),
+		payee_name = $("#payee_name").val(),captcha = $("#captcha").val(),
+		payee_id = $("#payeeId").attr("payee-id"),phone_code = $("#phone_code").val();
+	
+	if(payee_id == null || payee_id ==""){
+		obz.error("请选择付款人");
+		return;
+	}
+	
+	if(phone_code == null || phone_code ==""){
+		obz.error("请输入手机验证码");
+		return;
+	}
+	
+	if(payment_money == null || payment_money ==""){
+		obz.error("请填写付款金额");
+		return;
+	}else if(parseInt(payment_money) < 0 
+			|| parseInt(payment_money) <1
+			|| parseInt(payment_money) >5000){
+		obz.error("付款金额范围需要在1~5000内");
+		return;
+	}
+	
+	if(explain == null || explain ==""){
+		obz.error("请填写付款说明");
+		return;
+	}
+	
+	if(captcha == null || captcha ==""){
+		obz.error("请填写验证码");
+		return;
+	}
+	
+	if(payee_name == null || payee_name ==""){
+		obz.error("请填写收款人姓名");
+		return;
+	}
+	
+	if(payee_id == null || payee_id ==""){
+		obz.error("请选择收款人");
+		return;
+	}
+	
+	params.payee_id = payee_id;
+	params.payee_name = payee_name;
+	params.payment_money = payment_money;
+	params.explain = explain;
+	params.captcha = captcha;
+	params.phone_code = phone_code;
+	
+	obz.showMessage("该操作不可撤回，确定提交吗?", function(){
+		$("#divForm").mask("正在提交...");
+		obz.ajaxJson(obz.ctx+"/companypay/savePay", params, function(resp) {
+			if(resp.state == "ok"){
+				obz.msg("操作成功，详情请查看付款记录", function(){
+					$("#divForm").unmask();
+					location.href = "#(webctx)/companypay";					
+				});
+			}else{
+				$("#divForm").unmask();
+			}
+		});
+	});
+}
+
+$("#payChoose").click(function(){
+	var url = "#(webctx)/companypay/tpl";
+	var flag = false;
+	BootstrapDialog.show({
+		title: "选择收款人",
+        message: $('<div></div>').load(url),
+        buttons: [ {
+            label: '关闭',
+            action: function(self){
+            	self.close();
+            }}, {
+            label: '新增收款人',
+            cssClass : "btn-success",
+            action: function(self){
+            	openAddWechatUserDialog();
+            }}, {
+            	label: '确认',
+            	cssClass : "btn-primary",
+            	action: function(self){
+            		var payeeList = [];
+            		//var i = 0;
+            		$(".payee-user").empty();
+            		var id = $("input:radio[name='payee_box']:checked").attr("data-id");
+            		var nick = $("input:radio[name='payee_box']:checked").attr("data-nick");
+            		var img = $("input:radio[name='payee_box']:checked").attr("data-img");
+            		
+            		if(id == null || id == ""){
+        				obz.error("请选择付款人");
+        				return;
+            		}
+            		
+        			var html = "<div id='payeeId' payee-id='"+id+"'>"
+					            		+"<img class='chat-avatar' src='"+img+"' alt=''>"
+					            		+"<div class='chat-user-name'>"
+					            			+"<a href='#'>"+nick+"</a>"
+					            		+"</div>"	
+					            	+"</div>";
+					$(".payee-user").append(html);
+					self.close();
+            		
+            	}
+            }]
+    });
+});
+
+function closePayee(obj){
+	$(obj).parent().remove();
+}
+
+function openAddWechatUserDialog(obj){
+	var url = "#(webctx)/companypay/add";
+	addNotifyerDialog = BootstrapDialog.show({
+		size: BootstrapDialog.SIZE_SMALL,
+		title: "请使用您的微信扫一扫",
+        message: $("<div style='text-align: -webkit-center;'></div>").load(url)
+    });
+	return false;
+}
+
+var $captcha = $("#captcha");
+var $captchaImage = $("#captchaImage");
+var change_captcha = function() {
+	var timestamp = (new Date()).valueOf();
+	var imageSrc = $captchaImage.attr("src");
+	if(imageSrc.indexOf("?") >= 0) {
+		imageSrc = imageSrc.substring(0, imageSrc.indexOf("?"));
+	}
+	imageSrc = imageSrc + "?timestamp=" + timestamp + "&width=100&height=35&fontsize=30";
+	$captchaImage.attr("src", imageSrc);
+};
+
+$captchaImage.click(change_captcha);
+</script>
+#end

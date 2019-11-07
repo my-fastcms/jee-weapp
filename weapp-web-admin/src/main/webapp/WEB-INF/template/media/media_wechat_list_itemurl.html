@@ -1,0 +1,46 @@
+<div id="item_media_pager" class="jqpager" style="margin-bottom: 1px;"></div>		
+<table class="table table-striped table-bordered" id="mainWechatMediaTable" style="padding-top: 5px;" border="0">
+	<thead>
+		<tr>
+			<th><span style="vertical-align: middle;">&nbsp;&nbsp;素材标题</span></th>
+			<th>摘要</th>
+			<th>访问地址</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody class="wechatMediaLotGrid"></tbody>
+</table>
+<!-- html 模板文件 -->
+<script type="text/template" id="media_table_tr_tpl_url">
+{{each list as item i}}
+		<tr class="package" id="tr_id_{{i}}" data-id="{{item.mediaId}}" data-title="{{item.title}}" data-image="{{item.coverPic}}" data-digest="{{item.digest}}" data-url="{{item.url}}">
+			<td>{{item.title}}</td>
+            <td>{{item.digest}}</td>
+            <td><a href="{{item.url}}" target="_blank">浏览文章</a></td>
+			<td><a onclick="chooseItem(this)"  class="btn btn-success">选择</a></td>
+		</tr>
+{{/each}}
+</script>
+<script type="text/template" id="media_table_noresult_tr_tpl_url">
+	<tr class="package"><td class="center" colspan="4">没有数据</td></tr>
+</script>
+<script type="text/javascript">
+var params = {};
+params.active = $("#a_status_sel").val();
+var table = new obz.TableView("item_media_pager", "#(webctx)/media/list4wechat", params, function(resp){
+	$(".wechatMediaLotGrid").empty();
+	if(resp && resp.list && resp.list.length>0){
+		$('.wechatMediaLotGrid').html(template('media_table_tr_tpl_url', resp));
+		TBatch.tableId = "mainWechatMediaTable";
+		//初始化checkbox点击事件
+		TBatch.checkCheckbox();
+		TBatch.initCheckboxClick();
+	}else{
+		$(".wechatMediaLotGrid").append($("#media_table_noresult_tr_tpl_url").html());
+	}
+});
+table.init();
+
+
+
+</script>

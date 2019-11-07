@@ -1,0 +1,105 @@
+#include ("/_includes/_layout.html")
+#@layout("门店管理", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content ibox-content">
+		<div class="panel-body">
+			<div style="float: left; margin-right: 20px;">
+			<table width="100%" border="0">
+				<tr>
+					<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+					<a href="#(webctx)/shop/employeeEdit" class="btn btn-success">新增员工</a>
+					</td>
+					<td><input style="margin:0 10px" type="text" name="eName" id="eName" placeholder="员工名称" class="control-inline" /></td>
+					<td><input style="margin:0 10px" type="text" name="sName" id="sName" placeholder="门店名称" class="control-inline" /></td>
+					<td><button id="myqueryBtn" class="btn btn-success btn-sm">查询</button></td>
+				</tr>
+			</table>
+			</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+				<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;员工名称</span></th>
+				<th>所属门店</th>
+				<th>手机号码</th>
+				<th>录入时间</th>
+				<th>操作</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	</div>   
+</div>
+<script type="text/html" id="item_table_tr_tpl">
+{{each list as item i}}
+		<tr class="package">
+			<td>
+				<input type="checkbox" class="commchk" id="checkbox_{{item.id}}" style="margin-right: 4px; vertical-align: middle;"/>
+				<input type="hidden" value="{{item.id}}"/>
+			</td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{{item.empl_name}}</span></td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{{item.shop_name}}</span></td>
+			<td><span>{{item.phone}}</span></td>
+			<td>{{item.created}}</td>
+			<td>&nbsp;<a id="edit#{{item.id}}" href="javascript:void(0)">编辑</a>
+			</td>
+		</tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="7" class="center">没有结果集</td></tr>
+</script>
+#end
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = {};
+	params.shopId = $("#shopId").val();
+	var table = new obz.TableView("pager", obz.ctx + "/shop/employeeList", params, function(resp){
+		$(".itemsLotGrid").empty();
+		if(resp && resp.list && resp.list.length>0){
+			$('.itemsLotGrid').html(template('item_table_tr_tpl', resp));
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+	table.init();
+	
+	var TableOpt = {
+		edit : function(param){
+			location.href = "#(webctx)/shop/employeeEdit?employeeId="+param[1]
+			return false;
+		},	
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.edit);
+			return optArray;
+		}
+	}
+	
+	$("#shopId").change(function(){
+		var params = {};
+		params.shopId = $("#shopId").val();
+		table.setParams(params);
+		table.init();
+	});
+	
+	$("#myqueryBtn").click(function(){
+		var eName = $("#eName").val();
+		var sName = $("#sName").val();
+
+		params.eName = eName;
+		params.sName = sName;
+
+		table.setParams(params);
+		table.init(); 
+	});
+});
+  
+</script>

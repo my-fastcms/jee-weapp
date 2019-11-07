@@ -1,0 +1,246 @@
+#include ("/_includes/_layout.html")
+#define css()
+<style>
+.dt-loading {color:#777; display: inline-block; margin-left: 5px;}
+#dependencyTreeViewer {background: #fff; overflow:visible !important; height: auto !important; max-height: auto !important;}
+.dt-buttons {text-align: right;}
+.dt-buttons a {display: inline;}
+.jstree-anchor > label > span > i {color: gray;font-size: 10px;}
+.jstree-icon {color: darkseagreen;}
+.indicators {display:inline-block; margin-left: 10px;}
+.indicator{display: inline;position: relative;color:green;}
+.indicator:hover:after{
+    background: #333;
+    background: rgba(0,0,0,.8);
+    border-radius: 5px;
+    top: 20px;
+    color: #fff;
+    content: attr(title);
+    left: 20%;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 98;
+    min-width: 50px;
+    max-width: 500px;
+    width: auto;
+    word-wrap: break-word;
+}
+.indicator-red {color: red;}
+.indicator-lightgreen {color: darkseagreen;}
+a.gray, a.gray:hover {color:gray !important;}
+a.properties, a.properties:hover {font-style: italic; color:gray !important; }
+#dependencyTreeExport .fa-stack-1x:before { margin-left: 5px; }
+.jstree-open > .jstree-anchor > .fa-folder:before {
+    content: "\f07c";
+}
+.jstree-default .jstree-icon.none {
+    width: 0;
+}
+</style>
+#end
+#@layout("", "wxmall,点步科技", "Wxmall社区","wxmall") 
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="#(webctx)/department" class="J_menuTab active">部门与员工</a>
+	           <a href="#(webctx)/role" class="J_menuTab">角色权限</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="content row ibox-content">
+	<div class="col-sm-2">
+	<div id="dependencyTreeViewer"></div>
+	</div>
+	<div class="col-sm-10">
+		<table class="table table-striped table-bordered bootstrap-datatable datatable">
+			<tr>
+				<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+				<input type="text" name="q_pond_txt" id="q_pond_txt" class="input-text" style="width:190px;" />
+				<button id="myqueryBtn" class="btn btn-success btn-sm">查询</button>
+				</td>
+			</tr>
+		</table>
+		<div class="panel-body">
+			<div style="float: left; margin-right: 20px;">
+				<a href="#(webctx)/employee/edit" class="btn btn-success">新增员工</a>
+			</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px; float: right;"></div>
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+				<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;昵称</span></th>
+				<th>性别</th>
+				<th>地区</th>
+				<th>首次来访时间</th>
+				<th>状态</th>
+				<th>操作</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	</div>
+	</div>
+	</div>
+</div>
+
+<script type="text/html" id="item_table_tr_tpl">
+{{each list as item i}}
+		<tr class="package">
+			<td>
+				<input type="checkbox" class="commchk" id="checkbox_{{item.id}}" style="margin-right: 4px; vertical-align: middle;"/>
+				<input type="hidden" value="{{item.id}}"/>
+			</td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;"><img src="{{item.headimgurl}}" width="40" height="40">&nbsp;&nbsp;{{item.nickname}}</img></span></td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{{if item.sex == 1}} 男 {{else}} 女 {{/if}}</span></td>
+			<td><span>{{item.province}}</span></td>
+			<td>{{item.created}}</td>
+			<td><span class="customer_status">{{if item.active == 1}} 正常 {{else}} 禁用 {{/if}}</span></td>
+			<td>
+				&nbsp;{{if item.active == 1}}<a id="del_{{item.id}}" href="javascript:void(0)">禁用</a>{{/if}}
+				&nbsp;{{if item.active == 0}}<a id="undel_{{item.id}}" href="javascript:void(0)">恢复</a>{{/if}}
+			</td>
+		</tr>
+{{/each}}
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="7" class="center">没有结果集</td></tr>
+</script>
+#end
+<script type="text/javascript">
+$(document).ready(function() {
+	var params = {};
+	params.active = $("#a_status_sel").val();
+	var table = new obz.TableView("pager", obz.ctx + "/employee/list", params, function(resp){
+		$(".itemsLotGrid").empty();
+		if(resp && resp.list && resp.list.length>0){
+			$('.itemsLotGrid').html(template('item_table_tr_tpl', resp));
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+	table.init();
+	
+	var TableOpt = {
+		del : function(param){
+			obz.showMessage("确定禁用吗？禁用后客户不可访问公众号！", function(){
+	   			var ids = param[1];
+	    		obz.ajaxJson(obz.ctx + "/customer/del", {ids: ids}, function(resp){
+	    			if(resp.code==200){
+	    				obz.msg("禁用成功", function(){table.init();});
+	    			}else {
+						obz.error(resp.msg);
+	    			}
+	    		});
+	   		});
+			return false;
+		},	
+		undel : function(param){
+			obz.showMessage("确定取消禁用吗？", function(){
+	   			var ids = param[1];
+	    		obz.ajaxJson(obz.ctx + "/customer/undel", {ids: ids}, function(resp){
+	    			if(resp.code==200){
+	    				obz.msg("已取消禁用", function(){table.init();});
+	    			}else {
+						obz.error(resp.msg);
+	    			}
+	    		});
+	   		});
+			return false;
+		},	
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.del);
+			optArray.push(this.undel);
+			return optArray;
+		}
+	}
+	
+	$("#myqueryBtn").click(function(){
+		var params = {};
+		params.qname = $("#q_pond_txt").val();
+		params.active = $("#a_status_sel").val();
+		table.setParams(params);
+		table.init();
+	});
+	
+	$('#dependencyTreeViewer').jstree({
+        'core': {
+            'data' : {
+				'url' : '#(webctx)/department/list',
+				'data' : function (node) {
+					return { 'id' : node.id == "#" ? null : node.id };
+				}
+			}
+        }
+		,'plugins' : ['dnd', 'types', "contextmenu"]
+		,"contextmenu":{  
+	        "items":{  
+	            "新建菜单":{  
+	                "label":"新建部门",  
+	                "action":function(data){  
+	                    var inst = jQuery.jstree.reference(data.reference),  
+	                    obj = inst.get_node(data.reference);  
+	                    dialog.show({"title":"新建“"+obj.text+"”的子菜单",url:"/accountmanage/createMenu?id="+obj.id,height:280,width:400});  
+	                }  
+	            },  
+	            "删除菜单":{  
+	                "label":"删除部门",  
+	                "action":function(data){  
+	                    var inst = jQuery.jstree.reference(data.reference),  
+	                    obj = inst.get_node(data.reference);  
+	                    if(confirm("确定要删除此菜单？删除后不可恢复。")){  
+	                        jQuery.get("/accountmanage/deleteMenu?id="+obj.id,function(dat){  
+	                            if(dat == 1){  
+	                                alert("删除菜单成功！");  
+	                                jQuery("#"+treeid).jstree("refresh");  
+	                            }else{  
+	                                alert("删除菜单失败！");  
+	                            }  
+	                        });  
+	                    }  
+	                }  
+	            },  
+	            "编辑菜单":{  
+	                "label":"编辑部门",  
+	                "action":function(data){  
+	                    var inst = jQuery.jstree.reference(data.reference),  
+	                    obj = inst.get_node(data.reference);  
+	                    dialog.show({"title":"编辑“"+obj.text+"”菜单",url:"/accountmanage/editMenu?id="+obj.id,height:280,width:400});  
+	                }  
+	            }  
+	        }
+		}
+    }).on('delete_node.jstree', function (e, data) {
+		alert(data.node.id);
+	}).on('create_node.jstree', function (e, data) {
+		//{ 'type' : data.node.type, 'id' : data.node.parent, 'text' : data.node.text }
+	})
+	.on('rename_node.jstree', function (e, data) {
+		//{ 'type' : data.node.type, 'id' : data.node.parent, 'text' : data.node.text }
+	})
+	.on('move_node.jstree', function (e, data) {
+		//{ 'type' : data.node.type, 'id' : data.node.parent, 'text' : data.node.text }
+	})
+	.on('copy_node.jstree', function (e, data) {
+		//{ 'type' : data.node.type, 'id' : data.node.parent, 'text' : data.node.text }
+	}).on('activate_node.jstree', function (e, data) {
+		if(data.node && data.node.id){
+			alert(data.node.id);	
+		}
+	}).on('hover_node.jstree', function (e, data) {
+        //监听鼠标移上事件
+        var node=data.node;
+        var a_attr=node.a_attr;
+        var id=node.id;
+    });
+});
+</script>

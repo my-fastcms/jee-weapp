@@ -1,0 +1,78 @@
+#('#')include ("/_includes/_layout.html")
+#('#')define css()
+#('#')end
+#('#')define script()
+#('#')end
+#('#')@layout("#(tableMeta.remarks)", "wxmall,点步科技", "Wxmall社区","wxmall")
+#('#')define content()
+<div class="wrapper wrapper-content">
+	<div class="ibox-content">
+		<form id="__#(tableMeta.modelName??)Form__" class="form-horizontal">
+	    #for(cm : tableMeta.columnMetas)
+	    	#set(modelAttrName=firstCharToLowerCase(tableMeta.modelName)+"."+cm.attrName??)
+	    	#if("id"==cm.name)
+	        <input type="hidden" id="id" name="#(cm.attrName??)" value="#('#(')#(modelAttrName)??)">
+	        #else
+	        #if(cm.remarks??)
+	        <div class="form-group">
+                <label class="col-sm-2 control-label">#if(cm.isNullable)<span class="requirespan">*</span>#end#(cm.remarks??)</label>
+                <div class="col-sm-8">
+                #if("java.util.Date"==cm.javaType)
+				    <input type="input" hint="date" class="form-control Wdate" readonly="readonly"
+				    	onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd'})"
+						name="#(cm.attrName)" value="#('#date(')#(modelAttrName) ?? now,'yyyy-MM-dd')" />
+				#elseif("java.lang.Boolean"==cm.javaType)
+				   <input type="checkbox" class="switchery" data-for="#(cm.attrName)" #('#')checkedIf(#(modelAttrName)??)/>
+                   <input type="hidden" id="#(cm.attrName)" name="#(cm.attrName)"/>
+				#elseif("java.lang.Integer"==cm.javaType || "java.lang.Long"==cm.javaType)
+				   <input type="input" id="#(cm.attrName)" name="#(cm.attrName)" class="form-control" value="#('#(')#(modelAttrName)??)" placeholder="" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+				#else
+				   <input type="input" id="#(cm.attrName)" name="#(cm.attrName)" class="form-control" value="#('#(')#(modelAttrName)??)" placeholder=""/>
+				#end
+                </div>
+	        </div>
+	        #end
+	    	#end
+		#end
+	        <div class="form-group">
+	            <div class="" align="center">
+			        <button type="submit" class="btn btn-success btn-sm">提 交</button>
+			        <a href="#('#')(webctx)/#(moduleName)/#(toLowerCase(tableMeta.modelName))" class="btn btn-default btn-sm">取   消</a>
+				</div>
+	        </div>
+		</form>
+	</div>
+</div>
+<script type="text/javascript">
+var icon = "<i class='fa fa-times-circle'></i> ";
+$("#__#(tableMeta.modelName??)Form__").validate({
+	ignore: "",
+    submitHandler:function() {
+    	$("#__#(tableMeta.modelName??)Form__").mask("正在处理中...");
+    	var params = $("#__#(tableMeta.modelName??)Form__").serializeJSON();
+    	obz.ajaxJson(obz.ctx+"/#(moduleName)/#(toLowerCase(tableMeta.modelName))/save", params, function(json) {
+    		$("#__#(tableMeta.modelName??)Form__").unmask();
+    		if(json.state == "ok" || json.code == 200){
+    			obz.msg('操作成功', function(){
+					location.href="#('#')(webctx)/#(moduleName)/#(toLowerCase(tableMeta.modelName))";
+				});	
+			}
+		});
+    },
+    rules: {
+    	#for(cm : tableMeta.columnMetas)
+    	#if(cm.remarks??)
+    	#(cm.attrName??): "required",
+    	#end
+    	#end
+    },
+    messages: {
+    	#for(cm : tableMeta.columnMetas)
+    	#if(cm.remarks??)
+    	#(cm.attrName??): icon + "请输入#(cm.remarks??)", 
+    	#end
+    	#end
+    }
+});
+</script>
+#('#')end

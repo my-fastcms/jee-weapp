@@ -1,0 +1,28 @@
+#include ("/_includes/_layout.html")
+#@layout("", "wxmall,点步科技", "Wxmall社区","wxmall")
+#define content()
+<div class="wrapper wrapper-content">
+	<div class="content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="#(webctx)/weapptpl" class="J_menuTab active">模板市场</a>
+		       <a href="#(webctx)/weapptpl/my" class="J_menuTab">我的模板</a>
+	       </div>
+	   	</nav>
+	</div>
+	
+	<div class="ibox-content">
+		#for(module: modules)
+          <div class="ibox" style="padding:10px 15px 15px 15px;border-bottom:1px solid #FFE4C4">
+              <div>
+                  <h2>#(module.module_name)</h2>
+                  <p>#(module.module_memo)</p>
+                  <div>
+                      <a class="btn btn-primary btn-xs" href="#(webctx)/weapptpl/detail/?id=#(module.id)">我要购买</a>
+                  </div>
+              </div>
+          </div>
+          #end
+	</div>
+</div>
+#end

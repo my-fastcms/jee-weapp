@@ -1,0 +1,153 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>点步微商城运维后台管理系统</title>
+#include ("/_includes/css.html")
+<style>
+.modal-body{
+	padding: 0px; 
+}
+.bootstrap-dialog-message{
+	padding-left: 12px;
+	padding-top: 5px;
+}
+.nav-tabs li{min-width:100px;}
+.nav-tabs li a{text-align: center;}
+.table {
+	width: 100%;
+    max-width: 100%;
+    margin-bottom: 2px !important;
+}
+.center{
+text-align: center;
+}
+.sidebard-panel-width{
+	width: 220px !important;
+}
+.animated{
+    animation-duration:0s !important;
+}
+
+.nav-tabs li{width:150px;}
+.nav-tabs li a{text-align: center;}
+.dd {
+    float: left;
+    width: 20%;
+}
+.dd-handle-bk-color {
+	background: #d4d4d4;
+}
+#page-wrapper {
+    position: inherit;
+	margin-left: 115px !important;
+}
+.control-inline{
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    font-size: 14px;
+    padding: 4px 12px;
+    height: 30px;
+}
+</style>
+#include ("/_includes/scripts.html")
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#header-bg").css({opacity:4});
+		/* if (jQuery.browser.msie) {
+			if (parseFloat(jQuery.browser.version) < 8) {
+				jQuery(document).ready(function() {
+					jQuery(document.body).addClass("ie-compat");
+				});
+			}
+		} */
+		$(".NumDecText").keyup(function(){    
+            $(this).val($(this).val().replace(/[^0-9.]/g,''));    
+        }).bind("paste",function(){
+            $(this).val($(this).val().replace(/[^0-9.]/g,''));     
+        }).css("ime-mode", "disabled");
+		
+		$(".NumText").keyup(function(){
+            $(this).val($(this).val().replace(/D|^0/g,''));  
+        }).bind("paste",function(){
+            $(this).val($(this).val().replace(/D|^0/g,''));     
+        }).css("ime-mode", "disabled");
+		
+		//help click
+		$("#menu_help").click(function(){
+			BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_WIDE,
+				title: "在线帮助",
+	            message: $('<div></div>').load("#(webctx)/help")
+	        });
+		});
+		
+		$("#app-second-sidebar").css("min-height", $(document).height());
+	});
+		obz.ctx = '#(webctx)';
+     var Template = {
+         debug: function() {
+             $("div").prepend(function(index, html) {
+                 $(this).attr("style", "border: dotted 1px #dedede");
+                 return "<span class='debug'>" + $(this).attr("id") + "</span>";
+             });
+         },
+         selectMenu: function(menu) {
+             if (menu) {
+                 $("#menu-items").children("li").removeClass("active").removeClass("opened");
+                 if(!$(menu).hasClass(".nav-header")){
+                     $(menu).addClass("active opened");
+                     $(menu).parent().show(); 
+                 }
+             }
+         },
+         selectMenuSecond: function(menu) {
+             if (menu) {
+                 $("#menu-second").children("li").removeClass("active");
+                     $(menu).addClass("active");
+                 }
+             },
+         init: function(menu) {
+             Template.selectMenu(menu);
+         },
+         initSecond: function(menu) {
+             Template.selectMenuSecond(menu);
+         }
+     }
+     //toast 配置
+     toastr.options = {
+		  "closeButton": true,
+		  "progressBar": true,
+		  "positionClass": "toast-top-center",
+		  "showDuration": "400",
+		  "hideDuration": "1000",
+		  "timeOut": "3000",
+		  "extendedTimeOut": "1000",
+		  "showEasing": "swing",
+		  "hideEasing": "linear",
+		  "showMethod": "fadeIn",
+		  "hideMethod": "fadeOut"
+	};
+     /* var _hmt = _hmt || [];
+     (function() {
+       var hm = document.createElement("script");
+       hm.src = "//hm.baidu.com/hm.js?3b0bc58fce4289e4526391baf8a50774";
+       var s = document.getElementsByTagName("script")[0]; 
+       s.parentNode.insertBefore(hm, s);
+     })(); */
+     $.fn.wxmall_serialize = function () {
+         var a = this.serializeArray();
+         var $radio = $('input[type=radio],input[type=checkbox]', this);
+         var temp = {};
+         $.each($radio, function () {
+             if (!temp.hasOwnProperty(this.name)) {
+                 if ($("input[name='" + this.name + "']:checked").length == 0) {
+                     temp[this.name] = "";
+                     a.push({name: this.name, value: ""});
+                 }
+             }
+         });
+         return jQuery.param(a);
+     };
+ </script>
