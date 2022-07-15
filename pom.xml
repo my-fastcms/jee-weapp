@@ -11,7 +11,7 @@
 
 	<properties>
 		<jdk.version>1.8</jdk.version>
-		<jfinal.version>4.7</jfinal.version>
+		<jfinal.version>4.9.11</jfinal.version>
 		<jfinal-undertow.version>1.9</jfinal-undertow.version>
 		<jboot.version>2.2.3</jboot.version>
 		<javassist_version>3.22.0-GA</javassist_version>
